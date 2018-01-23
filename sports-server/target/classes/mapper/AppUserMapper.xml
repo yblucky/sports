@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.server.mapper.AppUserMapper">
+
+    <resultMap type="java.util.HashMap" id="resultMap">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="uid" property="uid" jdbcType="VARCHAR"/>
+        <result column="userType" property="userType" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="fields">
+       uid,mobile,name,nickName,loginPwd,pwdStal,payPwd,payStal,parentId,epBalance,blockedEpBalance,birdScore,assets,state,level,imgPath,createTime,activeNo,loginTime,releaseTime,isAllowed
+    </sql>
+
+    <sql id="fields_id">
+        id,
+        <include refid="fields"/>
+    </sql>
+
+    <sql id="table_name">app_user</sql>
+
+    <sql id="selector">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+    </sql>
+
+    <sql id="condition">
+        <where>
+            <if test="model.uid != null and model.uid != ''">uid=#{model.uid}</if>
+            <if test="model.mobile != null and model.mobile != ''">and mobile=#{model.mobile}</if>
+            <if test="model.nickName != null and model.nickName != ''">and  nickName=#{model.nickName}</if>
+            <if test="model.name != null and model.name != ''">and  name=#{model.name}</if>
+            <if test="model.parentId != null and model.parentId != ''">and parentId=#{model.parentId}</if>
+            <if test="model.state != null and model.state != ''">and state=#{model.state}</if>
+            <if test="model.level != null">and level=#{model.level}</if>
+            <if test="model.isAllowed != null">and isAllowed=#{model.isAllowed}</if>
+        </where>
+    </sql>
+	
+    <select id="readById" resultType="com.pf.common.po.AppUserPo">
+        <include refid="selector"/>
+        where id=#{id} limit 1;
+    </select>
+
+    <select id="findUserByCondition" resultType="com.pf.common.po.AppUserPo">
+        <include refid="selector"/>
+        <include refid="condition"/>
+        limit 1;
+    </select>
+
+    <select id="readList" resultType="com.pf.common.po.AppUserPo">
+        <include refid="selector"/>
+        <include refid="condition"/>
+        ORDER BY createTime DESC
+        limit #{startRow}, #{pageSize};
+    </select>
+
+    <update id="updateById">
+        update <include refid="table_name"/>
+        <set>
+            <if test="model.mobile != null and model.mobile !=''">mobile= #{model.mobile},</if>
+            <if test="model.nickName != null and model.nickName !=''">nickName= #{model.nickName},</if>
+            <if test="model.name != null">name= #{model.name},</if>
+            <if test="model.loginPwd != null and model.loginPwd !=''">loginPwd= #{model.loginPwd},</if>
+            <if test="model.pwdStal != null and model.pwdStal !=''">pwdStal= #{model.pwdStal},</if>
+            <if test="model.payPwd != null">payPwd= #{model.payPwd},</if>
+            <if test="model.payStal != null and model.payStal !=''">payStal= #{model.payStal},</if>
+            <if test="model.state != null and model.state !=''">state= #{model.state},</if>
+            <if test="model.loginTime != null ">loginTime= #{model.loginTime},</if>
+            <if test="model.releaseTime != null ">releaseTime= #{model.releaseTime},</if>
+            <if test="model.imgPath != null and model.imgPath !=''">imgPath= #{model.imgPath},</if>
+            <if test="model.epBalance != null">epBalance= #{model.epBalance},</if>
+            <if test="model.blockedEpBalance != null">blockedEpBalance= #{model.blockedEpBalance},</if>
+            <if test="model.birdScore != null">birdScore= #{model.birdScore},</if>
+            <if test="model.assets != null">assets= #{model.assets},</if>
+            <if test="model.level != null">level= #{model.level},</if>
+            <if test="model.isAllowed != null">isAllowed= #{model.isAllowed},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--修改用户ep余额-->
+    <update id="updateEpBalanceById">
+        update <include refid="table_name"/>
+        set epBalance = epBalance + #{epBalance}
+        where id=#{id} and (epBalance + #{epBalance}) >= 0
+    </update>
+
+    <!--修改用户冻结ep余额-->
+    <update id="updateEpBlockBalanceById">
+        update <include refid="table_name"/>
+        set blockedEpBalance = blockedEpBalance + #{blockedEpBalance}
+        where id=#{id} and (blockedEpBalance + #{blockedEpBalance}) >= 0
+    </update>
+
+    <!--修改用户候鸟积分-->
+    <update id="updateBirdScoreById">
+        update <include refid="table_name"/>
+        set birdScore = birdScore + #{birdScore}
+        where id=#{id}
+    </update>
+
+    <!--修改用户e资产-->
+    <update id="updateAssetsById">
+        update <include refid="table_name"/>
+        set assets = IFNULL(assets,0) + #{assets}
+        where id=#{id}
+    </update>
+
+    <!--调用存储过程，获取上级-->
+    <select id="readUserByParentId" resultMap="resultMap" statementType="CALLABLE">
+        CALL select_appUser(#{uid},#{level});
+    </select>
+
+
+    <!--修改用激活次数-->
+    <update id="updateActiveNoById">
+        update <include refid="table_name"/>
+        set activeNo = activeNo + #{activeNo}
+        where id=#{id} and (activeNo + #{activeNo}) >= 0
+    </update>
+
+    <!--修改用户状态-->
+    <update id="updateUserStateById">
+        update <include refid="table_name"/> set state = #{state}   where id=#{id}
+    </update>
+    
+    <select id="getPoList" resultType="com.pf.common.po.AppUserPo">
+        <include refid="selector"/>
+        <include refid="condition"/>
+        ORDER BY  
+         
+         <if test="model.epBalance == 1 ">state asc,epBalance DESC,</if>
+         <if test="model.epBalance == 2 ">state asc,epBalance ASC,</if>
+         <if test="model.birdScore == 1 " >state asc,birdScore DESC,</if>
+         <if test="model.birdScore == 2 " >state asc,birdScore ASC,</if>
+         <if test="model.assets == 1">state asc,assets DESC,</if>
+         <if test="model.assets == 2">state asc,assets ASC,</if>
+         <if test="model.blockedEpBalance == 1">state asc,blockedEpBalance DESC,</if>
+         <if test="model.blockedEpBalance == 2">state asc,blockedEpBalance ASC,</if>
+         
+       
+	createTime DESC
+	limit #{startRow}, #{pageSize};
+    </select>
+    
+    
+    <select id="findPoListCount" resultType="int">
+        select  count(1) from  app_user
+        <include refid="condition"/>
+
+    </select>
+    
+    
+    
+
+</mapper>
+
+
+

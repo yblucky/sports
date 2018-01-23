@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+	
+	
+	<!-- 定时任务配置 -->
+	<!--<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+            	<ref local="resetIssueTaskTrigger"/>
+            	<ref local="rollbackTaskTrigger"/>
+            </list>
+        </property>
+    </bean>
+	
+	<bean id="resetIssueTaskJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="resetIssueTask" />
+		<property name="targetMethod" value="resetTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="resetIssueTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="resetIssueTaskJobDetail" />
+		<property name="cronExpression" value="0 0 0 * * ?" />&lt;!&ndash; 每天凌晨00:00执行一次 &ndash;&gt;
+	</bean>
+	
+	<bean id="rollbackTaskJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="rollbackTask" />
+		<property name="targetMethod" value="rollbackTask" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="rollbackTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="rollbackTaskJobDetail" />
+		<property name="cronExpression" value="0 0 1 * * ?" />&lt;!&ndash; 每天凌晨01:00执行一次 &ndash;&gt;
+	</bean>-->
+	
+</beans>

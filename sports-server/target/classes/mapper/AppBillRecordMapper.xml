@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.server.mapper.AppBillRecordMapper">
+
+    <sql id="fields_id">
+        id,userId,balance,currencyType,busnessType,createTime,businessNumber,remark,beforeBalance,afterBalance,extend
+    </sql>
+
+    <sql id="table_name">app_bill_record</sql>
+
+    <sql id="selector">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+    </sql>
+
+    <sql id="condition">
+        <where>
+            <if test="model.userId != null and model.userId != ''">userId=#{model.userId}</if>
+            <if test="model.currencyType != null and model.currencyType != ''">currencyType=#{model.currencyType}</if>
+            <if test="model.busnessType != null and model.busnessType != ''">busnessType=#{model.busnessType}</if>
+        </where>
+    </sql>
+
+  
+    
+    <select id="findAll" resultType="com.pf.common.vo.pc.AppBillRecordVo1">
+       	SELECT b.*,u.uid,u.mobile from app_bill_record b left join app_user u on b.userId=u.id
+       	<where>
+       	 1 = 1
+		<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
+		<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
+		<if test="model.currencyType != null and model.currencyType != ''">AND b.currencyType=#{model.currencyType}</if>
+		<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
+		<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
+		<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
+		<if test="model.uuid != null and model.uuid != ''">AND b.uuid=#{model.uuid}</if>
+		<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
+		
+		</where>
+		ORDER BY b.createTime DESC
+		limit #{startRow}, #{pageSize};
+    </select>
+    
+    <select id="findCount" resultType="int">
+    	SELECT count(1) from app_bill_record b left join app_user u on b.userId=u.id
+    	<where>
+       	 1 = 1
+		<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
+		<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
+		<if test="model.currencyType != null and model.currencyType != ''">AND b.currencyType=#{model.currencyType}</if>
+		<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
+		<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
+		<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
+		<if test="model.uuid != null and model.uuid != ''">AND b.uuid=#{model.uuid}</if>
+		<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
+		</where>
+    	
+    </select>
+
+	<select id="findBillRecord" resultType="com.pf.common.vo.app.AppBillRecordVo">
+		SELECT bill.*,user.mobile,user.imgPath,user.nickName from app_bill_record bill left join app_user user on bill.userId=user.id
+		<where>
+			<if test="model.userId != null and model.userId != ''"> AND bill.userId=#{model.userId}</if>
+			<if test="model.currencyType != null and model.currencyType != ''"> AND bill.currencyType=#{model.currencyType}</if>
+			<if test="model.busnessType != null and model.busnessType != ''"> AND bill.busnessType=#{model.busnessType}</if>
+		</where>
+		order by bill.createTime desc
+	</select>
+</mapper>
+
+

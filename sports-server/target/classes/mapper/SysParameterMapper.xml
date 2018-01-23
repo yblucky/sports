@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pf.server.mapper.SysParameterMapper">
+
+    <sql id="fields">
+    	paraName,paraCnName,paraValue,createTime,updateTime,remark,state,groupType
+    </sql>
+
+    <sql id="fields_id">
+        id,
+        <include refid="fields"/>
+    </sql>
+
+    <sql id="table_name">sys_parameter</sql>
+
+    <sql id="selector">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+    </sql>
+
+    <sql id="condition">
+        <where>
+        	1=1
+            <if test="model.paraName != null and model.paraName != ''">and paraName=#{model.paraName}</if>
+            <if test="model.paraCnName != null and model.paraCnName != ''">and paraCnName=#{model.paraCnName}</if>
+            <if test="model.paraValue != null and model.paraValue != ''">and  paraValue=#{model.paraValue}</if>
+            <if test="model.createTime != null and model.createTime != ''">and  createTime=#{model.createTime}</if>
+            <if test="model.updateTime != null and model.updateTime != ''">and  updateTime=#{model.updateTime}</if>
+            <if test="model.state != null and model.state != ''">and state=#{model.state}</if>
+            <if test="model.groupType != null and model.groupType != ''">and groupType=#{model.groupType}</if>
+        </where>
+    </sql>
+	
+    <select id="readById" resultType="com.pf.common.vo.pc.SysParameterVo">
+        <include refid="selector"/>
+        where id=#{id} limit 1;
+    </select>
+
+    <select id="findUserByCondition" resultType="com.pf.common.vo.pc.SysParameterVo">
+        <include refid="selector"/>
+        <include refid="condition"/>
+        limit 1;
+    </select>
+
+    <select id="readList" resultType="com.pf.common.vo.pc.SysParameterVo">
+        <include refid="selector"/>
+        <include refid="condition"/>
+        ORDER BY createTime DESC
+        limit #{startRow}, #{pageSize};
+    </select>
+	
+	<select id="getInfoByTime" resultType="com.pf.common.vo.pc.SysParameterVo">
+        SELECT  * from sys_parameter 
+		WHERE 1=1
+		<if test="model.paraName != null and model.paraName != ''">and paraName LIKE '%${model.paraName}%' or paraCnName LIKE '%${model.paraName}%' </if>
+		<if test="model.paraValue != null and model.paraValue != ''">and paraValue LIKE '%${model.paraValue}%'</if>
+		<if test="model.state != null and model.state != ''">and  state=#{model.state}</if>
+		<if test="model.groupType != null and model.groupType != ''">and  groupType=#{model.groupType}</if>
+		<!-- <if test="model.createTime != null">
+		    AND createTime&gt;=#{model.createTime} 
+		</if>
+		<if test="model.endTime != null">
+		    AND endTime&lt;#{model.endTime} 
+		</if> -->
+		ORDER BY createTime DESC
+		limit #{startRow}, #{pageSize};
+    </select>
+</mapper>
+
+
