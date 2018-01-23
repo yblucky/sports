@@ -52,6 +52,22 @@
 		</where>
     	
     </select>
+    
+    <select id="findSUM" resultType="BigDecimal">
+    	SELECT ifnull(SUM(amount),0) from app_withdraw 
+    	<where>
+       	 1 = 1
+		<if test="model.id != null and model.id != ''">AND id=#{model.id}</if>
+		<if test="model.state != null and model.state != ''">AND state=#{model.state}</if>
+		
+		<if test="model.startTime != null">AND createTime&gt;=#{model.startTime}</if>
+		<if test="model.endTime != null">AND createTime&lt;#{model.endTime}</if>
+		</where>
+    	
+    </select>
+    
+    
+    
 
     
 </mapper>

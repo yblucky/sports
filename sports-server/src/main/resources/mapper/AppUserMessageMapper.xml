@@ -30,25 +30,25 @@
         </where>
     </sql>
 	
-    <select id="readById" resultType="com.pf.common.vo.pc.AppUserMessageVo">
+    <select id="readById" resultType="com.xlf.common.vo.pc.AppUserMessageVo">
         <include refid="selector"/>
         where id=#{id} limit 1;
     </select>
 
-    <select id="findUserByCondition" resultType="com.pf.common.vo.pc.AppUserMessageVo">
+    <select id="findUserByCondition" resultType="com.xlf.common.vo.pc.AppUserMessageVo">
         <include refid="selector"/>
         <include refid="condition"/>
         limit 1;
     </select>
 
-    <select id="readList" resultType="com.pf.common.vo.pc.AppUserMessageVo">
+    <select id="readList" resultType="com.xlf.common.vo.pc.AppUserMessageVo">
         <include refid="selector"/>
         <include refid="condition"/>
         ORDER BY createTime DESC
         limit #{startRow}, #{pageSize};
     </select>
 	
-	<select id="getInfoByTime" resultType="com.pf.common.vo.pc.AppUserMessageVo">
+	<select id="getInfoByTime" resultType="com.xlf.common.vo.pc.AppUserMessageVo">
         SELECT  m.* ,u.uid from app_user_message m inner join app_user u on u.id  = m.userId
 		WHERE 1=1  
 		<if test="model.title != null and model.title != ''">and m.title LIKE '%${model.title}%'</if>

@@ -20,7 +20,7 @@
         <include refid="table_name"/>
     </sql>
 	
-	<select id="order" resultType="com.pf.common.vo.pc.AppTransactionRecordVo">
+	<select id="order" resultType="com.xlf.common.vo.pc.AppTransactionRecordVo">
 		SELECT t.*,ju.uid AS payuid,ju.mobile AS paymobile FROM (
 		SELECT r.id,r.transactionId,r.payeeId,r.payeeNike,r.payeeBalance,r.payId,r.payNoke,r.payBalance,r.amount,r.createTime,r.transactionType,fu.uid AS payeeuid,fu.mobile AS payeemobile 
 		FROM app_transaction_record r LEFT JOIN app_user fu ON r.payeeId=fu.id) t 

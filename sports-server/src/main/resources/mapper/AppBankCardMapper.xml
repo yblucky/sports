@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.pf.server.mapper.AppBankCardMapper">
+<mapper namespace="com.xlf.server.mapper.AppBankCardMapper">
 
     <sql id="fields">
         userId,name,bankTypeId,bankCard,branch,defaultState
@@ -31,18 +31,18 @@
         </where>
     </sql>
 	
-    <select id="readById" resultType="com.pf.common.po.AppBankCardPo">
+    <select id="readById" resultType="com.xlf.common.po.AppBankCardPo">
         <include refid="selector"/>
         where id=#{id} limit 1;
     </select>
 
-    <select id="findUserByCondition" resultType="com.pf.common.po.AppBankCardPo">
+    <select id="findUserByCondition" resultType="com.xlf.common.po.AppBankCardPo">
         <include refid="selector"/>
         <include refid="condition"/>
         limit 1;
     </select>
     
-    <select id="getByIds" resultType="com.pf.common.po.AppBankCardPo">
+    <select id="getByIds" resultType="com.xlf.common.po.AppBankCardPo">
         <include refid="selector"/>
         <if test="ids != null">
 	        where relationId in
@@ -52,7 +52,7 @@
 		</if>
     </select>
    
-   <select id="getPoList" resultType="com.pf.common.vo.pc.AppBankCardVo">
+   <select id="getPoList" resultType="com.xlf.common.vo.pc.AppBankCardVo">
    		SELECT b.*,t.bankName,u.uid,u.mobile FROM  `app_bank_card` b LEFT JOIN `app_bank_type` t ON b.`bankTypeId`=t.`id` LEFT JOIN `app_user` u ON b.userId=u.id 
    		WHERE 1=1
    		<if test="model.uid != null and model.uid != ''"> AND u.uid=#{model.uid}</if>

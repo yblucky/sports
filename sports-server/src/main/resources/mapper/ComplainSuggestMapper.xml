@@ -47,7 +47,7 @@
         limit #{startRow}, #{pageSize};
     </select> -->
 	
-	<select id="getInfoByTime" resultType="com.pf.common.vo.pc.UseComplainSuggestVo">
+	<select id="getInfoByTime" resultType="com.xlf.common.vo.pc.UseComplainSuggestVo">
         SELECT s.id,s.userId,s.content,s.createTime,u.uid,u.mobile,u.nickName,u.name AS userName FROM `use_complain_suggest` s LEFT JOIN `app_user` u ON s.userId=u.id 
 		WHERE 1=1
 		<if test="model.uid != null and model.uid != ''"> AND u.uid=#{model.uid}</if>

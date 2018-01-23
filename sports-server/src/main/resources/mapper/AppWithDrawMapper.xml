@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.pf.server.mapper.AppWithDrawMapper">
+<mapper namespace="com.xlf.server.mapper.AppWithDrawMapper">
 
 
     <sql id="fields">
@@ -22,7 +22,7 @@
     </sql>
     
     
-    <select id="findAll" resultType="com.pf.common.vo.pc.AppWithDrawVo">
+    <select id="findAll" resultType="com.xlf.common.vo.pc.AppWithDrawVo">
        	SELECT w.*,u.uid,u.mobile,c.name,c.bankCard,c.branch from app_withdraw w left join app_user u on w.userId=u.id  left join app_bank_card c on   w.bankCardId = c.id
        	<where>
        	 1 = 1

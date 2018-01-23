@@ -154,6 +154,21 @@
     </select>
     
     
+    <select id="homeSUM" resultType="com.pf.common.vo.pc.HomeUser">
+    	select ifnull(SUM(epBalance),0) as epBalance,ifnull(SUM(birdScore),0) as birdScore,ifnull(SUM(assets),0) as assets,ifnull(count(1),0) as userCount from app_user
+    </select>
+    
+    
+    <select id="SUMCount" resultType ="int">
+		select ifnull(count(1),0) from  app_user 
+		<where>
+       	 1 = 1
+		<if test="model.state != null and model.state !=''">and state= #{model.state}</if>
+		<if test="model.createTime != null">AND createTime&gt;=#{model.createTime}</if>
+		</where>
+	</select>
+    
+    
     
 
 </mapper>

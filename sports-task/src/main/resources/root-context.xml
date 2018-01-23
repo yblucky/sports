@@ -27,7 +27,7 @@
 
     <!-- 拦截器 -->
     <mvc:interceptors>
-        <bean class="com.pf.server.interceptor.LoginAuthInterceptor"/>
+        <bean class="com.xlf.server.interceptor.LoginAuthInterceptor"/>
     </mvc:interceptors>
 
     <!-- 加载配置文件 -->
@@ -51,7 +51,7 @@
 
 
     <!-- 短信工具类(包含国际短信) -->
-    <bean id="newSmsUtil" class="com.pf.common.util.NewSmsUtil">
+    <bean id="newSmsUtil" class="com.xlf.common.util.NewSmsUtil">
         <property name="cn_sn" value="${sms.cn_sn}"/>
         <property name="cn_password" value="${sms.cn_password}"/>
         <property name="ext" value="${sms.ext}"/>
@@ -62,7 +62,7 @@
         <property name="outTime" value="${sms.outTime}"/>
     </bean>
     <!-- scp工具类 -->
-    <bean id="scpUtil" class="com.pf.common.util.ScpUtil">
+    <bean id="scpUtil" class="com.xlf.common.util.ScpUtil">
         <property name="ip" value="${scp.ip}"/>
         <property name="port" value="${scp.port}"/>
         <property name="userName" value="${scp.userName}"/>
@@ -74,7 +74,7 @@
     <!-- mapper -->
     <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.pf.server.mapper"/>
-        <property name="markerInterface" value="com.pf.server.base.BaseMapper"/>
+        <property name="markerInterface" value="com.xlf.server.base.BaseMapper"/>
         <property name="properties">
             <value>
                 style=uppercase
@@ -83,7 +83,7 @@
     </bean>
 
     <!-- 分页拦截器 -->
-    <bean name="paginationInterceptor" class="com.pf.server.interceptor.PageInterceptor"></bean>
+    <bean name="paginationInterceptor" class="com.xlf.server.interceptor.PageInterceptor"></bean>
 
     <!-- 配置sqlSessionFactory -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

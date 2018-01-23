@@ -35,7 +35,7 @@
 		<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
 		<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 		<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
-		<if test="model.uuid != null and model.uuid != ''">AND b.uuid=#{model.uuid}</if>
+		
 		<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
 		
 		</where>
@@ -53,10 +53,9 @@
 		<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
 		<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 		<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
-		<if test="model.uuid != null and model.uuid != ''">AND b.uuid=#{model.uuid}</if>
+		
 		<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
 		</where>
-    	
     </select>
 
 	<select id="findBillRecord" resultType="com.pf.common.vo.app.AppBillRecordVo">
@@ -67,6 +66,35 @@
 			<if test="model.busnessType != null and model.busnessType != ''"> AND bill.busnessType=#{model.busnessType}</if>
 		</where>
 		order by bill.createTime desc
+	</select>
+
+    <select id="billRecordListTotal" resultType="Integer">
+        SELECT count(1) from app_bill_record b left join app_user u on b.userId=u.id where userId=#{userId} and currencyType=#{currencyType}
+        and busnessType IN
+        <foreach collection="list" open="(" close=")" item="item" separator="," index="index">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findBillRecordList" resultType="com.pf.common.vo.app.AppBillRecordVo">
+        SELECT bill.*,user.mobile,user.imgPath,user.nickName from app_bill_record bill left join app_user user on bill.userId=user.id
+        where userId=#{userId} and currencyType=#{currencyType}
+        and busnessType IN
+        <foreach collection="list" open="(" close=")" item="item" separator="," index="index">
+            #{item}
+        </foreach>
+        order by bill.createTime desc
+    </select>
+
+
+	<select id="SUMCount" resultType ="BigDecimal">
+		select ifnull(SUM(balance),0) from  app_bill_record
+		<where>
+       	 1 = 1
+       	 <if test="model.currencyType != null and model.currencyType != ''">AND currencyType=#{model.currencyType}</if>
+		<if test="model.busnessType != null and model.busnessType != ''">AND busnessType=#{model.busnessType}</if>
+		<if test="model.startTime != null">AND createTime&gt;=#{model.startTime}</if>
+		</where>
 	</select>
 </mapper>
 

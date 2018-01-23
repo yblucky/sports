@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.pf.server.mapper.AppBillRecordMapper">
+<mapper namespace="com.xlf.server.mapper.AppBillRecordMapper">
 
     <sql id="fields_id">
         id,userId,balance,currencyType,busnessType,createTime,businessNumber,remark,beforeBalance,afterBalance,extend
@@ -25,7 +25,7 @@
 
   
     
-    <select id="findAll" resultType="com.pf.common.vo.pc.AppBillRecordVo1">
+    <select id="findAll" resultType="com.xlf.common.vo.pc.AppBillRecordVo1">
        	SELECT b.*,u.uid,u.mobile from app_bill_record b left join app_user u on b.userId=u.id
        	<where>
        	 1 = 1
@@ -58,7 +58,7 @@
 		</where>
     </select>
 
-	<select id="findBillRecord" resultType="com.pf.common.vo.app.AppBillRecordVo">
+	<select id="findBillRecord" resultType="com.xlf.common.vo.app.AppBillRecordVo">
 		SELECT bill.*,user.mobile,user.imgPath,user.nickName from app_bill_record bill left join app_user user on bill.userId=user.id
 		<where>
 			<if test="model.userId != null and model.userId != ''"> AND bill.userId=#{model.userId}</if>
@@ -76,7 +76,7 @@
         </foreach>
     </select>
 
-    <select id="findBillRecordList" resultType="com.pf.common.vo.app.AppBillRecordVo">
+    <select id="findBillRecordList" resultType="com.xlf.common.vo.app.AppBillRecordVo">
         SELECT bill.*,user.mobile,user.imgPath,user.nickName from app_bill_record bill left join app_user user on bill.userId=user.id
         where userId=#{userId} and currencyType=#{currencyType}
         and busnessType IN

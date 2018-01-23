@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.pf.server.mapper.SysParameterMapper">
+<mapper namespace="com.xlf.server.mapper.SysParameterMapper">
 
     <sql id="fields">
     	paraName,paraCnName,paraValue,createTime,updateTime,remark,state,groupType
@@ -33,25 +33,25 @@
         </where>
     </sql>
 	
-    <select id="readById" resultType="com.pf.common.vo.pc.SysParameterVo">
+    <select id="readById" resultType="com.xlf.common.vo.pc.SysParameterVo">
         <include refid="selector"/>
         where id=#{id} limit 1;
     </select>
 
-    <select id="findUserByCondition" resultType="com.pf.common.vo.pc.SysParameterVo">
+    <select id="findUserByCondition" resultType="com.xlf.common.vo.pc.SysParameterVo">
         <include refid="selector"/>
         <include refid="condition"/>
         limit 1;
     </select>
 
-    <select id="readList" resultType="com.pf.common.vo.pc.SysParameterVo">
+    <select id="readList" resultType="com.xlf.common.vo.pc.SysParameterVo">
         <include refid="selector"/>
         <include refid="condition"/>
         ORDER BY createTime DESC
         limit #{startRow}, #{pageSize};
     </select>
 	
-	<select id="getInfoByTime" resultType="com.pf.common.vo.pc.SysParameterVo">
+	<select id="getInfoByTime" resultType="com.xlf.common.vo.pc.SysParameterVo">
         SELECT  * from sys_parameter 
 		WHERE 1=1
 		<if test="model.paraName != null and model.paraName != ''">and paraName LIKE '%${model.paraName}%' or paraCnName LIKE '%${model.paraName}%' </if>
