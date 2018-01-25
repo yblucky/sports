@@ -53,7 +53,6 @@ public class AppBillRecordVo extends AppBillRecordPo {
     public void setBusnessType(Integer busnessType) {
         super.setBusnessType(busnessType);
         this.setBusnessTypeName(BusnessTypeEnum.getName(busnessType));
-        this.setBusnessTypeEgName(BusnessTypeEnum.getEgName(String.valueOf(busnessType)));
     }
 
     public String getMobile() {

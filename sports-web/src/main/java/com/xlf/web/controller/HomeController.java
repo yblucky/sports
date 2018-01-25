@@ -89,7 +89,6 @@ public class HomeController {
 			//E资产释放
 			AppBillRecordVo1 vo2 = new AppBillRecordVo1();
 			vo2.setBusnessType(18);
-			vo2.setCurrencyType(20);
 			vo2.setStartTime(getStarttime(new Date().getTime()));
 			BigDecimal epRelease = webBillRecordService.SUMCount(vo2);
 			result.put("epRelease",epRelease.abs());
@@ -113,7 +112,6 @@ public class HomeController {
 			//今日ep释放记录
 			AppBillRecordVo1 vo5 = new AppBillRecordVo1();
 			vo5.setBusnessType(18);
-			vo5.setCurrencyType(20);
 			vo5.setStartTime(getStarttime(new Date().getTime()));
 			result.put("todayEpReleaseCount",webBillRecordService.findCount(vo5));
 			
@@ -159,7 +157,6 @@ public class HomeController {
 			
 			AppBillRecordVo1 appbillRecordVo3 = new AppBillRecordVo1();
 			appbillRecordVo3.setBusnessType(18);
-			appbillRecordVo3.setCurrencyType(20);
 			BigDecimal epReleaseAll = webBillRecordService.SUMCount(appbillRecordVo3);
 			
 			result.put("epReleaseAll",epReleaseAll.abs());

@@ -34,7 +34,7 @@ public class AppBankCardPo {
     /**
      * 是否删除
      */
-    private String state;
+    private Integer state;
     /**
      * 是否默认
      */
@@ -101,11 +101,11 @@ public class AppBankCardPo {
         this.bankTypeId = bankTypeId;
     }
 
-    public String getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 }
