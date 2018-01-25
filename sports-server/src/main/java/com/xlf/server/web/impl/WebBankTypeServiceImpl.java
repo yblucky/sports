@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.xlf.server.mapper.AppBankTypeMapper;
-import com.xlf.server.web.BankTypeService;
+import com.xlf.server.web.WebBankTypeService;
 import org.springframework.stereotype.Service;
 
 import com.xlf.common.po.AppBankTypePo;
@@ -17,7 +17,7 @@ import com.xlf.common.po.AppBankTypePo;
  * @date 2017年6月14日
  */
 @Service
-public class BankTypeServiceImpl implements BankTypeService {
+public class WebBankTypeServiceImpl implements WebBankTypeService {
 	@Resource
 	public AppBankTypeMapper appBankTypeMapper;
 

@@ -12,7 +12,7 @@ import com.xlf.common.vo.pc.AppBankCardVo;
  * @version v1.0
  * @date 2017年6月14日
  */
-public interface BankCardService {
+public interface WebBankCardService {
 
 	List<AppBankCardVo> getPoList(AppBankCardVo vo,Paging paging);
 

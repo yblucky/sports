@@ -10,8 +10,8 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.AppWithDrawVo;
-import com.xlf.server.web.AppUserService;
-import com.xlf.server.web.AppWithDrawService;
+import com.xlf.server.web.WebUserService;
+import com.xlf.server.web.WebWithDrawService;
 import com.xlf.server.web.WebBillRecordService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +22,10 @@ import java.util.List;
 @RequestMapping(value = "/appWithDraw")
 public class AppWithDrawController {
     @Resource
-    private AppWithDrawService appWithDrawService;
+    private WebWithDrawService webWithDrawService;
 
     @Resource
-    private AppUserService appUserService;
+    private WebUserService appUserService;
     @Resource
     private WebBillRecordService webBillRecordService;
 
@@ -34,13 +34,13 @@ public class AppWithDrawController {
         RespBody respBody = new RespBody();
         try {
             //保存返回数据
-            List<AppWithDrawVo> list = appWithDrawService.findAll(vo, paging);
+            List<AppWithDrawVo> list = webWithDrawService.findAll(vo, paging);
             for (AppWithDrawVo vo1 : list) {
                 vo1.setTypeName(WithDrawEnum.getName(vo1.getState()));
             }
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有提现记录数据成功", list);
             //保存分页对象
-            paging.setTotalCount(appWithDrawService.findCount(vo));
+            paging.setTotalCount(webWithDrawService.findCount(vo));
             respBody.setPage(paging);
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "查找所有提现记录数据失败");
@@ -58,7 +58,7 @@ public class AppWithDrawController {
 
 
             po.setState(20);
-            appWithDrawService.update(po);
+            webWithDrawService.update(po);
             /**
              * 修改用户冻结资金（冻结资金-提现金额）
              */
@@ -83,7 +83,7 @@ public class AppWithDrawController {
 
 
             po.setState(30);
-            appWithDrawService.update(po);
+            webWithDrawService.update(po);
             /**
              * 修改用户冻结资金（冻结资金 = 冻结资金-提现金额   用户ep余额 = 用户ep余额 +提现金额 ）
              */

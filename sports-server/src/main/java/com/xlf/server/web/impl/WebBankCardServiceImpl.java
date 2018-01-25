@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.xlf.server.mapper.AppBankCardMapper;
-import com.xlf.server.web.BankCardService;
+import com.xlf.server.web.WebBankCardService;
 import org.springframework.stereotype.Service;
 
 import com.xlf.common.resp.Paging;
@@ -19,7 +19,7 @@ import com.xlf.common.vo.pc.AppBankCardVo;
  * @date 2017年6月14日
  */
 @Service
-public class BankCardServiceImpl implements BankCardService {
+public class WebBankCardServiceImpl implements WebBankCardService {
 	@Resource
 	public AppBankCardMapper appBankCardMapper;
 

@@ -23,7 +23,7 @@ import com.xlf.common.vo.pc.StatisticsVo;
  * @version v1.0
  * @date 2017年6月12日
  */
-public interface AppUserService {
+public interface WebUserService {
 
     /**
      * 根据用户id查询用户

@@ -18,7 +18,7 @@ import com.xlf.common.util.CryptUtils;
 import com.xlf.common.vo.pc.HomeUser;
 import com.xlf.common.vo.pc.StatisticsVo;
 import com.xlf.server.mapper.AppUserMapper;
-import com.xlf.server.web.AppUserService;
+import com.xlf.server.web.WebUserService;
 
 /**
  * 用户业务层实现类
@@ -28,7 +28,7 @@ import com.xlf.server.web.AppUserService;
  * @date 2017年6月12日
  */
 @Service("webAppUserService")
-public class AppUserServiceImpl implements AppUserService {
+public class WebUserServiceImpl implements WebUserService {
     @Resource
     private AppUserMapper appUserMapper;
     @Resource

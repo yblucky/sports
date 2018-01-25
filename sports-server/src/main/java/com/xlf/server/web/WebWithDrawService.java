@@ -8,7 +8,7 @@ import com.xlf.common.resp.Paging;
 
 import com.xlf.common.vo.pc.AppWithDrawVo;
 
-public interface AppWithDrawService {
+public interface WebWithDrawService {
 	
 	 public List<AppWithDrawVo> findAll(AppWithDrawVo vo,Paging paging);
 		

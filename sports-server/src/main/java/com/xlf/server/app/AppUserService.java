@@ -73,15 +73,6 @@ public interface AppUserService {
 
 
     /**
-     * 激活用户
-     * @param userPo
-     * @param vo
-     * @return
-     * @throws Exception
-     */
-    public Boolean active(AppUserPo userPo,ActiveVo vo) throws Exception;
-
-    /**
      * 删除用户
      */
     public int delUser(String userId) throws Exception;

@@ -36,9 +36,7 @@ public class UserController {
     @Resource
     private CommonService commonService;
     @Resource
-    private LanguageUtil msgUtil;
-    @Resource
-    private HttpServletRequest request;
+    private LanguageUtil msgUtil; 
 
     @PostMapping("/register")
     @SystemControllerLog(description = "用户注册")

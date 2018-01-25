@@ -20,8 +20,8 @@ import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.AppBillRecordVo1;
 import com.xlf.common.vo.pc.AppWithDrawVo;
-import com.xlf.server.web.AppUserService;
-import com.xlf.server.web.AppWithDrawService;
+import com.xlf.server.web.WebUserService;
+import com.xlf.server.web.WebWithDrawService;
 import com.xlf.server.web.WebBillRecordService;
 
 /**
@@ -41,9 +41,9 @@ public class HomeController {
 	private WebBillRecordService webBillRecordService;
 	
 	@Resource
-	private AppWithDrawService appWithDrawService;
+	private WebWithDrawService webWithDrawService;
 	@Resource
-	private AppUserService appUserService;
+	private WebUserService appUserService;
 	/**
 	 * 首页记录
 	 * @param vo
@@ -135,11 +135,11 @@ public class HomeController {
 			appWithDrawVo.setState(10);
 			//appWithDrawVo.setStartTime(getStarttime(new Date().getTime()));
 			
-			result.put("appWidthDraw",appWithDrawService.findCount(appWithDrawVo));
+			result.put("appWidthDraw", webWithDrawService.findCount(appWithDrawVo));
 			
 			//提现总数
 			appWithDrawVo.setState(20);
-			result.put("appWidthDrawSUM",appWithDrawService.findSUM(appWithDrawVo));
+			result.put("appWidthDrawSUM", webWithDrawService.findSUM(appWithDrawVo));
 			
 			//用户统计（ep,候鸟积分，e资产，用户数量）
 			result.put("homeSUM",appUserService.homeSUM());

@@ -18,8 +18,8 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.AppBankCardVo;
-import com.xlf.server.web.BankCardService;
-import com.xlf.server.web.BankTypeService;
+import com.xlf.server.web.WebBankCardService;
+import com.xlf.server.web.WebBankTypeService;
 
 /**
  * 银行卡控制器
@@ -31,9 +31,9 @@ import com.xlf.server.web.BankTypeService;
 @RequestMapping(value = "/bankcard")
 public class BankCardController {
 	@Resource
-	private BankCardService bankCardService;
+	private WebBankCardService bankCardService;
 	@Resource
-	private BankTypeService bankTypeService;
+	private WebBankTypeService bankTypeService;
 	
 	/**
 	 * 加载银行卡类型

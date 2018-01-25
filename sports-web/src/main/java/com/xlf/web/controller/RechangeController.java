@@ -9,7 +9,7 @@ import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.AppBillRecordVo1;
 import com.xlf.common.vo.pc.RechangeVo;
-import com.xlf.server.web.AppUserService;
+import com.xlf.server.web.WebUserService;
 import com.xlf.server.web.WebBillRecordService;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +32,7 @@ public class RechangeController {
     private WebBillRecordService webBillRecordService;
 
     @Resource
-    private AppUserService appUserService;
+    private WebUserService appUserService;
 
 
     /**

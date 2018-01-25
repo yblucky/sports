@@ -11,11 +11,11 @@ import com.xlf.common.po.AppWithDrawPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.pc.AppWithDrawVo;
 import com.xlf.server.mapper.AppWithDrawMapper;
-import com.xlf.server.web.AppWithDrawService;
+import com.xlf.server.web.WebWithDrawService;
 
 
 @Service("appWithDraw")
-public class AppWithDrawServiceImpl implements AppWithDrawService {
+public class WebWithDrawServiceImpl implements WebWithDrawService {
 	
 	
 	@Resource

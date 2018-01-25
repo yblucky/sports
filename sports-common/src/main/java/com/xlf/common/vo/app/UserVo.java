@@ -22,6 +22,10 @@ public class UserVo {
      */
     private String mobile;
     /**
+     * '邀请人手机号
+     */
+    private String inviteMobile;
+    /**
      * '昵称'
      */
     private String nickName;
@@ -46,25 +50,16 @@ public class UserVo {
      */
     private String payStal;
     /**
-     * 'eq余额'
+     * 'e余额'
      */
-    private BigDecimal epBalance;
+    private BigDecimal balance;
     /**
      * '冻结ep余额'
      */
-    private BigDecimal blockedEpBalance;
+    private BigDecimal blockedBalance;
     /**
-     * '候鸟积分'
-     */
-    private BigDecimal birdScore;
-    /**
-     * 'e资产'
-     */
-    private BigDecimal assets;
-    /**
-     * 10 -未激活
-     * 20 - 正常
-     * 30 - 已禁用
+     * 10 -正常
+     * 20 - 已禁用
      **/
     private String state;
 
@@ -76,15 +71,6 @@ public class UserVo {
      * 手机验证码
      */
     private String smsCode;
-
-    /**
-     * 国家代码
-     */
-    private String areaNum;
-    /**
-     * 接点人层级
-     */
-    private Integer contactLevel;
     /**
      * 图片验证码
      */
@@ -94,38 +80,6 @@ public class UserVo {
      * 图片验证码的值
      */
     private String imgKeyValue;
-    /**
-     * 主键编号
-     */
-    private String contactId;
-    /**
-     * 'A区业绩'
-     */
-    private BigDecimal performanceA;
-    /**
-     * 'B区业绩'
-     */
-    private BigDecimal performanceB;
-    /**
-     * '上级编号'
-     */
-    private String parentId;
-    /**
-     * '层级'
-     */
-    private Integer level;
-    /**
-     * '候鸟积分转账'
-     */
-    private Integer isAllowed;
-    /**
-     * '激活次数'
-     */
-    private Integer activeNo;
-    /**
-     * 所在分区
-     */
-    private String currentArea;
 
     public String getId() {
         return id;
@@ -199,44 +153,20 @@ public class UserVo {
         this.payStal = payStal;
     }
 
-    public String getParentId() {
-        return parentId;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
-    public BigDecimal getEpBalance() {
-        return epBalance;
+    public BigDecimal getBlockedBalance() {
+        return blockedBalance;
     }
 
-    public void setEpBalance(BigDecimal epBalance) {
-        this.epBalance = epBalance;
-    }
-
-    public BigDecimal getBlockedEpBalance() {
-        return blockedEpBalance;
-    }
-
-    public void setBlockedEpBalance(BigDecimal blockedEpBalance) {
-        this.blockedEpBalance = blockedEpBalance;
-    }
-
-    public BigDecimal getBirdScore() {
-        return birdScore;
-    }
-
-    public void setBirdScore(BigDecimal birdScore) {
-        this.birdScore = birdScore;
-    }
-
-    public BigDecimal getAssets() {
-        return assets;
-    }
-
-    public void setAssets(BigDecimal assets) {
-        this.assets = assets;
+    public void setBlockedBalance(BigDecimal blockedBalance) {
+        this.blockedBalance = blockedBalance;
     }
 
     public String getState() {
@@ -245,14 +175,6 @@ public class UserVo {
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
     }
 
     public String getImgPath() {
@@ -271,38 +193,6 @@ public class UserVo {
         this.smsCode = smsCode;
     }
 
-    public String getAreaNum() {
-        return areaNum;
-    }
-
-    public void setAreaNum(String areaNum) {
-        this.areaNum = areaNum;
-    }
-
-    public String getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
-    }
-
-    public String getCurrentArea() {
-        return currentArea;
-    }
-
-    public void setCurrentArea(String currentArea) {
-        this.currentArea = currentArea;
-    }
-
-    public Integer getContactLevel() {
-        return contactLevel;
-    }
-
-    public void setContactLevel(Integer contactLevel) {
-        this.contactLevel = contactLevel;
-    }
-
     public String getImgKey() {
         return imgKey;
     }
@@ -319,35 +209,11 @@ public class UserVo {
         this.imgKeyValue = imgKeyValue;
     }
 
-    public BigDecimal getPerformanceA() {
-        return performanceA;
+    public String getInviteMobile() {
+        return inviteMobile;
     }
 
-    public void setPerformanceA(BigDecimal performanceA) {
-        this.performanceA = performanceA;
-    }
-
-    public BigDecimal getPerformanceB() {
-        return performanceB;
-    }
-
-    public void setPerformanceB(BigDecimal performanceB) {
-        this.performanceB = performanceB;
-    }
-
-    public Integer getIsAllowed() {
-        return isAllowed;
-    }
-
-    public void setIsAllowed(Integer isAllowed) {
-        this.isAllowed = isAllowed;
-    }
-
-    public Integer getActiveNo() {
-        return activeNo;
-    }
-
-    public void setActiveNo(Integer activeNo) {
-        this.activeNo = activeNo;
+    public void setInviteMobile(String inviteMobile) {
+        this.inviteMobile = inviteMobile;
     }
 }

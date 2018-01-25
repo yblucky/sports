@@ -10,6 +10,6 @@ import com.xlf.common.po.AppBankTypePo;
  * @version v1.0
  * @date 2017年6月14日
  */
-public interface BankTypeService {
+public interface WebBankTypeService {
 	List<AppBankTypePo> getall();
 }

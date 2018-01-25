@@ -16,8 +16,8 @@ import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.app.BankCardVo;
 import com.xlf.server.mapper.AppBillRecordMapper;
-import com.xlf.server.web.AppUserService;
-import com.xlf.server.web.BankCardService;
+import com.xlf.server.web.WebUserService;
+import com.xlf.server.web.WebBankCardService;
 import com.xlf.server.web.LoginService;
 import com.xlf.server.web.WebBillRecordService;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +36,7 @@ import javax.annotation.Resource;
 @RequestMapping(value = "/appUser")
 public class AppUserController {
     @Resource
-    private AppUserService webAppUserService;
+    private WebUserService webAppUserService;
     @Resource
     private RedisService redisService;
     @Resource(name = "webLogin")
@@ -44,7 +44,7 @@ public class AppUserController {
     @Resource
     private AppBillRecordMapper appBillRecordMapper;
     @Resource
-    private BankCardService bankCardService;
+    private WebBankCardService bankCardService;
 
     @Resource
     private WebBillRecordService webBillRecordService;

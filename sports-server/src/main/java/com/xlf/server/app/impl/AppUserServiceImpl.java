@@ -109,7 +109,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         appUserPo.setMobile(userVo.getMobile());
         appUserPo.setNickName(userVo.getNickName());
-        appUserPo.setParentId(userVo.getParentId());
+//        appUserPo.setParentId(userVo.getParentId());
         appUserPo.setLoginPwd(loginPw);
         appUserPo.setPayPwd(payPwd);
         appUserPo.setPwdStal(pwdStal);
@@ -183,27 +183,6 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserMapper.updateById(userPo, userId);
     }
 
-    @Override
-    @Transactional
-    public Boolean active(AppUserPo userPo, ActiveVo vo) throws Exception {
-        Integer count = appUserMapper.updateActiveNoById(userPo.getId(), -1);
-        if (count == null || count < 1) {
-            throw new CommException(msgUtil.getMsg(AppMessage.ACTIVENO_NOT_ENOUGH, "激活次数不够"));
-        }
-        AppUserPo activeUserPo=this.findUserById(vo.getActiveUserId());
-        if (activeUserPo==null){
-            throw new CommException(msgUtil.getMsg(AppMessage.USER_INVALID, "用户信息异常"));
-        }
-        String uuid = ToolUtils.getUUID();
-        appUserMapper.updateUserStateById(vo.getActiveUserId(), StateEnum.NORMAL.getCode());
-//        billRecordService.saveBillRecord(uuid, userPo.getId(), BusnessTypeEnum.ACCOUNT_ACTIVE.getCode(), CurrencyTypeEnum.ACTIVATION_TIMES.getCode(), new BigDecimal("-1"), new BigDecimal(userPo.getActiveNo()), new BigDecimal((userPo.getActiveNo() - 1)), "为" + vo.getMobile()+"【"+activeUserPo.getUid()+"】" + "激活账号",vo.getMobile());
-        String activeAddE = commonService.findParameter("activeAddE");
-
-        appUserMapper.updateAssetsById(new BigDecimal(activeAddE),activeUserPo.getId());
-        BigDecimal activeAddEAmount=new BigDecimal(activeAddE);
-//        billRecordService.saveBillRecord(uuid, activeUserPo.getId(), BusnessTypeEnum.E_ASSET_ACTIVE.getCode(), CurrencyTypeEnum.E_ASSET.getCode(),activeAddEAmount,beforActiveAddEAmount,afterActiveAddEAmount,"激活增加E资产","");
-        return true;
-    }
 
 
 

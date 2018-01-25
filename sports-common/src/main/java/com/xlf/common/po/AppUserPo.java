@@ -66,17 +66,16 @@ public class AppUserPo implements Serializable {
      */
     private String parentId;
     /**
-     * 'eq余额'
+     * '余额'
      */
     private BigDecimal balance;
     /**
-     * '冻结ep余额'
+     * '冻结余额'
      */
     private BigDecimal blockedBalance;
     /**
-     * 10 -未激活
-     * 20 - 正常
-     * 30 - 已禁用
+     * 10 -正常
+     * 20 - 已禁用
      **/
     private Integer state;
     /**
@@ -93,7 +92,7 @@ public class AppUserPo implements Serializable {
     private String imgPath;
 
     /**
-     * 激活次数
+     * 登录密码错误次数
      */
     private Integer errorNo;
     /**
