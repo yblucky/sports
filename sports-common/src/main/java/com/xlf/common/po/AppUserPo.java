@@ -68,19 +68,11 @@ public class AppUserPo implements Serializable {
     /**
      * 'eq余额'
      */
-    private BigDecimal epBalance;
+    private BigDecimal balance;
     /**
      * '冻结ep余额'
      */
-    private BigDecimal blockedEpBalance;
-    /**
-     * '候鸟积分'
-     */
-    private BigDecimal birdScore;
-    /**
-     * 'e资产'
-     */
-    private BigDecimal assets;
+    private BigDecimal blockedBalance;
     /**
      * 10 -未激活
      * 20 - 正常
@@ -96,14 +88,6 @@ public class AppUserPo implements Serializable {
      */
     private Date loginTime;
     /**
-     * '释放时间'
-     */
-    private Date releaseTime;
-    /**
-     * '用户层级'
-     */
-    private Integer level;
-    /**
      * 用户头像
      */
     private String imgPath;
@@ -111,17 +95,24 @@ public class AppUserPo implements Serializable {
     /**
      * 激活次数
      */
-    private Integer activeNo;
-
+    private Integer errorNo;
     /**
-     * 区域代码
+     * '累计投注金额'
      */
-    private String areaNum;
-
+    private BigDecimal bettingAmout;
     /**
-     * 是否允许释放候鸟积分
+     * '当天盈亏：每日凌晨清零'
      */
-    private Integer isAllowed;
+    private BigDecimal currentProfit;
+    /**
+     * '累计中奖金额'
+     */
+    private BigDecimal winingAmout;
+    /**
+     * '历史累计返水衡量值'
+     */
+    private BigDecimal kickBackAmount;
+
 
     public String getId() {
         return id;
@@ -203,36 +194,20 @@ public class AppUserPo implements Serializable {
         this.parentId = parentId;
     }
 
-    public BigDecimal getEpBalance() {
-        return epBalance;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setEpBalance(BigDecimal epBalance) {
-        this.epBalance = epBalance;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
-    public BigDecimal getBlockedEpBalance() {
-        return blockedEpBalance;
+    public BigDecimal getBlockedBalance() {
+        return blockedBalance;
     }
 
-    public void setBlockedEpBalance(BigDecimal blockedEpBalance) {
-        this.blockedEpBalance = blockedEpBalance;
-    }
-
-    public BigDecimal getBirdScore() {
-        return birdScore;
-    }
-
-    public void setBirdScore(BigDecimal birdScore) {
-        this.birdScore = birdScore;
-    }
-
-    public BigDecimal getAssets() {
-        return assets;
-    }
-
-    public void setAssets(BigDecimal assets) {
-        this.assets = assets;
+    public void setBlockedBalance(BigDecimal blockedBalance) {
+        this.blockedBalance = blockedBalance;
     }
 
     public Integer getState() {
@@ -259,22 +234,6 @@ public class AppUserPo implements Serializable {
         this.loginTime = loginTime;
     }
 
-    public Date getReleaseTime() {
-        return releaseTime;
-    }
-
-    public void setReleaseTime(Date releaseTime) {
-        this.releaseTime = releaseTime;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
     public String getImgPath() {
         return imgPath;
     }
@@ -283,27 +242,43 @@ public class AppUserPo implements Serializable {
         this.imgPath = imgPath;
     }
 
-    public Integer getActiveNo() {
-        return activeNo;
+    public Integer getErrorNo() {
+        return errorNo;
     }
 
-    public void setActiveNo(Integer activeNo) {
-        this.activeNo = activeNo;
+    public void setErrorNo(Integer errorNo) {
+        this.errorNo = errorNo;
     }
 
-    public String getAreaNum() {
-        return areaNum;
+    public BigDecimal getBettingAmout() {
+        return bettingAmout;
     }
 
-    public void setAreaNum(String areaNum) {
-        this.areaNum = areaNum;
+    public void setBettingAmout(BigDecimal bettingAmout) {
+        this.bettingAmout = bettingAmout;
     }
 
-    public Integer getIsAllowed() {
-        return isAllowed;
+    public BigDecimal getCurrentProfit() {
+        return currentProfit;
     }
 
-    public void setIsAllowed(Integer isAllowed) {
-        this.isAllowed = isAllowed;
+    public void setCurrentProfit(BigDecimal currentProfit) {
+        this.currentProfit = currentProfit;
+    }
+
+    public BigDecimal getWiningAmout() {
+        return winingAmout;
+    }
+
+    public void setWiningAmout(BigDecimal winingAmout) {
+        this.winingAmout = winingAmout;
+    }
+
+    public BigDecimal getKickBackAmount() {
+        return kickBackAmount;
+    }
+
+    public void setKickBackAmount(BigDecimal kickBackAmount) {
+        this.kickBackAmount = kickBackAmount;
     }
 }
