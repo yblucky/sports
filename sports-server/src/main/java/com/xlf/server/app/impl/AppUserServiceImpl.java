@@ -206,14 +206,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
 
-    @Override
-    public List<UserInfoVo> findUserByContactParentId(String partentId) {
-        List<UserInfoVo> list = appUserMapper.findUserByContactParentId(partentId);
-        if (list == null) {
-            list = Collections.emptyList();
-        }
-        return list;
-    }
 
     @Override
     public UserInfoVo findUserByContactUserId(String userId) {

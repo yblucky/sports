@@ -87,7 +87,6 @@ public interface AppUserService {
     public int delUser(String userId) throws Exception;
 
 
-    public List<UserInfoVo> findUserByContactParentId(String partentId);
 
     public UserInfoVo findUserByContactUserId(String userId);
 
