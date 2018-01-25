@@ -34,7 +34,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping(value = "/appUser")
-public class AppUserController {
+public class WebUserController {
     @Resource
     private WebUserService webAppUserService;
     @Resource

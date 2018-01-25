@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/appWithDraw")
-public class AppWithDrawController {
+public class WebWithDrawController {
     @Resource
     private WebWithDrawService webWithDrawService;
 
