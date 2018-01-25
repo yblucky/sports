@@ -7,7 +7,7 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.pc.AppBillRecordVo1;
+import com.xlf.common.vo.pc.WebBillRecordVo;
 import com.xlf.common.vo.pc.RechangeVo;
 import com.xlf.server.web.WebUserService;
 import com.xlf.server.web.WebBillRecordService;
@@ -43,12 +43,12 @@ public class RechangeController {
      * @return
      */
     @GetMapping("/findAll")
-    public RespBody findAll(AppBillRecordVo1 vo, Paging paging) {
+    public RespBody findAll(WebBillRecordVo vo, Paging paging) {
         RespBody respBody = new RespBody();
         try {
             vo.setBusnessType(11);
             //保存返回数据
-            List<AppBillRecordVo1> list = webBillRecordService.findAll(vo, paging);
+            List<WebBillRecordVo> list = webBillRecordService.findAll(vo, paging);
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "查询记录数据成功", list);
             //保存分页对象
             paging.setTotalCount(webBillRecordService.findCount(vo));

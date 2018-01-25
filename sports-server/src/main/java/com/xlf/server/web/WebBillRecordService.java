@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.resp.Paging;
-import com.xlf.common.vo.pc.AppBillRecordVo1;
+import com.xlf.common.vo.pc.WebBillRecordVo;
 
 
 public interface WebBillRecordService {
-	public List<AppBillRecordVo1> findAll(AppBillRecordVo1 vo,Paging paging);
+	public List<WebBillRecordVo> findAll(WebBillRecordVo vo, Paging paging);
 	
-	public Integer findCount(AppBillRecordVo1 vo);
+	public Integer findCount(WebBillRecordVo vo);
 	
 	public List<String> getCurrencyType();
 	
@@ -19,7 +19,7 @@ public interface WebBillRecordService {
 	
 	public void add(AppBillRecordPo appBillRecordPo) throws Exception;
 	
-	public  BigDecimal SUMCount(AppBillRecordVo1 vo);
+	public  BigDecimal SUMCount(WebBillRecordVo vo);
 	
 
 }

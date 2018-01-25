@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
-import com.xlf.common.vo.pc.AppBillRecordVo1;
+import com.xlf.common.vo.pc.WebBillRecordVo;
 
 @Service
 public class WebBillRecordServiceImpl implements WebBillRecordService {
@@ -23,7 +23,7 @@ public class WebBillRecordServiceImpl implements WebBillRecordService {
     private AppBillRecordMapper appBillRecordMapper;
 	
 	@Override
-	public List<AppBillRecordVo1> findAll(AppBillRecordVo1 vo, Paging paging) {
+	public List<WebBillRecordVo> findAll(WebBillRecordVo vo, Paging paging) {
 		
 		int startRow=0;int pageSize=0;
 		if(null!=paging){
@@ -37,7 +37,7 @@ public class WebBillRecordServiceImpl implements WebBillRecordService {
 	}
 
 	@Override
-	public Integer findCount(AppBillRecordVo1 vo){
+	public Integer findCount(WebBillRecordVo vo){
 		return appBillRecordMapper.findCount(vo);
 		//return null;
 	}
@@ -68,7 +68,7 @@ public class WebBillRecordServiceImpl implements WebBillRecordService {
 	}
 
 	@Override
-	public BigDecimal SUMCount(AppBillRecordVo1 vo) {
+	public BigDecimal SUMCount(WebBillRecordVo vo) {
 		// TODO Auto-generated method stub
 		return appBillRecordMapper.SUMCount(vo);
 	}

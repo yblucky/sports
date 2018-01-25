@@ -18,7 +18,7 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.pc.AppBillRecordVo1;
+import com.xlf.common.vo.pc.WebBillRecordVo;
 import com.xlf.common.vo.pc.AppWithDrawVo;
 import com.xlf.server.web.WebUserService;
 import com.xlf.server.web.WebWithDrawService;
@@ -51,7 +51,7 @@ public class HomeController {
 	 * @return
 	 */
 	@GetMapping("/findAll")
-	public RespBody findAll(AppBillRecordVo1 vo,Paging paging){
+	public RespBody findAll(WebBillRecordVo vo, Paging paging){
 		RespBody respBody = new RespBody();
 		try {
 			Map<String,Object> result=new HashMap<String, Object>();
@@ -87,7 +87,7 @@ public class HomeController {
 			result.put("birdScore",birdScore);
 			
 			//E资产释放
-			AppBillRecordVo1 vo2 = new AppBillRecordVo1();
+			WebBillRecordVo vo2 = new WebBillRecordVo();
 			vo2.setBusnessType(18);
 			vo2.setStartTime(getStarttime(new Date().getTime()));
 			BigDecimal epRelease = webBillRecordService.SUMCount(vo2);
@@ -104,19 +104,19 @@ public class HomeController {
 			
 			
 			//今日ep转账记录
-			AppBillRecordVo1 vo4 = new AppBillRecordVo1();
+			WebBillRecordVo vo4 = new WebBillRecordVo();
 			vo4.setBusnessType(12);
 			vo4.setStartTime(getStarttime(new Date().getTime()));
 			
 			result.put("todayEpTranCount",webBillRecordService.findCount(vo4));
 			//今日ep释放记录
-			AppBillRecordVo1 vo5 = new AppBillRecordVo1();
+			WebBillRecordVo vo5 = new WebBillRecordVo();
 			vo5.setBusnessType(18);
 			vo5.setStartTime(getStarttime(new Date().getTime()));
 			result.put("todayEpReleaseCount",webBillRecordService.findCount(vo5));
 			
 			//今日ep充值记录
-			AppBillRecordVo1 vo6 = new AppBillRecordVo1();
+			WebBillRecordVo vo6 = new WebBillRecordVo();
 			
 			vo6.setBusnessType(11);
 			vo6.setStartTime(getStarttime(new Date().getTime()));
@@ -144,7 +144,7 @@ public class HomeController {
 			
 			
 			
-			AppBillRecordVo1 appbillRecordVo2 = new AppBillRecordVo1();
+			WebBillRecordVo appbillRecordVo2 = new WebBillRecordVo();
 			
 			
 			//EP充值总计
@@ -155,7 +155,7 @@ public class HomeController {
 			
 			//E资产释放
 			
-			AppBillRecordVo1 appbillRecordVo3 = new AppBillRecordVo1();
+			WebBillRecordVo appbillRecordVo3 = new WebBillRecordVo();
 			appbillRecordVo3.setBusnessType(18);
 			BigDecimal epReleaseAll = webBillRecordService.SUMCount(appbillRecordVo3);
 			

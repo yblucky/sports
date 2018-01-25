@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.vo.app.AppBillRecordVo;
-import com.xlf.common.vo.pc.AppBillRecordVo1;
+import com.xlf.common.vo.pc.WebBillRecordVo;
 
 /**
  * 流水对账DAO接口
@@ -59,10 +59,10 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
     List<String> getBusnessType();
 
 
-    List<AppBillRecordVo1> findAll(@Param("model") AppBillRecordVo1 vo,@Param("startRow")int startRow,@Param("pageSize")int pageSize);
+    List<WebBillRecordVo> findAll(@Param("model") WebBillRecordVo vo, @Param("startRow")int startRow, @Param("pageSize")int pageSize);
     
 
-    Integer findCount(@Param("model") AppBillRecordVo1 vo);
+    Integer findCount(@Param("model") WebBillRecordVo vo);
 
     /**
      * 查询当天提现笔数
@@ -77,6 +77,6 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
      * @return
      */
     
-    BigDecimal SUMCount(@Param("model") AppBillRecordVo1 vo);
+    BigDecimal SUMCount(@Param("model") WebBillRecordVo vo);
 
 }

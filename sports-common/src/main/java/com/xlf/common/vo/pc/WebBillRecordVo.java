@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AppBillRecordVo1 {
+public class WebBillRecordVo {
 
     /**
      * '主键编号'

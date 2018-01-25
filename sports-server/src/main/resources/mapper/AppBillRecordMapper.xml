@@ -25,7 +25,7 @@
 
   
     
-    <select id="findAll" resultType="com.xlf.common.vo.pc.AppBillRecordVo1">
+    <select id="findAll" resultType="com.xlf.common.vo.pc.WebBillRecordVo">
        	SELECT b.*,u.uid,u.mobile from app_bill_record b left join app_user u on b.userId=u.id
        	<where>
        	 1 = 1

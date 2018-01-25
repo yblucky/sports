@@ -5,7 +5,7 @@ import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.pc.AppBillRecordVo1;
+import com.xlf.common.vo.pc.WebBillRecordVo;
 import com.xlf.server.web.WebBillRecordService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +25,12 @@ public class WebBillRecordController {
     private WebBillRecordService appBillRecordService;
 
     @GetMapping("/findAll")
-    public RespBody findAll(AppBillRecordVo1 vo, Paging paging) {
+    public RespBody findAll(WebBillRecordVo vo, Paging paging) {
         RespBody respBody = new RespBody();
         try {
             //保存返回数据
-            List<AppBillRecordVo1> list = appBillRecordService.findAll(vo, paging);
-            for (AppBillRecordVo1 vo1 : list) {
+            List<WebBillRecordVo> list = appBillRecordService.findAll(vo, paging);
+            for (WebBillRecordVo vo1 : list) {
                 vo1.setBusnessTypeName(BusnessTypeEnum.getName(vo1.getBusnessType()));
 
             }
