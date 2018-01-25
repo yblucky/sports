@@ -89,7 +89,6 @@ public class RechangeController {
                 appBillRecordPo.setBeforeBalance(new BigDecimal("0"));
                 appBillRecordPo.setAfterBalance(appuser.getBalance());
 
-                appBillRecordPo.setCurrencyType(10);
                 appBillRecordPo.setBusnessType(11);
                 appBillRecordPo.setRemark("给用户" + appuser.getUid() + "充值" + vo.getBalance() + "ep");
                 webBillRecordService.add(appBillRecordPo);

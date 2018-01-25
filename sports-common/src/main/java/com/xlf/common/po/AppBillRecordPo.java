@@ -26,10 +26,6 @@ public class AppBillRecordPo {
      */
     private BigDecimal balance;
     /**
-     * '货币类型'
-     */
-    private Integer currencyType;
-    /**
      * '业务类型'
      */
     private Integer busnessType;
@@ -56,7 +52,7 @@ public class AppBillRecordPo {
     /**
      * '扩展'
      */
-    private String  extend;
+    private String extend;
 
     public String getId() {
         return id;
@@ -80,14 +76,6 @@ public class AppBillRecordPo {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
-    }
-
-    public Integer getCurrencyType() {
-        return currencyType;
-    }
-
-    public void setCurrencyType(Integer currencyType) {
-        this.currencyType = currencyType;
     }
 
     public Integer getBusnessType() {

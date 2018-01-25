@@ -97,7 +97,6 @@ public class AppWithDrawController {
             appBillRecordPo.setBalance(po.getAmount());
             appBillRecordPo.setBusinessNumber(po.getId());
 
-            appBillRecordPo.setCurrencyType(10);
             appBillRecordPo.setBusnessType(22);
             appBillRecordPo.setRemark("提现驳回记录");
             webBillRecordService.add(appBillRecordPo);

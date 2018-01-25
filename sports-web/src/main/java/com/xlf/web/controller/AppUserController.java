@@ -122,7 +122,7 @@ public class AppUserController {
             if (null == find) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "用户错误");
             }
-            if ((StateEnum.NORMAL.getCode().equals(find.getState()) || StateEnum.DISABLE.getCode().equals(find.getState()) || StateEnum.NO_ACTIVE.getCode().equals(find.getState()))) {
+            if ((StateEnum.NORMAL.getCode().equals(find.getState()) || StateEnum.DISABLE.getCode().equals(find.getState()))) {
                 int count = webAppUserService.updateById(po, po.getId());
                 if (count > 0) {
                     if (StateEnum.DISABLE.getCode().equals(po.getState())) {
@@ -164,7 +164,7 @@ public class AppUserController {
             if (null == find) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "用户错误");
             }
-            if ((StateEnum.NORMAL.getCode().equals(find.getState()) || StateEnum.DISABLE.getCode().equals(find.getState()) || StateEnum.NO_ACTIVE.getCode().equals(find.getState()))) {
+            if ((StateEnum.NORMAL.getCode().equals(find.getState()) || StateEnum.DISABLE.getCode().equals(find.getState()))) {
                 AppUserPo upPo = new AppUserPo();
                 upPo.setName(po.getName());
                 int count = webAppUserService.updateById(upPo, po.getId());
