@@ -15,11 +15,9 @@ import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.app.BankCardVo;
-import com.xlf.server.mapper.AppBillRecordMapper;
-import com.xlf.server.web.WebUserService;
-import com.xlf.server.web.WebBankCardService;
 import com.xlf.server.web.LoginService;
-import com.xlf.server.web.WebBillRecordService;
+import com.xlf.server.web.WebBankCardService;
+import com.xlf.server.web.WebUserService;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.util.StringUtil;
 
@@ -42,13 +40,8 @@ public class WebUserController {
     @Resource(name = "webLogin")
     private LoginService loginService;
     @Resource
-    private AppBillRecordMapper appBillRecordMapper;
-    @Resource
     private WebBankCardService bankCardService;
 
-    @Resource
-    private WebBillRecordService webBillRecordService;
-    //private AppBillRecordService appUserContactService;
 
     /**
      * 加载用户菜单
@@ -87,26 +80,6 @@ public class WebUserController {
         }
         return respBody;
     }
-
-
-    /**
-     * 加载用户币种钱包菜单
-     *
-     * @return 响应对象
-     */
-/*	@GetMapping("/appUserCoinAddress")
-    public RespBody appUserCoinAddress(AppUserCoinAddress appUserCoinAddress,Paging paging){
-		RespBody respBody = new RespBody();
-		try {
-			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载列表成功",webAppUserService.appUserCoinAddress(appUserCoinAddress, paging));
-			paging.setTotalCount(webAppUserService.appUserCoinAddress(appUserCoinAddress,null).size());
-			respBody.setPage(paging);
-		} catch (Exception ex) {
-			respBody.add(RespCodeEnum.ERROR.getCode(), "加载列表失败");
-			LogUtils.error("加载列表失败！",ex);
-		}
-		return respBody;
-	}*/
 
 
     /**
