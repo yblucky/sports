@@ -1,7 +1,6 @@
 package com.xlf.common.enums;
 
 
-
 /**
  * 状态是否枚举
  * @author qsy
@@ -9,17 +8,17 @@ package com.xlf.common.enums;
  * @date 2017年7月18日
  */
 public enum YNEnum {
-	YES("10","是"),
-	NO("20","否");
-	private String code;
+	YES(10,"是"),
+	NO(20,"否");
+	private Integer code;
 	private String name;
 	
-	private YNEnum(String code, String name) {
+	private YNEnum(Integer code, String name) {
 		this.name = name;
 		this.code = code;
 	}
 
-	public String getCode() {
+	public Integer getCode() {
 		return code;
 	}
 

@@ -6,33 +6,14 @@ package com.xlf.common.enums;
  */
 public enum BusnessTypeEnum {
 
-    EP_RECHARGE(11,"EP充值","EP_recharge"),
-    EP_TRANSFER_IN(12,"EP转入","EP_transfer_in"),
-    EP_TRANSFER_OUT(13,"EP转出","EP_transfer_out"),
-    EP_EXCHANGE(14,"EP兑换","EP_exchange"),
-    EP_WITHDRAWALS(15,"EP提现","EP_withdrawals"),
-    E_ASSET_ACTIVE(16,"E资产激活","e_asset_active"),
-    E_REWARD(17,"E资产赏金","E_reward"),
-    E_RELEASE(18,"E资产释放","E_release"),
-    BIRDSCORE_TRANSFER_IN(19,"候鸟积分转入","birdscore_transfer_in"),
-    BIRDSCORE_TRANSFER_OUT(20,"候鸟积分转出","birdscore_transfer_out"),
-    ACCOUNT_ACTIVE(21,"激活账号","Account_active"),
-    EP_FREE_FORZEN(22,"EP解除冻结","EP_free_forzen"),
-    ACCOUNT_ACTIVE_CHARGE(23,"充值激活次数","Account_active_charge");
+    BACK_RECHARGE(11,"后台充值","back_recharge"),
+    WITHDRAWALS(12,"提现","withdrawals"),
+    TIME_BETTING(21,"时时彩投注","time_betting"),
+    RACING_BETTING(22,"北京赛车投注","racing_betting"),
+    ADD_KICKBACKAMOUNT_RECORD(31,"上级返水衡量值加","ADD_KICKBACKAMOUNT_RECORD"),
+    REDUCE_KICKBACKAMOUNT_RECORD(32,"上级返水衡量值减","REDUCE_KICKBACKAMOUNT_RECORD"),
+    FREE_FORZEN(41,"解除冻结","free_forzen");
 
-/*    EP_RECHARGE(11,"EP充值","EP_recharge"),
-    EP_TRANSFER_IN(12,"EP转入","EP_transfer_in"),
-    EP_TRANSFER_OUT(13,"EP转出","EP_transfer_out"),
-    EP_EXCHANGE(14,"EP兑换","EP_exchange"),
-    EP_WITHDRAWALS(15,"EP提现","EP_withdrawals"),
-    E_ASSET_ACTIVE(16,"E资产激活","e_asset_active"),
-    E_REWARD(17,"E资产赏金","E_reward"),
-    E_RELEASE(18,"E资产释放","E_release"),
-    BIRDSCORE_TRANSFER_IN(19,"候鸟积分转入","birdscore_transfer_in"),
-    BIRDSCORE_TRANSFER_OUT(20,"候鸟积分转出","birdscore_transfer_out"),
-    ACCOUNT_ACTIVE(21,"激活账号","Account_active"),
-    EP_FREE_FORZEN(22,"EP解除冻结","EP_free_forzen"),
-    ACCOUNT_ACTIVE_CHARGE(23,"充值激活次数","Account_active_charge");*/
 
     private Integer code;
     private String name;
@@ -67,18 +48,4 @@ public enum BusnessTypeEnum {
         }
         return String.valueOf(code);
     }
-    public static String getEgName(String code){
-        if (code == null) {
-            return "";
-        }
-        for(BusnessTypeEnum enums : BusnessTypeEnum.values()){
-            if (enums.getCode().toString().equals(code)) {
-                return enums.getEgName();
-            }
-        }
-        return code;
-    }
-
-
-
 }

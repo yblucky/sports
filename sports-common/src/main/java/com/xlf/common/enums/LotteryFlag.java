@@ -1,4 +1,4 @@
-package com.xlf.common.enums.sports;
+package com.xlf.common.enums;
 
 /**
  * 是否开奖
