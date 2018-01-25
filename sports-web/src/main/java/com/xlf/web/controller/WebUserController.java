@@ -33,7 +33,7 @@ import javax.annotation.Resource;
  * @date 2017年6月14日
  */
 @RestController
-@RequestMapping(value = "/appUser")
+@RequestMapping(value = "/webUser")
 public class WebUserController {
     @Resource
     private WebUserService webAppUserService;
