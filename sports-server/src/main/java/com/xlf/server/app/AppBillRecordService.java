@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface AppBillRecordService {
 
-    public void saveBillRecord(String businessNumber, String userId, Integer busnessType, Integer currencyType, BigDecimal amount, BigDecimal beforeAmout, BigDecimal afterAmout, String remark,String extend) throws Exception;
+    public void saveBillRecord(String businessNumber, String userId, Integer busnessType,  BigDecimal amount, BigDecimal beforeAmout, BigDecimal afterAmout, String remark,String extend) throws Exception;
 
     Integer  countCurrentDayWithDraw(String userId) throws Exception;
 
@@ -21,7 +21,7 @@ public interface AppBillRecordService {
     /**
      * 根据货币类型查找用户流水记录
      */
-    List<AppBillRecordVo> findBillRecord(Integer currencyType, Integer busnessType, String userId, Paging paging);
+    List<AppBillRecordVo> findBillRecord( Integer busnessType, String userId, Paging paging);
 
     /**
      * 根据货币类型统计用户流水数量
@@ -30,7 +30,7 @@ public interface AppBillRecordService {
      * @param userId
      * @return
      */
-    int billRecordTotal(Integer currencyType, Integer busnessType, String userId);
+    int billRecordTotal( Integer busnessType, String userId);
     
     public void add(AppBillRecordPo po) throws Exception;
 
@@ -45,7 +45,7 @@ public interface AppBillRecordService {
     /**
      * 根据货币类型查找用户流水记录
      */
-    List<AppBillRecordVo> findBillRecordList(String userId, List<Integer> busnessTypeList,Integer currencyType, Paging paging);
+    List<AppBillRecordVo> findBillRecordList(String userId, List<Integer> busnessTypeList, Paging paging);
 
 
 }

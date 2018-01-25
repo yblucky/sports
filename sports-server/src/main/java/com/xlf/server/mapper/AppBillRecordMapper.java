@@ -29,7 +29,7 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
      * @param rowBounds
      * @return
      */
-    List<AppBillRecordVo> findBillRecordList(@Param("userId") String userId,@Param("list") List<Integer> busnessTypeList, @Param("currencyType") Integer currencyType, RowBounds rowBounds);
+    List<AppBillRecordVo> findBillRecordList(@Param("userId") String userId,@Param("list") List<Integer> busnessTypeList,  RowBounds rowBounds);
 
     /**
      * 查询流水
