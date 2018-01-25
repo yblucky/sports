@@ -128,7 +128,7 @@ public class AssetsController {
             //获取总记录数量
             int total = billRecordService.billRecordListTotal(appUserPo.getId(), busnessTypeList, currencyType);
             if (total > 0) {
-                list = billRecordService.findBillRecordList(appUserPo.getId(), busnessTypeList, currencyType, paging);
+                list = billRecordService.findBillRecordList(appUserPo.getId(), busnessTypeList,  paging);
             }
             //返回前端总记录
             paging.setTotalCount(total);

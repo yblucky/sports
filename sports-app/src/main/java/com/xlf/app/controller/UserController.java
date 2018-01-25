@@ -11,8 +11,6 @@ import com.xlf.common.service.RedisService;
 import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.app.ActiveVo;
-import com.xlf.common.vo.app.DelUserVo;
 import com.xlf.common.vo.app.UserInfoVo;
 import com.xlf.common.vo.app.UserVo;
 import com.xlf.server.app.AppUserService;
@@ -43,7 +41,7 @@ public class UserController {
     private HttpServletRequest request;
 
     @PostMapping("/register")
-        @SystemControllerLog(description = "用户注册")
+    @SystemControllerLog(description = "用户注册")
     public RespBody register(@RequestBody UserVo userVo) {
         RespBody respBody = new RespBody();
         try {
@@ -185,7 +183,7 @@ public class UserController {
             }
 
             Boolean signFlag = commonService.checkSign(userVo);
-            if (!signFlag){
+            if (!signFlag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
             }
@@ -243,7 +241,6 @@ public class UserController {
         }
         return false;
     }
-
 
 
     /**

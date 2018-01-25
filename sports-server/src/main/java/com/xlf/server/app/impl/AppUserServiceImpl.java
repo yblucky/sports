@@ -1,10 +1,10 @@
 package com.xlf.server.app.impl;
 
-import com.xlf.common.enums.*;
+import com.xlf.common.enums.PerformanceTypeEnum;
+import com.xlf.common.enums.RedisKeyEnum;
+import com.xlf.common.enums.StateEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.AppTimeBettingPo;
-import com.xlf.common.po.AppUserContactPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.ConfUtils;
@@ -15,20 +15,16 @@ import com.xlf.common.vo.app.ActiveVo;
 import com.xlf.common.vo.app.UserInfoVo;
 import com.xlf.common.vo.app.UserVo;
 import com.xlf.server.app.AppBillRecordService;
-import com.xlf.server.app.AppPerformanceRecordService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
-import com.xlf.server.mapper.AppUserContactMapper;
 import com.xlf.server.mapper.AppUserMapper;
 import com.xlf.server.mapper.SysKeyWordsMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -49,14 +45,10 @@ public class AppUserServiceImpl implements AppUserService {
     @Resource
     private RedisService redisService;
     @Resource
-    private AppUserContactMapper appUserContactMapper;
-    @Resource
     private AppBillRecordService billRecordService;
     @Resource
     private CommonService commonService;
 
-    @Resource
-    private AppPerformanceRecordService performanceRecordService;
 
     @Override
     public AppUserPo findUserById(String id) throws Exception {
@@ -125,37 +117,8 @@ public class AppUserServiceImpl implements AppUserService {
         appUserPo.setId(ToolUtils.getUUID());
         appUserPo.setCreateTime(new Date());
         appUserPo.setState(StateEnum.NO_ACTIVE.getCode());
-        appUserPo.setLevel(userVo.getLevel());
-        appUserPo.setEpBalance(new BigDecimal(0));
-        appUserPo.setBlockedEpBalance(new BigDecimal(0));
-        appUserPo.setBirdScore(new BigDecimal(0));
-        appUserPo.setAssets(new BigDecimal(0));
-        appUserPo.setAreaNum(userVo.getAreaNum().trim());
-        appUserPo.setActiveNo(0);
-        appUserPo.setState(10);
-        appUserPo.setIsAllowed(10);
 
-
-        //生成接点人信息
-        AppUserContactPo appUserContactPo = new AppUserContactPo();
-        appUserContactPo.setId(ToolUtils.getUUID());
-        appUserContactPo.setCurrentArea(userVo.getCurrentArea());
-        AppUserContactPo appUserContactParent = appUserContactMapper.findUserByUserId(userVo.getContactId());
-        if (appUserContactParent == null) {
-            throw new CommException("接点人不存在");
-        }
-        appUserContactPo.setLevel(appUserContactParent.getLevel().intValue() + 1);
-        appUserContactPo.setParentId(appUserContactParent.getUserId());
-        appUserContactPo.setUserId(appUserPo.getId());
-        appUserContactPo.setPerformanceA(new BigDecimal(0));
-        appUserContactPo.setPerformanceB(new BigDecimal(0));
-
-        int count = appUserContactMapper.insert(appUserContactPo);
-        if (count < 1) {
-            throw new CommException("保存注册用户接点人信息失败");
-        }
-
-        count = appUserMapper.insert(appUserPo);
+       int  count = appUserMapper.insert(appUserPo);
 
         if (count > 0) {
             return true;
@@ -196,9 +159,7 @@ public class AppUserServiceImpl implements AppUserService {
         if (StringUtils.isEmpty(userId)){
             return 0;
         }
-        AppUserContactPo model = new AppUserContactPo();
-        model.setUserId(userId);
-        int rows = appUserContactMapper.delete(model);
+        int rows =0;
         if (rows<1){
             throw new CommException(msgUtil.getMsg(AppMessage.DELUSER_FAILURE, "删除用户失败"));
         }
@@ -235,73 +196,15 @@ public class AppUserServiceImpl implements AppUserService {
         }
         String uuid = ToolUtils.getUUID();
         appUserMapper.updateUserStateById(vo.getActiveUserId(), StateEnum.NORMAL.getCode());
-        billRecordService.saveBillRecord(uuid, userPo.getId(), BusnessTypeEnum.ACCOUNT_ACTIVE.getCode(), CurrencyTypeEnum.ACTIVATION_TIMES.getCode(), new BigDecimal("-1"), new BigDecimal(userPo.getActiveNo()), new BigDecimal((userPo.getActiveNo() - 1)), "为" + vo.getMobile()+"【"+activeUserPo.getUid()+"】" + "激活账号",vo.getMobile());
+//        billRecordService.saveBillRecord(uuid, userPo.getId(), BusnessTypeEnum.ACCOUNT_ACTIVE.getCode(), CurrencyTypeEnum.ACTIVATION_TIMES.getCode(), new BigDecimal("-1"), new BigDecimal(userPo.getActiveNo()), new BigDecimal((userPo.getActiveNo() - 1)), "为" + vo.getMobile()+"【"+activeUserPo.getUid()+"】" + "激活账号",vo.getMobile());
         String activeAddE = commonService.findParameter("activeAddE");
 
         appUserMapper.updateAssetsById(new BigDecimal(activeAddE),activeUserPo.getId());
         BigDecimal activeAddEAmount=new BigDecimal(activeAddE);
-        BigDecimal beforActiveAddEAmount=activeUserPo.getAssets();
-        BigDecimal afterActiveAddEAmount=activeUserPo.getAssets().add(activeAddEAmount).setScale(4,BigDecimal.ROUND_HALF_EVEN);
-        billRecordService.saveBillRecord(uuid, activeUserPo.getId(), BusnessTypeEnum.E_ASSET_ACTIVE.getCode(), CurrencyTypeEnum.E_ASSET.getCode(),activeAddEAmount,beforActiveAddEAmount,afterActiveAddEAmount,"激活增加E资产","");
-        updatePerformance(vo.getActiveUserId(), uuid,new BigDecimal(activeAddE), PerformanceTypeEnum.ACTIVE);
+//        billRecordService.saveBillRecord(uuid, activeUserPo.getId(), BusnessTypeEnum.E_ASSET_ACTIVE.getCode(), CurrencyTypeEnum.E_ASSET.getCode(),activeAddEAmount,beforActiveAddEAmount,afterActiveAddEAmount,"激活增加E资产","");
         return true;
     }
 
-    /**
-     * 激活
-     *
-     * @param userId 被激活人的userId
-     * @param uuid
-     */
-    @Override
-    public void updatePerformance(String userId, String uuid,BigDecimal amount, PerformanceTypeEnum performanceTypeEnum) {
-        String level = commonService.findParameter("levelNo");
-        Integer levelNo = Integer.valueOf(level);
-        List<String> alist = new ArrayList<>();
-        List<String> blist = new ArrayList<>();
-        List<AppTimeBettingPo> poList = new ArrayList<>();
-        AppUserContactPo contactPo = null;
-        AppUserContactPo contactParentPo = null;
-        for (int i = 0; i < levelNo; i++) {
-            AppTimeBettingPo recordPo = new AppTimeBettingPo();
-            if (i == 0) {
-                contactPo = appUserContactMapper.findUserByUserId(userId);
-            }
-
-            if (org.apache.commons.lang3.StringUtils.isEmpty(contactPo.getParentId())) {
-                break;
-            }
-            contactParentPo=appUserContactMapper.findUserByUserId(contactPo.getParentId());
-            if (contactParentPo==null){
-                break;
-            }
-            if (AreaEnum.DEPARTMENT_A.getCode().equals(contactPo.getCurrentArea())) {
-                alist.add(contactParentPo.getId());
-                recordPo.setDepartment(AreaEnum.DEPARTMENT_A.getCode());
-                poList.add(recordPo);
-            } else if (AreaEnum.DEPARTMENT_B.getCode().equals(contactPo.getCurrentArea())) {
-                blist.add(contactParentPo.getId());
-                recordPo.setDepartment(AreaEnum.DEPARTMENT_B.getCode());
-                poList.add(recordPo);
-            }
-            recordPo.setId(ToolUtils.getUUID());
-            recordPo.setOrderId(uuid);
-            recordPo.setAmount(amount);
-            recordPo.setUserId(contactParentPo.getUserId());
-            recordPo.setCreateTime(new Date());
-            recordPo.setType(performanceTypeEnum.getCode());
-            contactPo = appUserContactMapper.findUserByUserId(contactPo.getParentId());
-        }
-        if (!CollectionUtils.isEmpty(alist)) {
-            appUserContactMapper.updatePerformanceListA(alist, amount);
-        }
-        if (!CollectionUtils.isEmpty(blist)) {
-            appUserContactMapper.updatePerformanceListB(blist, amount);
-        }
-        if (!CollectionUtils.isEmpty(poList)) {
-            performanceRecordService.insertPerformanceRecordList(poList);
-        }
-    }
 
     @Override
     public List<UserInfoVo> findUserByContactParentId(String partentId) {
@@ -316,4 +219,7 @@ public class AppUserServiceImpl implements AppUserService {
     public UserInfoVo findUserByContactUserId(String userId) {
         return appUserMapper.findUserByContactUserId(userId);
     }
+
+
+
 }

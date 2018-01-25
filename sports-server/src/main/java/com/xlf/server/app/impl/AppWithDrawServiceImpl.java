@@ -63,17 +63,14 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
         appUserMapper.updateEpBalanceById(amount.multiply(new BigDecimal("-1")), userId);
         appUserMapper.updateEpBlockBalanceById(amount, userId);
         BigDecimal am=amount.multiply(new BigDecimal("-1")).setScale(4,BigDecimal.ROUND_HALF_EVEN);
-        BigDecimal before=userPo.getEpBalance();
         BigDecimal fee=amount.multiply(withdrawFee).setScale(4,BigDecimal.ROUND_HALF_EVEN);
-        BigDecimal after=userPo.getEpBalance().subtract(amount).setScale(4,BigDecimal.ROUND_HALF_EVEN);
         AppWithDrawPo model = new AppWithDrawPo();
         model.setFee(fee);
-        model.setBeforeBalance(before);
         model.setAmount(amount);
         model.setUserId(userId);
         model.setBankCardId(bankId);
         this.save(model);
-        billRecordService.saveBillRecord(ToolUtils.getUUID(),userId, BusnessTypeEnum.EP_WITHDRAWALS.getCode(), CurrencyTypeEnum.EP_BALANCE.getCode(),am,before,after,"用户提现",userPo.getNickName());
+//        billRecordService.saveBillRecord(ToolUtils.getUUID(),userId, BusnessTypeEnum.EP_WITHDRAWALS.getCode(), CurrencyTypeEnum.EP_BALANCE.getCode(),am,"用户提现",userPo.getNickName());
         return true;
     }
 

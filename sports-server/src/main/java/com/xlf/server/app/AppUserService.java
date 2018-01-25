@@ -100,6 +100,5 @@ public interface AppUserService {
      */
     public int updateById(AppUserPo userPo, String userId) throws Exception;
 
-    void updatePerformance(String userId , String uuid, BigDecimal amount, PerformanceTypeEnum performanceTypeEnum) throws Exception;
 
 }
