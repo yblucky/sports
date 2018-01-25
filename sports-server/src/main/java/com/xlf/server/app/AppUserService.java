@@ -79,7 +79,7 @@ public interface AppUserService {
 
 
 
-    public UserInfoVo findUserByContactUserId(String userId);
+    public AppUserPo findUserByParentId(String parentId) throws Exception;
 
     /**
      * 根据用户id修改用户信息

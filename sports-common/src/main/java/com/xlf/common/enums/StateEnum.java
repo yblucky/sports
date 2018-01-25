@@ -7,9 +7,8 @@ package com.xlf.common.enums;
  * @date 2016年11月27日
  */
 public enum StateEnum {
-	NO_ACTIVE(10,"未激活"),
-	NORMAL(20,"正常"),
-	DISABLE(30,"禁用");
+	NORMAL(10,"正常"),
+	DISABLE(20,"禁用");
 	private Integer code;
 	private String name;
 	

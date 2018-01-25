@@ -58,6 +58,17 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     @Select("select * from app_user where mobile=#{mobile}")
     public AppUserPo findUserByMobile(@Param("mobile") String mobile);
 
+
+    /**
+     * 根据parentId查询用户
+     *
+     * @param parentId
+     * @return
+     */
+    @Select("select * from app_user where parentId=#{parentId}")
+    public AppUserPo findUserByParentId(@Param("mobile") String parentId);
+
+
     /**
      * 根据昵称查询用户
      *

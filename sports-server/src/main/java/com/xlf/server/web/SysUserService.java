@@ -19,7 +19,7 @@ import com.xlf.common.vo.pc.SysUserVo;
  * @version v1.0
  * @date 2017年6月12日
  */
-public interface UserService {
+public interface SysUserService {
 
 	/**
 	 * 获取用户信息
@@ -75,6 +75,13 @@ public interface UserService {
 	 * @return
 	 */
 	public SysUserVo findByLoginName(String loginName);
+
+	/**
+	 * 查找登录名是否存在
+	 * @param mobile
+	 * @return
+	 */
+	public SysUserVo findByMobile(String mobile);
 
 	/**
 	 * 修改密码

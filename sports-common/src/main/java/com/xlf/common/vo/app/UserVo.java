@@ -81,6 +81,11 @@ public class UserVo {
      */
     private String imgKeyValue;
 
+    /**
+     * 代理ip
+     */
+    private String parentId;
+
     public String getId() {
         return id;
     }
@@ -215,5 +220,13 @@ public class UserVo {
 
     public void setInviteMobile(String inviteMobile) {
         this.inviteMobile = inviteMobile;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

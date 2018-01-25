@@ -20,7 +20,7 @@ import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.common.vo.pc.UpdatePwVo;
 import com.xlf.server.web.LoginService;
-import com.xlf.server.web.UserService;
+import com.xlf.server.web.SysUserService;
 
 /**
  * 用户控制器
@@ -32,7 +32,7 @@ import com.xlf.server.web.UserService;
 @RequestMapping(value = "/user")
 public class UserController {
 	@Resource
-	private UserService webUserService;//用户业务层
+	private SysUserService webUserService;//用户业务层
 	@Resource
 	private HttpServletRequest request;
 	@Resource

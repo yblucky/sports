@@ -11,24 +11,26 @@ import com.xlf.common.service.RedisService;
 import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.app.UserInfoVo;
 import com.xlf.common.vo.app.UserVo;
+import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
+import com.xlf.server.web.SysUserService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by Administrator on 2017/8/18.
+ * 用户相关
  */
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
+    @Resource
+    private SysUserService sysUserService;
     @Resource
     private AppUserService userService;
     @Resource
@@ -36,7 +38,7 @@ public class UserController {
     @Resource
     private CommonService commonService;
     @Resource
-    private LanguageUtil msgUtil; 
+    private LanguageUtil msgUtil;
 
     @PostMapping("/register")
     @SystemControllerLog(description = "用户注册")
@@ -61,28 +63,13 @@ public class UserController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.PAYPWD_NOT_NULL, "支付密码不能为空"));
                 return respBody;
             }
-            if (StringUtils.isEmpty(userVo.getSmsCode())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VERIFY_NOT_NULL, "短信验证码不能为空"));
-                return respBody;
-            }
-            if (StringUtils.isEmpty(userVo.getAreaNum())) {
-                userVo.setAreaNum("86");
-            }
-            if (StringUtils.isEmpty(userVo.getContactId())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.CONTACT_PERSON_NOT_NULL, "接点人不能为空"));
+
+            if (StringUtils.isEmpty(userVo.getInviteMobile())) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.CONTACT_PERSON_NOT_NULL, "代理手機號不能为空"));
                 return respBody;
             }
 
-            //判断短信验证码是否正确
-            String redisSmsCode = redisService.getString(userVo.getMobile());
-            if (redisSmsCode == null && StringUtils.isEmpty(redisSmsCode)) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VERIFY_INVALID, "短信验证码已失效"));
-                return respBody;
-            }
-            if (!redisSmsCode.equals(userVo.getSmsCode())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VARIFY_FAIL, "短信验证码输入不正确"));
-                return respBody;
-            }
+
             Boolean flag = commonService.checkSign(userVo);
             if (!flag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
@@ -102,27 +89,18 @@ public class UserController {
                 return respBody;
             }
 
-            //推荐人id为当前登录用户，保存推荐人的唯一ID
-            userVo.setParentId(appUserPo.getId());
-            //判断用户层数
-
-            AppUserPo contactUser = userService.findUserById(userVo.getContactId());
-            if (contactUser == null) {
+            SysUserVo sysUserVo = sysUserService.findByMobile(userVo.getInviteMobile());
+            if (sysUserVo == null) {
                 //根据父节点手机号查询
-                contactUser = userService.findUserByMobile(userVo.getContactId());
-            }
-            /*if (parentUser == null || StateEnum.DISABLE.getCode().equals(parentUser.getState())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVITECODE_HAS_USE, "邀请人不存在或者已被禁用"));
-                return respBody;
-            }*/
-            //新增业务：禁用用户可以作为邀请人
-            if (contactUser == null) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVITECODE_HAS_USE, "接点人不存在"));
+                respBody.add(RespCodeEnum.ERROR.getCode(), "代理上级不存在");
                 return respBody;
             }
-
-            //保存接点人唯一id
-            userVo.setContactId(contactUser.getId());
+            AppUserPo parentUser = userService.findUserByParentId(sysUserVo.getId());
+            if (parentUser != null) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "该代理已有下级会员");
+                return respBody;
+            }
+            userVo.setParentId(appUserPo.getId());
 
             //判断用户是否存在
             AppUserPo Po = userService.findUserByMobile(userVo.getMobile());
@@ -198,10 +176,6 @@ public class UserController {
                 return respBody;
             }
 
-            if (StateEnum.NO_ACTIVE.getCode().equals(appUserPo.getState())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_UNACTIVE, "用户未激活"));
-                return respBody;
-            }
 
             // 用户有效，对输入密码进行加密
             String loginPwd = CryptUtils.hmacSHA1Encrypt(userVo.getLoginPwd(), appUserPo.getPwdStal());
@@ -224,23 +198,6 @@ public class UserController {
     }
 
 
-    private boolean checkUserState(RespBody respBody, AppUserPo appUserPo) {
-        if (appUserPo == null || StringUtils.isEmpty(appUserPo)) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_INVALID, "用户不存在"));
-            return true;
-        }
-        if (StateEnum.DISABLE.getCode().equals(appUserPo.getState())) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_DISABLE, "用户已禁用"));
-            return true;
-        }
-        if (StateEnum.NORMAL.getCode().equals(appUserPo.getState())) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_DISABLE, "用户已激活"));
-            return true;
-        }
-        return false;
-    }
-
-
     /**
      * 根据token获取用户信息
      *
@@ -252,10 +209,7 @@ public class UserController {
         try {
             AppUserPo appUserPo = commonService.checkToken();
             UserVo vo = new UserVo();
-            UserInfoVo contactPo = userService.findUserByContactUserId(appUserPo.getId());
-            contactPo.setName(appUserPo.getName());
             BeanUtils.copyProperties(vo, appUserPo);
-            BeanUtils.copyProperties(vo, contactPo);
             vo.setPayPwd("*");
             vo.setLoginPwd("*");
             vo.setPayStal("*");

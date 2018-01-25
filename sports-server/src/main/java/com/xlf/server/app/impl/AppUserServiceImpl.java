@@ -72,6 +72,11 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public AppUserPo findUserByParentId(String parentId) throws Exception {
+        return appUserMapper.findUserByParentId(parentId);
+    }
+
+    @Override
     public AppUserPo findUserByNickName(String nickName) throws Exception {
         return appUserMapper.findUserByNickName(nickName);
     }
@@ -109,14 +114,21 @@ public class AppUserServiceImpl implements AppUserService {
 
         appUserPo.setMobile(userVo.getMobile());
         appUserPo.setNickName(userVo.getNickName());
-//        appUserPo.setParentId(userVo.getParentId());
+        appUserPo.setParentId(userVo.getParentId());
         appUserPo.setLoginPwd(loginPw);
         appUserPo.setPayPwd(payPwd);
         appUserPo.setPwdStal(pwdStal);
         appUserPo.setPayStal(payStal);
         appUserPo.setId(ToolUtils.getUUID());
         appUserPo.setCreateTime(new Date());
-        appUserPo.setState(StateEnum.NO_ACTIVE.getCode());
+        appUserPo.setState(StateEnum.NORMAL.getCode());
+        appUserPo.setBalance(BigDecimal.ONE);
+        appUserPo.setBettingAmout(BigDecimal.ONE);
+        appUserPo.setBlockedBalance(BigDecimal.ONE);
+        appUserPo.setCurrentProfit(BigDecimal.ZERO);
+        appUserPo.setKickBackAmount(BigDecimal.ZERO);
+        appUserPo.setWiningAmout(BigDecimal.ZERO);
+        appUserPo.setErrorNo(5);
 
        int  count = appUserMapper.insert(appUserPo);
 
@@ -182,15 +194,5 @@ public class AppUserServiceImpl implements AppUserService {
     public int updateById(AppUserPo userPo, String userId) throws Exception {
         return appUserMapper.updateById(userPo, userId);
     }
-
-
-
-
-    @Override
-    public UserInfoVo findUserByContactUserId(String userId) {
-        return appUserMapper.findUserByContactUserId(userId);
-    }
-
-
 
 }
