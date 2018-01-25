@@ -1,4 +1,4 @@
-package com.pf.common;
+package com.xlf.common;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.pf.server.mapper.UseComplainSuggestMapper">
+<mapper namespace="com.xlf.server.mapper.UseComplainSuggestMapper">
 
     <sql id="fields">
         userId,userName,content,createTime
@@ -29,18 +29,18 @@
         </where>
     </sql>
 	
-<!--     <select id="readById" resultType="com.pf.common.po.UseComplainSuggestPo">
+<!--     <select id="readById" resultType="com.xlf.common.po.UseComplainSuggestPo">
         <include refid="selector"/>
         where id=#{id} limit 1;
     </select> -->
 
-<!--     <select id="findUserByCondition" resultType="com.pf.common.po.UseComplainSuggestPo">
+<!--     <select id="findUserByCondition" resultType="com.xlf.common.po.UseComplainSuggestPo">
         <include refid="selector"/>
         <include refid="condition"/>
         limit 1;
     </select>
 
-    <select id="readList" resultType="com.pf.common.po.UseComplainSuggestPo">
+    <select id="readList" resultType="com.xlf.common.po.UseComplainSuggestPo">
         <include refid="selector"/>
         <include refid="condition"/>
         ORDER BY createTime DESC
