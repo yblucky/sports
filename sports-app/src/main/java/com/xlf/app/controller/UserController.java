@@ -109,7 +109,6 @@ public class UserController {
             //推荐人id为当前登录用户，保存推荐人的唯一ID
             userVo.setParentId(appUserPo.getId());
             //判断用户层数
-            userVo.setLevel(appUserPo.getLevel().intValue() + 1);
 
             AppUserPo contactUser = userService.findUserById(userVo.getContactId());
             if (contactUser == null) {
@@ -155,53 +154,6 @@ public class UserController {
         return respBody;
     }
 
-
-    @PostMapping("/active")
-    @SystemControllerLog(description = "用户激活")
-    public RespBody active(@RequestBody ActiveVo vo) {
-        RespBody respBody = new RespBody();
-        try {
-            AppUserPo userPo = commonService.checkToken();
-
-            if (StringUtils.isEmpty(vo.getMobile())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.PHONE_NOT_NULL, "手机号不能为空"));
-                return respBody;
-            }
-            if (StringUtils.isEmpty(vo.getPayPwd())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.PAYPWD_NOT_NULL, "支付密码不能为空"));
-                return respBody;
-            }
-            if (userPo.getActiveNo() <= 0) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.ACTIVENO_NOT_ENOUGH, "用户激活次数不足"));
-                return respBody;
-            }
-            if (!userPo.getPayPwd().equals(CryptUtils.hmacSHA1Encrypt(vo.getPayPwd(), userPo.getPayStal()))) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.PAYPWD_ERROR, "支付密码错误"));
-                return respBody;
-            }
-            AppUserPo activeUserPo = userService.findUserByMobile(vo.getMobile());
-            if (activeUserPo == null) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.PHONE_NOT_EXIST, "该手机号不存在"));
-                return respBody;
-            }
-            if (!StateEnum.NO_ACTIVE.getCode().equals(activeUserPo.getState())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_IS_NOT_UNACTIVE, "用户不是未激活状态"));
-                return respBody;
-            }
-            Boolean flag = commonService.checkSign(vo);
-            if (!flag) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
-                return respBody;
-            }
-            vo.setActiveUserId(activeUserPo.getId());
-            userService.active(userPo, vo);
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), msgUtil.getMsg(AppMessage.ACTIVE_SUCCESS, "激活成功"));
-        } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.ACTIVE_FAILE, "激活失败"));
-            LogUtils.error("激活失败！", ex);
-        }
-        return respBody;
-    }
 
     @PostMapping("/login")
     @SystemControllerLog(description = "用户登录")
@@ -276,36 +228,6 @@ public class UserController {
     }
 
 
-    @GetMapping("/findUserInfoByMobile")
-    @SystemControllerLog(description = "手机查询")
-    public RespBody findUserInfoByMobile(String mobile) {
-        RespBody respBody = new RespBody();
-        try {
-
-            if (StringUtils.isEmpty(mobile)) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.PHONE_NOT_NULL, "手机号不能为空"));
-                return respBody;
-            }
-            AppUserPo appUserPo = userService.findUserByMobile(mobile);
-            if (appUserPo==null){
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_INVALID, "用户不存在"));
-                return respBody;
-            }
-            UserInfoVo vo = new UserInfoVo();
-            vo.setNickName(StringUtils.isEmpty(appUserPo.getNickName()) ? "" : appUserPo.getNickName());
-            vo.setName(StringUtils.isEmpty(appUserPo.getName()) ? "" : appUserPo.getName());
-            vo.setMobile(StringUtils.isEmpty(appUserPo.getMobile()) ? "" : appUserPo.getMobile());
-            vo.setState(appUserPo.getState());
-            vo.setIsAllowed(appUserPo.getIsAllowed());
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "", vo);
-        } catch (CommException ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
-        } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.REQUEST_INVALID, "请求失败"));
-        }
-        return respBody;
-    }
-
     private boolean checkUserState(RespBody respBody, AppUserPo appUserPo) {
         if (appUserPo == null || StringUtils.isEmpty(appUserPo)) {
             respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_INVALID, "用户不存在"));
@@ -322,52 +244,6 @@ public class UserController {
         return false;
     }
 
-    /**
-     * 删除账号
-     *
-     * @return
-     */
-    @PostMapping("/delUser")
-    @SystemControllerLog(description = "删除用户")
-    public RespBody delUser(@RequestBody DelUserVo vo) {
-        RespBody respBody = new RespBody();
-        try {
-            AppUserPo appUserPo = commonService.checkToken();
-            if (StringUtils.isEmpty(vo.getUserId())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.DELUSERID_NOT_NULL, "需要删除的用户ID不能为空"));
-                return respBody;
-            }
-            AppUserPo delUserPo = userService.findUserById(vo.getUserId());
-
-            //判断如果还是空的话就返回错误
-            if (delUserPo == null) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.USER_INVALID, "用户不存在"));
-                return respBody;
-            }
-
-            //判断用户是否激活
-            if (delUserPo.getState() != StateEnum.NO_ACTIVE.getCode().intValue()) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.DELUSER_IS_NOT_ACTIVE, "用户不是未激活状态，无法删除"));
-                return respBody;
-            }
-            Boolean flag = commonService.checkSign(vo);
-            if (!flag) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
-                return respBody;
-            }
-
-            //进行删除
-            int count = userService.delUser(vo.getUserId());
-            if (count <= 0) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.DELUSER_FAILURE, "删除用户失败"));
-                return respBody;
-            }
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "删除用户成功");
-        } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.DELUSER_FAILURE, "删除用户失败"));
-        }
-        return respBody;
-    }
 
 
     /**
@@ -385,7 +261,6 @@ public class UserController {
             contactPo.setName(appUserPo.getName());
             BeanUtils.copyProperties(vo, appUserPo);
             BeanUtils.copyProperties(vo, contactPo);
-            vo.setIsAllowed(appUserPo.getIsAllowed());
             vo.setPayPwd("*");
             vo.setLoginPwd("*");
             vo.setPayStal("*");

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xlf.server.mapper.AppPerformanceRecordMapper">
+<mapper namespace="com.xlf.server.mapper.AppRacingLotteryMapper">
 
 
     <sql id="fields">
-         orderId,userId,type,amount,createTime
+        issueNo,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryTime,createTime
     </sql>
 
     <sql id="fields_id">
@@ -12,7 +12,7 @@
         <include refid="fields"/>
     </sql>
 
-    <sql id="table_name">app_performance_record</sql>
+    <sql id="table_name">app_time_lottery</sql>
 
     <sql id="selector">
         select
@@ -21,7 +21,7 @@
         <include refid="table_name"/>
     </sql>
 
-    <insert id="insertPerformanceRecordList" parameterType="com.xlf.common.po.AppPerformanceRecordPo" keyProperty="id" useGeneratedKeys="true">
+    <insert id="insertPerformanceRecordList" parameterType="com.xlf.common.po.AppTimeBettingPo" keyProperty="id" useGeneratedKeys="true">
         insert into app_performance_record(id,orderId,userId,type,amount,department,createTime)
         VALUES
         <foreach item="item" collection="list" separator=",">

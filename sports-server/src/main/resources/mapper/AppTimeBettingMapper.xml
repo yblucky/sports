@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xlf.server.mapper.AppPerformanceParamMapper">
+<mapper namespace="com.xlf.server.mapper.AppTimeBettingMapper">
 
 
     <sql id="fields">
-         minRange,maxRange,type,rate
+         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryFlag,winningAmount,multiple,createTime
     </sql>
 
     <sql id="fields_id">
@@ -12,7 +12,7 @@
         <include refid="fields"/>
     </sql>
 
-    <sql id="table_name">app_performance_param</sql>
+    <sql id="table_name">app_time_betting</sql>
 
     <sql id="selector">
         select

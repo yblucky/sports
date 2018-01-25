@@ -1,6 +1,6 @@
 package com.xlf.server.common;
 
-import com.xlf.common.po.AppCountryCode;
+import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppUserPo;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public interface CommonService {
      * 获取全球国家代码
      * @throws Exception
      */
-    public List<AppCountryCode> findCountryCode() throws Exception;
+    public List<AppRacingBettingPo> findCountryCode() throws Exception;
 
     public String getToken();
 

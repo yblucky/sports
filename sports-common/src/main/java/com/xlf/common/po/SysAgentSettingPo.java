@@ -54,7 +54,7 @@ public class SysAgentSettingPo implements Serializable {
     /**
      * '代理返水比例'
      * */
-    private BigDecimal returnWater;
+    private BigDecimal returnWaterScale;
 
     /**
      * '会员每天最大提现额度'
@@ -134,12 +134,12 @@ public class SysAgentSettingPo implements Serializable {
         this.maxBetNoPerDigital = maxBetNoPerDigital;
     }
 
-    public BigDecimal getReturnWater() {
-        return returnWater;
+    public BigDecimal getReturnWaterScale() {
+        return returnWaterScale;
     }
 
-    public void setReturnWater(BigDecimal returnWater) {
-        this.returnWater = returnWater;
+    public void setReturnWaterScale(BigDecimal returnWaterScale) {
+        this.returnWaterScale = returnWaterScale;
     }
 
     public Integer getMaxWithdrawPerDay() {

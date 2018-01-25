@@ -4,12 +4,12 @@ import com.xlf.common.enums.LanguageEnum;
 import com.xlf.common.enums.StateEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.AppCountryCode;
+import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.service.RedisService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
-import com.xlf.server.mapper.AppCountryCodeMapper;
+import com.xlf.server.mapper.AppRacingBettingMapper;
 import com.xlf.server.web.ParameterService;
 import com.xlf.common.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +42,7 @@ public class CommonServiceImpl implements CommonService {
     @Resource
     private NewSmsUtil newSmsUtil;
     @Resource
-    private AppCountryCodeMapper appCountryCodeMapper;
+    private AppRacingBettingMapper appCountryCodeMapper;
     @Resource
     private LanguageUtil languageUtil;
 
@@ -126,7 +126,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public List<AppCountryCode> findCountryCode() throws Exception {
+    public List<AppRacingBettingPo> findCountryCode() throws Exception {
         return appCountryCodeMapper.selectAll();
     }
 

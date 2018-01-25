@@ -3,7 +3,7 @@ package com.xlf.server.app.impl;
 import com.xlf.common.enums.*;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.AppPerformanceRecordPo;
+import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppUserContactPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.service.RedisService;
@@ -259,11 +259,11 @@ public class AppUserServiceImpl implements AppUserService {
         Integer levelNo = Integer.valueOf(level);
         List<String> alist = new ArrayList<>();
         List<String> blist = new ArrayList<>();
-        List<AppPerformanceRecordPo> poList = new ArrayList<>();
+        List<AppTimeBettingPo> poList = new ArrayList<>();
         AppUserContactPo contactPo = null;
         AppUserContactPo contactParentPo = null;
         for (int i = 0; i < levelNo; i++) {
-            AppPerformanceRecordPo recordPo = new AppPerformanceRecordPo();
+            AppTimeBettingPo recordPo = new AppTimeBettingPo();
             if (i == 0) {
                 contactPo = appUserContactMapper.findUserByUserId(userId);
             }

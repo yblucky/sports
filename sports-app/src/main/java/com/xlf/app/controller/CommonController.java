@@ -5,11 +5,8 @@ import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
-import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.util.ToolUtils;
-import com.xlf.server.app.AppPerformanceParamService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.common.KaptchaService;
@@ -40,8 +37,6 @@ public class CommonController {
     private CommonService commonService;
     @Resource
     private AppUserService appUserService;
-    @Resource
-    private AppPerformanceParamService appPerformanceParamService;
     @Resource
     private LanguageUtil languageUtil;
 
@@ -135,7 +130,6 @@ public class CommonController {
                 return respBody;
             }
             // 验证通过，调用业务层
-            commonService.sendSms(appUserPo.getMobile(), appUserPo.getAreaNum());
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "获取手机验证码失败");
             LogUtils.error("获取手机验证码失败！", ex);
@@ -186,24 +180,6 @@ public class CommonController {
     }
 
     /**
-     * 获取全球国家代码
-     *
-     * @return 响应对象
-     */
-    @GetMapping("/findCountryCode")
-    public RespBody findCountryCode() {
-        // 创建返回对象
-        RespBody respBody = new RespBody();
-        try {
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取成功", commonService.findCountryCode());
-        } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), "获取全球国家代码失败");
-            LogUtils.error("获取全球国家代码失败！", ex);
-        }
-        return respBody;
-    }
-
-    /**
      * 获取服务器时间戳
      *
      * @return 响应对象
@@ -222,10 +198,4 @@ public class CommonController {
         return respBody;
     }
 
-    public static void main(String[] args) {
-        String uuid= ToolUtils.getUUID();
-        System.out.println(uuid);
-        System.out.println(CryptUtils.hmacSHA1Encrypt("a123456",uuid));
-        System.out.println(CryptUtils.hmacSHA1Encrypt("123456",uuid));
-    }
 }

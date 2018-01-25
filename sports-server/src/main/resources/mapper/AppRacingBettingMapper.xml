@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlf.server.mapper.AppRacingBettingMapper">
+
+
+    <sql id="fields">
+         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotterySix,lotterySeven,lotteryEight,lotteryNine,lotteryTen,lotteryFlag,winningAmount,multiple,createTime
+    </sql>
+
+    <sql id="fields_id">
+        id,
+        <include refid="fields"/>
+    </sql>
+
+    <sql id="table_name">app_racing_betting</sql>
+
+    <sql id="selector">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+    </sql>
+    
+    
+</mapper>
+
+
+
