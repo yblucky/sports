@@ -16,6 +16,7 @@ import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.app.BankCardVo;
 import com.xlf.server.web.LoginService;
+import com.xlf.server.web.SysUserService;
 import com.xlf.server.web.WebBankCardService;
 import com.xlf.server.web.WebUserService;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +38,8 @@ public class WebUserController {
     private WebUserService webAppUserService;
     @Resource
     private RedisService redisService;
-    @Resource(name = "webLogin")
-    private LoginService loginService;
     @Resource
-    private WebBankCardService bankCardService;
+    private SysUserService sysUserService;
 
 
     /**
@@ -121,44 +120,6 @@ public class WebUserController {
     }
 
 
-    /**
-     * 修改用户姓名
-     *
-     * @return 响应对象
-     */
-    @PostMapping("/upUserName")
-    public RespBody upUserName(@RequestBody AppUserPo po) {
-        RespBody respBody = new RespBody();
-        try {
-            if (StringUtil.isEmpty(po.getName())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "姓名错误!");
-            }
-            AppUserPo find = webAppUserService.findUserById(po.getId());
-            if (null == find) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "用户错误");
-            }
-            if ((StateEnum.NORMAL.getCode().equals(find.getState()) || StateEnum.DISABLE.getCode().equals(find.getState()))) {
-                AppUserPo upPo = new AppUserPo();
-                upPo.setName(po.getName());
-                int count = webAppUserService.updateById(upPo, po.getId());
-                if (count > 0) {
-                    BankCardVo bankCardVo = new BankCardVo();
-                    bankCardVo.setName(po.getName());
-                    bankCardVo.setUserId(po.getId());
-                    bankCardService.update(bankCardVo);
-                    respBody.add(RespCodeEnum.SUCCESS.getCode(), "修改成功");
-                } else {
-                    respBody.add(RespCodeEnum.ERROR.getCode(), "修改失败");
-                }
-            } else {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "用户状态不正常");
-            }
-        } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), "修改失败");
-            LogUtils.error("修改用户状态失败", ex);
-        }
-        return respBody;
-    }
 
     /**
      * 获取用户的上级
@@ -167,7 +128,7 @@ public class WebUserController {
     public RespBody loadParent(String id) {
         RespBody respBody = new RespBody();
         try {
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载数据成功", webAppUserService.findUserById(id));
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载数据成功", sysUserService.findById(id));
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "加载列表失败");
             LogUtils.error("加载列表失败！", ex);
@@ -175,21 +136,6 @@ public class WebUserController {
         return respBody;
     }
 
-
-    /**
-     * 获取用户的下级
-     */
-    @GetMapping("/loadLower")
-    public RespBody loadLower(String parentId) {
-        RespBody respBody = new RespBody();
-        try {
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载数据成功", webAppUserService.getLowerPoList(parentId));
-        } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), "加载列表失败");
-            LogUtils.error("加载列表失败！", ex);
-        }
-        return respBody;
-    }
 
 
 }

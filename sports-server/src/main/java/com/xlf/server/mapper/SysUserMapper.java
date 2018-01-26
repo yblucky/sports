@@ -44,17 +44,19 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 	/**
 	 * 分页查询
 	 * @param rwoBounds
+	 * @param roleType
 	 * @return
 	 */
-	@Select("select id,userName,loginName,mobile,roleId,roleName,userIcon,createTime,lastTime,state from sys_user order by createTime desc")
-	public List<SysUserVo> findAll(RowBounds rwoBounds);
+	@Select("select id,userName,loginName,mobile,roleId,roleName,userIcon,createTime,lastTime,state from sys_user order where roleType=#{roleType} by createTime desc")
+	public List<SysUserVo> findAll(RowBounds rwoBounds, @Param("roleType") String roleType);
 
 	/**
 	 * 查总记录数
 	 * @return
+	 * @param roleType
 	 */
-	@Select("select count(1) from sys_user")
-	public long findCount();
+	@Select("select count(1) from sys_user where roleType=#{roleType}")
+	public long findCount(@Param("roleType") String roleType);
 
 	/**
 	 * 查找登录名是否存在

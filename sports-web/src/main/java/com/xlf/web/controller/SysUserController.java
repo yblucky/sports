@@ -3,6 +3,8 @@ package com.xlf.web.controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.xlf.server.app.SysAgentSettingService;
+import com.xlf.server.common.CommonService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +32,7 @@ import com.xlf.server.web.SysUserService;
  */
 @RestController
 @RequestMapping(value = "/user")
-public class UserController {
+public class SysUserController {
 	@Resource
 	private SysUserService webUserService;//用户业务层
 	@Resource
@@ -39,6 +41,10 @@ public class UserController {
 	private ConfUtils confUtils;
 	@Resource
 	private RedisService redisService;
+	@Resource
+	private CommonService commonService;
+	@Resource
+	private SysAgentSettingService sysAgentSettingService;
 	@Resource(name="webLogin")
 	private LoginService loginService;
 	
@@ -65,18 +71,32 @@ public class UserController {
 		}
 		return respBody;
 	}
-	
+
 	@GetMapping("/findAll")
-	public RespBody findAll(Paging paging){
+	public RespBody findAll(Paging paging,String roleType){
 		RespBody respBody = new RespBody();
 		try {
 			//保存返回数据
-			respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有用户信息数据成功", webUserService.findAll(paging));
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有用户信息数据成功", webUserService.findAll(paging,roleType));
 			//保存分页对象
-			paging.setTotalCount(webUserService.findCount());
+			paging.setTotalCount(webUserService.findCount(roleType));
 			respBody.setPage(paging);
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "查找所有用户信息数据失败");
+			LogUtils.error("查找所有用户信息数据失败！",ex);
+		}
+		return respBody;
+	}
+
+	@GetMapping("/loadAgentSetting")
+	public RespBody loadAgentSetting(){
+		RespBody respBody = new RespBody();
+		try {
+			commonService.checkToken();
+			//保存返回数据
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载代理等级参数成功", sysAgentSettingService.loadAgentSetting());
+		} catch (Exception ex) {
+			respBody.add(RespCodeEnum.ERROR.getCode(), "加载代理等级参数失败");
 			LogUtils.error("查找所有用户信息数据失败！",ex);
 		}
 		return respBody;
@@ -100,7 +120,7 @@ public class UserController {
 		RespBody respBody = new RespBody();
 		try {
 			//判断用户是否存在
-			SysUserVo findUser = webUserService.findByLoginName(userVo.getLoginName());
+			SysUserVo findUser = webUserService.findByMobile(userVo.getMobile());
 			if(findUser == null){
 				webUserService.add(userVo);
 				respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息保存成功");

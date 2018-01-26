@@ -2,6 +2,7 @@ package com.xlf.common.po;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -70,6 +71,14 @@ public class SysUserPo {
 	 * 代理等级id
 	 */
 	private String agentLevelId;
+	/**
+	 * 今日返水：每日凌晨清零
+	 */
+	private BigDecimal totayReturnWater;
+	/**
+	 * 累计返水
+	 */
+	private BigDecimal totalReturnWater;
 
 	/**
 	 * @return the password
@@ -263,5 +272,21 @@ public class SysUserPo {
 
 	public void setAgentLevelId(String agentLevelId) {
 		this.agentLevelId = agentLevelId;
+	}
+
+	public BigDecimal getTotayReturnWater() {
+		return totayReturnWater;
+	}
+
+	public void setTotayReturnWater(BigDecimal totayReturnWater) {
+		this.totayReturnWater = totayReturnWater;
+	}
+
+	public BigDecimal getTotalReturnWater() {
+		return totalReturnWater;
+	}
+
+	public void setTotalReturnWater(BigDecimal totalReturnWater) {
+		this.totalReturnWater = totalReturnWater;
 	}
 }

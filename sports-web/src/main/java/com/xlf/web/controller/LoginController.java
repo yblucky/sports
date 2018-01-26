@@ -111,6 +111,10 @@ public class LoginController {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "验证码不能为空！");
 			return false;
 		}
+		if(loginVo.getRoleType() == null){
+			respBody.add(RespCodeEnum.ERROR.getCode(), "参数不合法！");
+			return false;
+		}
 		return true;
 	}
 

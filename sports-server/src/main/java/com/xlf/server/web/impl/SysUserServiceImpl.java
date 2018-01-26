@@ -45,14 +45,14 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public List<SysUserVo> findAll(Paging paging) {
+    public List<SysUserVo> findAll(Paging paging, String roleType) {
         RowBounds rwoBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
-        return userMapper.findAll(rwoBounds);
+        return userMapper.findAll(rwoBounds, roleType);
     }
 
     @Override
-    public long findCount() {
-        return userMapper.findCount();
+    public long findCount(String roleType) {
+        return userMapper.findCount(roleType);
     }
 
     @Override
@@ -90,8 +90,8 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUserVo findByLoginName(String loginName) {
-        return userMapper.findByloginName(loginName, loginVo.getRoleType());
+    public SysUserVo findByLoginName(String loginName,Integer roleType) {
+        return userMapper.findByloginName(loginName, roleType);
     }
 
     @Override
