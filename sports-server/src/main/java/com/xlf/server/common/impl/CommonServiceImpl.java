@@ -108,6 +108,9 @@ public class CommonServiceImpl implements CommonService {
         if (userPo == null) {
             throw new CommException(languageUtil.getMsg(AppMessage.USER_INVALID,"用户不存在"));
         }
+        if (StringUtils.isEmpty(userPo.getParentId())) {
+            throw new CommException("没有代理挂靠");
+        }
         if (StateEnum.DISABLE.getCode().equals(userPo.getState())) {
             //清除token缓存，强制用户下线
             String token_key = redisService.getString(userPo.getId());

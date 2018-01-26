@@ -84,6 +84,12 @@ public interface SysUserService {
 	public SysUserVo findByMobile(String mobile);
 
 	/**
+	 * @param id
+	 * @return
+	 */
+	public SysUserVo findById(String id);
+
+	/**
 	 * 修改密码
 	 * @param newPw
 	 * @param id

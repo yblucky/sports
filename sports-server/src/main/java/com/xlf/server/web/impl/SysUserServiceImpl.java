@@ -105,4 +105,9 @@ public class SysUserServiceImpl implements SysUserService {
         userPo.setPassword(newPw);
         userMapper.updateByPrimaryKey(userPo);
     }
+
+    @Override
+    public SysUserVo findById(String id) {
+        return userMapper.findById(id);
+    }
 }

@@ -34,6 +34,13 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 	public SysUserVo findByMobile(@Param("mobile") String mobile);
 
 	/**
+	 * @param id
+	 * @return
+	 */
+	@Select("select * from sys_user where id=#{id}")
+	public SysUserVo findById(@Param("id") String id);
+
+	/**
 	 * 分页查询
 	 * @param rwoBounds
 	 * @return
