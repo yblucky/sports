@@ -13,6 +13,8 @@ public enum RedisKeyEnum {
     SHORT_CURRENCY_TYPE_EN("short_currency_type_en", 24 * 60 * 60),
     CURRENCY_TYPE_EN("currency_type_en", 24 * 60 * 60),
     CURRENCY_TYPE_ZH("currency_type_zh", 24 * 60 * 60),
+    SYSLOG_FLAG("syslog_flag", 24 * 60 * 60),
+    BILLRECORD_FLAG("billrecord_flag", 24 * 60 * 60),
     CURRENCY_TYPE_TRANSACTION("currency_type_transaction_", 24 * 60 * 60);
 
     private final String key;

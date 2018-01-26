@@ -70,6 +70,14 @@ public class SysUserVo implements Serializable{
 	 * 状态
 	 */
 	private String state;
+	/**
+	 * 代理等级ID
+	 */
+	private String agentLevelId;
+	/**
+	 * 角色类型
+	 */
+	private String roleType;
 
 	/**
 	 * @return the salt
@@ -249,5 +257,21 @@ public class SysUserVo implements Serializable{
 	 */
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getAgentLevelId() {
+		return agentLevelId;
+	}
+
+	public void setAgentLevelId(String agentLevelId) {
+		this.agentLevelId = agentLevelId;
+	}
+
+	public String getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(String roleType) {
+		this.roleType = roleType;
 	}
 }

@@ -23,6 +23,10 @@ public class LoginVo{
 	 * 验证码
 	 */
 	private String picCode;
+	/**
+	 * 角色 10 超级管理员 20 代理
+	 */
+	private Integer roleType;
 	
 	/**
 	 * @return the imgKey
@@ -71,5 +75,13 @@ public class LoginVo{
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Integer getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
 	}
 }
