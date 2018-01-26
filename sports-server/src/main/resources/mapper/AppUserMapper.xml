@@ -9,7 +9,7 @@
     </resultMap>
 
     <sql id="fields">
-       uid,mobile,name,nickName,loginPwd,pwdStal,payPwd,payStal,parentId,epBalance,blockedEpBalance,birdScore,assets,state,level,imgPath,createTime,activeNo,loginTime,releaseTime,isAllowed
+       uid,mobile,name,nickName,loginPwd,pwdStal,payPwd,payStal,parentId,balance,blockedBalance,bettingAmout,currentProfit,winingAmout,kickBackAmount,errorNo,state,imgPath,createTime,loginTime
     </sql>
 
     <sql id="fields_id">
@@ -34,8 +34,6 @@
             <if test="model.name != null and model.name != ''">and  name=#{model.name}</if>
             <if test="model.parentId != null and model.parentId != ''">and parentId=#{model.parentId}</if>
             <if test="model.state != null and model.state != ''">and state=#{model.state}</if>
-            <if test="model.level != null">and level=#{model.level}</if>
-            <if test="model.isAllowed != null">and isAllowed=#{model.isAllowed}</if>
         </where>
     </sql>
 	
@@ -69,30 +67,23 @@
             <if test="model.payStal != null and model.payStal !=''">payStal= #{model.payStal},</if>
             <if test="model.state != null and model.state !=''">state= #{model.state},</if>
             <if test="model.loginTime != null ">loginTime= #{model.loginTime},</if>
-            <if test="model.releaseTime != null ">releaseTime= #{model.releaseTime},</if>
             <if test="model.imgPath != null and model.imgPath !=''">imgPath= #{model.imgPath},</if>
-            <if test="model.epBalance != null">epBalance= #{model.epBalance},</if>
-            <if test="model.blockedEpBalance != null">blockedEpBalance= #{model.blockedEpBalance},</if>
-            <if test="model.birdScore != null">birdScore= #{model.birdScore},</if>
-            <if test="model.assets != null">assets= #{model.assets},</if>
-            <if test="model.level != null">level= #{model.level},</if>
-            <if test="model.isAllowed != null">isAllowed= #{model.isAllowed},</if>
         </set>
         where id=#{id}
     </update>
 
-    <!--修改用户ep余额-->
-    <update id="updateEpBalanceById">
+    <!--修改用户余额-->
+    <update id="updateBalanceById">
         update <include refid="table_name"/>
-        set epBalance = epBalance + #{epBalance}
-        where id=#{id} and (epBalance + #{epBalance}) >= 0
+        set balance = balance + #{balance}
+        where id=#{id} and (balance + #{balance}) >= 0
     </update>
 
-    <!--修改用户冻结ep余额-->
-    <update id="updateEpBlockBalanceById">
+    <!--修改用户冻结余额-->
+    <update id="updateBlockBalanceById">
         update <include refid="table_name"/>
-        set blockedEpBalance = blockedEpBalance + #{blockedEpBalance}
-        where id=#{id} and (blockedEpBalance + #{blockedEpBalance}) >= 0
+        set blockedBalance = blockedBalance + #{blockedBalance}
+        where id=#{id} and (blockedBalance + #{blockedBalance}) >= 0
     </update>
 
     <!--修改用户候鸟积分-->
@@ -102,17 +93,35 @@
         where id=#{id}
     </update>
 
-    <!--修改用户e资产-->
-    <update id="updateAssetsById">
+    <!--修改用户累计投注金额-->
+    <update id="updateBettingAmoutById">
         update <include refid="table_name"/>
-        set assets = IFNULL(assets,0) + #{assets}
+        set assets = IFNULL(bettingAmout,0) + #{bettingAmout}
         where id=#{id}
     </update>
 
-    <!--调用存储过程，获取上级-->
-    <select id="readUserByParentId" resultMap="resultMap" statementType="CALLABLE">
-        CALL select_appUser(#{uid},#{level});
-    </select>
+    <!--修改用户当天盈亏：每日凌晨清零-->
+    <update id="updateCurrentProfitById">
+        update <include refid="table_name"/>
+        set assets = IFNULL(currentProfit,0) + #{currentProfit}
+        where id=#{id}
+    </update>
+
+
+    <!--修改用户累计中奖金额-->
+    <update id="updateWiningAmoutById">
+        update <include refid="table_name"/>
+        set assets = IFNULL(winingAmout,0) + #{winingAmout}
+        where id=#{id}
+    </update>
+
+
+    <!--修改用户历史累计返水衡量值-->
+    <update id="updateKickBackAmountById">
+        update <include refid="table_name"/>
+        set assets = IFNULL(kickBackAmount,0) + #{kickBackAmount}
+        where id=#{id}
+    </update>
 
 
     <!--修改用激活次数-->
@@ -125,6 +134,11 @@
     <!--修改用户状态-->
     <update id="updateUserStateById">
         update <include refid="table_name"/> set state = #{state}   where id=#{id}
+    </update>
+
+    <!--修改用户登录时间-->
+    <update id="updateLoginTimeById">
+        update <include refid="table_name"/> set loginTime = #{loginTime}   where id=#{id}
     </update>
     
     <select id="getPoList" resultType="com.xlf.common.po.AppUserPo">

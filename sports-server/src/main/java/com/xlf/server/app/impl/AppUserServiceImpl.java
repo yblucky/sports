@@ -190,4 +190,44 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserMapper.updateById(userPo, userId);
     }
 
+
+    @Override
+    public int updateBalanceById(String id, BigDecimal balance) {
+        return appUserMapper.updateBalanceById(id,balance);
+    }
+
+    @Override
+    public int updateBlockBalanceById(String id, BigDecimal blockedBalance) {
+        return appUserMapper.updateBlockBalanceById(id,blockedBalance);
+    }
+
+    @Override
+    public int updateBettingAmoutById(String id, BigDecimal bettingAmout) {
+        return appUserMapper.updateBettingAmoutById(id,bettingAmout);
+    }
+
+    @Override
+    public int updateCurrentProfitById(String id, BigDecimal currentProfit) {
+        return appUserMapper.updateCurrentProfitById(id,currentProfit);
+    }
+
+    @Override
+    public Integer updateWiningAmoutById(String id, BigDecimal winingAmout) {
+        return appUserMapper.updateWiningAmoutById(id,winingAmout);
+    }
+
+    @Override
+    public Integer updateKickBackAmountById(String id, BigDecimal kickBackAmount) {
+        return appUserMapper.updateKickBackAmountById(id,kickBackAmount);
+    }
+
+    @Override
+    public Integer updateUserStateById(String id, Integer state) {
+        return appUserMapper.updateUserStateById(id,state);
+    }
+
+    @Override
+    public Integer updateLoginTimeById(String id, Date loginTime) {
+        return appUserMapper.updateLoginTimeById(id,loginTime);
+    }
 }

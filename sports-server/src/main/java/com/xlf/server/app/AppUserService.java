@@ -3,6 +3,9 @@ package com.xlf.server.app;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.vo.app.UserVo;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  * 用户相关业务
  * Created by Administrator on 2018/1/4 0004.
@@ -83,6 +86,70 @@ public interface AppUserService {
      * @throws Exception
      */
     public int updateById(AppUserPo userPo, String userId) throws Exception;
+
+
+    /**
+     * 修改用户余额
+     *
+     * @param balance
+     * @param id
+     * @return
+     */
+    public int updateBalanceById( String id, BigDecimal balance);
+
+    /**
+     * 修改用户冻结余额
+     *
+     * @param blockedBalance
+     * @param id
+     * @return
+     */
+    public int updateBlockBalanceById( String id,  BigDecimal blockedBalance);
+
+    /**
+     * 修改用户累计投注金额
+     *
+     * @param bettingAmout
+     * @param id
+     * @return
+     */
+    public int updateBettingAmoutById( String id, BigDecimal bettingAmout);
+
+    /**
+     * 修改用户当天盈亏：每日凌晨清零
+     *
+     * @param currentProfit
+     * @param id
+     * @return
+     */
+    public int updateCurrentProfitById( String id,  BigDecimal currentProfit);
+
+
+    /**
+     * 修改用户累计中奖金额
+     *
+     * @param id
+     * @param winingAmout
+     * @return
+     */
+    public Integer updateWiningAmoutById( String id,  BigDecimal winingAmout);
+
+
+    /**
+     * 修改用户历史累计返水衡量值
+     *
+     * @param id
+     * @param kickBackAmount
+     * @return
+     */
+    public Integer updateKickBackAmountById( String id,   BigDecimal kickBackAmount);
+
+
+
+    public Integer updateUserStateById( String id,  Integer state);
+
+
+    public Integer updateLoginTimeById( String id,   Date loginTime);
 
 
 }

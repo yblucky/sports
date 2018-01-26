@@ -39,7 +39,7 @@ public class SysAgentSettingPo implements Serializable {
     /**
      * '会员每天最大盈利额度'
      * */
-    private Integer maxProfitPerDay;
+    private BigDecimal maxProfitPerDay;
 
     /**
      * '会员每期每个数字最少下注组数'
@@ -115,11 +115,11 @@ public class SysAgentSettingPo implements Serializable {
         this.deposit = deposit;
     }
 
-    public Integer getMaxProfitPerDay() {
+    public BigDecimal getMaxProfitPerDay() {
         return maxProfitPerDay;
     }
 
-    public void setMaxProfitPerDay(Integer maxProfitPerDay) {
+    public void setMaxProfitPerDay(BigDecimal maxProfitPerDay) {
         this.maxProfitPerDay = maxProfitPerDay;
     }
 

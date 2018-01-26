@@ -87,52 +87,67 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     public int updateById(@Param("model") AppUserPo appUserPo, @Param("id") String id);
 
     /**
-     * 修改用户ep余额
+     * 修改用户余额
      *
-     * @param epBalance
+     * @param balance
      * @param id
      * @return
      */
-    public int updateEpBalanceById(@Param("epBalance") BigDecimal epBalance, @Param("id") String id);
+    public int updateBalanceById(@Param("id") String id,@Param("balance") BigDecimal balance);
 
     /**
-     * 修改用户冻结ep余额
+     * 修改用户冻结余额
      *
-     * @param blockedEpBalance
+     * @param blockedBalance
      * @param id
      * @return
      */
-    public int updateEpBlockBalanceById(@Param("blockedEpBalance") BigDecimal blockedEpBalance, @Param("id") String id);
+    public int updateBlockBalanceById(@Param("id") String id,@Param("blockedBalance") BigDecimal blockedBalance);
 
     /**
-     * 修改用户候鸟
+     * 修改用户累计投注金额
      *
-     * @param birdScore
+     * @param bettingAmout
      * @param id
      * @return
      */
-    public int updateBirdScoreById(@Param("birdScore") BigDecimal birdScore, @Param("id") String id);
+    public int updateBettingAmoutById(@Param("id") String id,@Param("bettingAmout") BigDecimal bettingAmout);
 
     /**
-     * 修改用户e资产
+     * 修改用户当天盈亏：每日凌晨清零
      *
-     * @param assets
+     * @param currentProfit
      * @param id
      * @return
      */
-    public int updateAssetsById(@Param("assets") BigDecimal assets, @Param("id") String id);
+    public int updateCurrentProfitById(@Param("id") String id,@Param("currentProfit") BigDecimal currentProfit);
 
 
     /**
-     * 修改用户激活次数
+     * 修改用户累计中奖金额
      *
      * @param id
-     * @param activeNo
+     * @param winingAmout
      * @return
      */
-    public Integer updateActiveNoById(@Param("id") String id, @Param("activeNo") Integer activeNo);
+    public Integer updateWiningAmoutById(@Param("id") String id, @Param("winingAmout") BigDecimal winingAmout);
+
+
+    /**
+     * 修改用户历史累计返水衡量值
+     *
+     * @param id
+     * @param kickBackAmount
+     * @return
+     */
+    public Integer updateKickBackAmountById(@Param("id") String id, @Param("kickBackAmount") BigDecimal kickBackAmount);
+
+
 
     public Integer updateUserStateById(@Param("id") String id, @Param("state") Integer state);
+
+
+    public Integer updateLoginTimeById(@Param("id") String id, @Param("loginTime") Date loginTime);
 
     /**
      * 根据条件查询用户列表
@@ -182,15 +197,15 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
      */
     @Select("select * from app_user where uid=#{uid} or mobile=#{uid}")
     public AppUserPo findUid(@Param("uid") String uid);
-    
-    
+
+
     public HomeUser homeSUM();
-    
-    public Integer SUMCount(@Param("model") AppUserPo po); 
-    
-    
+
+    public Integer SUMCount(@Param("model") AppUserPo po);
+
+
     @Update("update app_user set activeNo=activeNo+#{activeNo} where id = #{id}")
     int updateActiveNoCount(@Param("activeNo") Integer activeNo, @Param("id") String id);
-    
+
 
 }

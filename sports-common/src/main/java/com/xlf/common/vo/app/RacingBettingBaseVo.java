@@ -1,58 +1,27 @@
-package com.xlf.common.po;
+package com.xlf.common.vo.app;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.util.Date;
+public class RacingBettingBaseVo {
 
-/**
- * 北京赛车投注表po类
- * Created by Administrator on 2017/8/17.
- */
-@Table(name="app_racing_betting")
-public class AppRacingBettingPo {
-    @Id
-    private String id;
-    private String issueNo;
-    private String userId;
+
+    private Integer multiple;
     private Integer lotteryOne;
     private Integer lotteryTwo;
     private Integer lotteryThree;
     private Integer lotteryFour;
     private Integer lotteryFive;
+
     private Integer lotterySix;
     private Integer lotterySeven;
     private Integer lotteryEight;
     private Integer lotteryNine;
     private Integer lotteryTen;
-    private Integer lotteryFlag;
-    private BigDecimal winningAmount;
-    private Integer multiple;
-    private Date createTime;
-    private String businessNumber;
 
-    public String getId() {
-        return id;
+    public Integer getMultiple() {
+        return multiple;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getIssueNo() {
-        return issueNo;
-    }
-
-    public void setIssueNo(String issueNo) {
-        this.issueNo = issueNo;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setMultiple(Integer multiple) {
+        this.multiple = multiple;
     }
 
     public Integer getLotteryOne() {
@@ -133,45 +102,5 @@ public class AppRacingBettingPo {
 
     public void setLotteryTen(Integer lotteryTen) {
         this.lotteryTen = lotteryTen;
-    }
-
-    public Integer getLotteryFlag() {
-        return lotteryFlag;
-    }
-
-    public void setLotteryFlag(Integer lotteryFlag) {
-        this.lotteryFlag = lotteryFlag;
-    }
-
-    public BigDecimal getWinningAmount() {
-        return winningAmount;
-    }
-
-    public void setWinningAmount(BigDecimal winningAmount) {
-        this.winningAmount = winningAmount;
-    }
-
-    public Integer getMultiple() {
-        return multiple;
-    }
-
-    public void setMultiple(Integer multiple) {
-        this.multiple = multiple;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getBusinessNumber() {
-        return businessNumber;
-    }
-
-    public void setBusinessNumber(String businessNumber) {
-        this.businessNumber = businessNumber;
     }
 }

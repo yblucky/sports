@@ -25,6 +25,7 @@ public class AppTimeBettingPo implements Serializable {
     private BigDecimal winningAmount;
     private Integer multiple;
     private Date createTime;
+    private String businessNumber;
 
     public String getId() {
         return id;
@@ -120,5 +121,13 @@ public class AppTimeBettingPo implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getBusinessNumber() {
+        return businessNumber;
+    }
+
+    public void setBusinessNumber(String businessNumber) {
+        this.businessNumber = businessNumber;
     }
 }
