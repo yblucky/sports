@@ -6,7 +6,7 @@ import java.util.List;
 public class RacingBettingVo {
     private String issueNo;
     private String payPwd;
-    private List timeList=new ArrayList<TimeBettingBaseVo>();
+    private List<RacingBettingBaseVo> raingList = new ArrayList<>();
 
     public String getIssueNo() {
         return issueNo;
@@ -24,11 +24,11 @@ public class RacingBettingVo {
         this.payPwd = payPwd;
     }
 
-    public List getTimeList() {
-        return timeList;
+    public List<RacingBettingBaseVo> getRaingList() {
+        return raingList;
     }
 
-    public void setTimeList(List timeList) {
-        this.timeList = timeList;
+    public void setRaingList(List<RacingBettingBaseVo> raingList) {
+        this.raingList = raingList;
     }
 }
