@@ -86,6 +86,11 @@ public class SysAgentSettingPo implements Serializable {
      * */
     private String  state;
 
+    /**
+     * '赔率'
+     * */
+    private BigDecimal  odds;
+
     public String getId() {
         return id;
     }
@@ -188,5 +193,13 @@ public class SysAgentSettingPo implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public BigDecimal getOdds() {
+        return odds;
+    }
+
+    public void setOdds(BigDecimal odds) {
+        this.odds = odds;
     }
 }
