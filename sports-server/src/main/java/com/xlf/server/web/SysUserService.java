@@ -32,15 +32,17 @@ public interface SysUserService {
 	/**
 	 * 获取所有数据
 	 * @param paging
-	 * @return
+	 * @param roleType
+     * @return
 	 */
-	public List<SysUserVo> findAll(Paging paging);
+	public List<SysUserVo> findAll(Paging paging, String roleType);
 
 	/**
 	 * 查找总记录数
 	 * @return
+	 * @param roleType
 	 */
-	public long findCount();
+	public long findCount(String roleType);
 
 	/**
 	 * 新增用户
@@ -74,7 +76,7 @@ public interface SysUserService {
 	 * @param loginName
 	 * @return
 	 */
-	public SysUserVo findByLoginName(String loginName);
+	SysUserVo findByLoginName(String loginName, Integer roleType);
 
 	/**
 	 * 查找登录名是否存在
