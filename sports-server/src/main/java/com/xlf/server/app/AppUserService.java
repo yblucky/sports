@@ -1,6 +1,5 @@
 package com.xlf.server.app;
 
-import com.xlf.common.enums.PerformanceTypeEnum;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.vo.app.UserVo;
 
