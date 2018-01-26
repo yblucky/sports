@@ -31,7 +31,7 @@ import com.xlf.server.web.SysUserService;
  * @date 2017年6月12日
  */
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/sysUser")
 public class SysUserController {
 	@Resource
 	private SysUserService webUserService;//用户业务层

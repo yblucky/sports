@@ -8,6 +8,7 @@
 package com.xlf.common.vo.pc;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -78,6 +79,18 @@ public class SysUserVo implements Serializable{
 	 * 角色类型
 	 */
 	private String roleType;
+	/**
+	 * 代理等级别称
+	 */
+	private String agentName;
+	/**
+	 * 今日返水：每日凌晨清零
+	 */
+	private BigDecimal totayReturnWater;
+	/**
+	 * 累计返水
+	 */
+	private BigDecimal totalReturnWater;
 
 	/**
 	 * @return the salt
@@ -273,5 +286,29 @@ public class SysUserVo implements Serializable{
 
 	public void setRoleType(String roleType) {
 		this.roleType = roleType;
+	}
+
+	public String getAgentName() {
+		return agentName;
+	}
+
+	public void setAgentName(String agentName) {
+		this.agentName = agentName;
+	}
+
+	public BigDecimal getTotayReturnWater() {
+		return totayReturnWater;
+	}
+
+	public void setTotayReturnWater(BigDecimal totayReturnWater) {
+		this.totayReturnWater = totayReturnWater;
+	}
+
+	public BigDecimal getTotalReturnWater() {
+		return totalReturnWater;
+	}
+
+	public void setTotalReturnWater(BigDecimal totalReturnWater) {
+		this.totalReturnWater = totalReturnWater;
 	}
 }

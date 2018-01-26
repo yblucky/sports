@@ -47,7 +47,8 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 	 * @param roleType
 	 * @return
 	 */
-	@Select("select id,userName,loginName,mobile,roleId,roleName,userIcon,createTime,lastTime,state from sys_user order where roleType=#{roleType} by createTime desc")
+	@Select("select u.id,u.userName,u.loginName,u.mobile,u.roleId,u.roleName,u.userIcon,u.createTime,u.lastTime,u.state,u.totayReturnWater,u.totalReturnWater,t.angetName " +
+			"  from sys_user u left join sys_agent_setting t on u.agentLevelId=t.id where roleType=#{roleType} by createTime desc")
 	public List<SysUserVo> findAll(RowBounds rwoBounds, @Param("roleType") String roleType);
 
 	/**

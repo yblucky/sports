@@ -1,7 +1,5 @@
 package com.xlf.server.app.impl;
 
-import com.xlf.common.enums.BusnessTypeEnum;
-import com.xlf.common.enums.CurrencyTypeEnum;
 import com.xlf.common.enums.WithDrawEnum;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.AppWithDrawPo;
