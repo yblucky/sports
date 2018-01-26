@@ -1,6 +1,5 @@
 package com.xlf.server.app.impl;
 
-import com.xlf.common.enums.PerformanceTypeEnum;
 import com.xlf.common.enums.RedisKeyEnum;
 import com.xlf.common.enums.StateEnum;
 import com.xlf.common.exception.CommException;
@@ -11,8 +10,6 @@ import com.xlf.common.util.ConfUtils;
 import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.ToolUtils;
-import com.xlf.common.vo.app.ActiveVo;
-import com.xlf.common.vo.app.UserInfoVo;
 import com.xlf.common.vo.app.UserVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppUserService;
@@ -25,9 +22,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Administrator on 2018/1/4 0004.
@@ -130,7 +125,7 @@ public class AppUserServiceImpl implements AppUserService {
         appUserPo.setWiningAmout(BigDecimal.ZERO);
         appUserPo.setErrorNo(5);
 
-       int  count = appUserMapper.insert(appUserPo);
+        int count = appUserMapper.insert(appUserPo);
 
         if (count > 0) {
             return true;
@@ -168,15 +163,15 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public int delUser(String userId) throws Exception {
-        if (StringUtils.isEmpty(userId)){
+        if (StringUtils.isEmpty(userId)) {
             return 0;
         }
-        int rows =0;
-        if (rows<1){
+        int rows = 0;
+        if (rows < 1) {
             throw new CommException(msgUtil.getMsg(AppMessage.DELUSER_FAILURE, "删除用户失败"));
         }
-        rows=appUserMapper.deleteByPrimaryKey(userId);
-        if (rows<1){
+        rows = appUserMapper.deleteByPrimaryKey(userId);
+        if (rows < 1) {
             throw new CommException(msgUtil.getMsg(AppMessage.DELUSER_FAILURE, "删除用户失败"));
         }
         return rows;
