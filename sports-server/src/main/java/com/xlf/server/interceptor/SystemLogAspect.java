@@ -1,9 +1,12 @@
 package com.xlf.server.interceptor;
 
 import com.xlf.common.annotation.SystemControllerLog;
+import com.xlf.common.enums.RedisKeyEnum;
 import com.xlf.common.service.RedisService;
+import com.xlf.common.thread.ThreadPoolManager;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.NetworkUtil;
+import com.xlf.common.util.SerializeUtil;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysLogsVo;
 import com.xlf.common.vo.pc.SysUserVo;
@@ -13,6 +16,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -21,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -85,13 +90,52 @@ public class SystemLogAspect {
 	        logVo.setLogDetail(argInfo);
 	        //设置操作类型
 	        logVo.setOptType(getControllerMethodDescription(joinPoint));
-	        //保存到数据库
-	        logService.save(logVo);
+			logVo.setOptDate(new Date());
+			//先缓存到redis中
+			redisService.rpush(SerializeUtil.serialize(RedisKeyEnum.SYSLOG_FLAG.getKey()), SerializeUtil.serialize(logVo));
+			//日志线程是否正在运行
+			String isRun = redisService.getString(RedisKeyEnum.SYSLOG_FLAG.getKey()+"_isRun");
+			if(!StringUtils.isEmpty(isRun)){
+				return;
+			}
+			//开启线程去跑存储日志的功能
+			ThreadPoolManager.getThreadPoolExecutor().execute(new Runnable() {
+				@Override
+				public void run() {
+					redisService.putString(RedisKeyEnum.SYSLOG_FLAG.getKey()+"_isRun","true",3600000);
+					doSaveLog();
+				}
+			});
 		}catch(Exception ex){
 			LogUtils.error("写入日志出错",ex);
 		}
 	}
-	
+
+
+	//递归调用保存日志
+	public void doSaveLog() {
+		try {
+			String key = RedisKeyEnum.SYSLOG_FLAG.getKey();
+			byte[] bytes = redisService.lpop(SerializeUtil.serialize(key));
+			if (bytes == null) {
+				//线程已跑完，关闭正在跑的线程提示
+				redisService.del(RedisKeyEnum.SYSLOG_FLAG.getKey()+"_isRun");
+				return;
+			}
+			SysLogsVo logVo = (SysLogsVo) SerializeUtil.unserialize(bytes);
+			if (logVo != null) {
+				//保存到数据库
+				logService.save(logVo);
+				//递归调用保存用户操作日志
+				doSaveLog();
+			}
+		} catch (Exception ex) {
+			//不抛出异常
+			//线程已跑完，关闭正在跑的线程提示
+			redisService.del(RedisKeyEnum.SYSLOG_FLAG.getKey()+"_isRun");
+		}
+	}
+
 	 @SuppressWarnings("rawtypes")
 	public static String getControllerMethodDescription(JoinPoint joinPoint) throws Exception {
 		String targetName = joinPoint.getTarget().getClass().getName();

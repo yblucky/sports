@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
 		String picCode = redisService.getString(loginVo.getImgKey());
 		if(picCode != null && picCode.equals(loginVo.getPicCode())){
 			//验证码正确,查询用户信息
-			SysUserVo userVo = userMapper.findByloginName(loginVo.getLoginName());
+			SysUserVo userVo = userMapper.findByloginName(loginVo.getLoginName(),loginVo.getRoleType());
 			// 是否查找到用户信息
 			if (userVo == null) {
 				// 不存在

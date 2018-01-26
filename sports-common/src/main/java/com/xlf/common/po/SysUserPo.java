@@ -62,6 +62,14 @@ public class SysUserPo {
 	 * 状态
 	 */
 	private String state;
+	/**
+	 * 角色 10 超级管理员 20 代理
+	 */
+	private Integer roleType;
+	/**
+	 * 代理等级id
+	 */
+	private String agentLevelId;
 
 	/**
 	 * @return the password
@@ -239,5 +247,21 @@ public class SysUserPo {
 	 */
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public Integer getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
+	}
+
+	public String getAgentLevelId() {
+		return agentLevelId;
+	}
+
+	public void setAgentLevelId(String agentLevelId) {
+		this.agentLevelId = agentLevelId;
 	}
 }
