@@ -100,7 +100,7 @@ public class AssetsController {
                 bettArray[j][2] = base.getLotteryThree();
                 bettArray[j][3] = base.getLotteryFour();
                 bettArray[j][4] = base.getLotteryFive();
-                bettArray[j][10] = base.getMultiple();
+                bettArray[j][5] = base.getMultiple();
                 if (base.getMultiple() < agentSettingPo.getMinBetNoPerDigital() || base.getMultiple() > agentSettingPo.getMaxBetNoPerDigital()) {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "单个位数最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "," + agentSettingPo.getMaxBetNoPerDigital() + "】注");
                     return respBody;
