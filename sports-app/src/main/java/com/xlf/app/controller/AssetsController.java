@@ -123,7 +123,7 @@ public class AssetsController {
                 for (int k = 0; k < length; k++) {
                     List<Integer> verticalList = new ArrayList<>();
                     Set<Integer> verticalSet = new HashSet<>();
-                    if (bettArray[k][j] > 0) {
+                    if (bettArray[k][j] >= 0) {
                         verticalList.add(bettArray[k][j]);
                         verticalSet.add(bettArray[k][j]);
                     }
