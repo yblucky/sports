@@ -54,6 +54,8 @@ public class AssetsController {
     private AppSysAgentSettingService appSysAgentSettingService;
     @Resource
     private AppTimeBettingService appTimeBettingService;
+    @Resource
+    private AppRacingBettingService appRacingBettingService;
 
     @PostMapping("/timebetting")
     @SystemControllerLog(description = "时时彩投注")
@@ -87,6 +89,61 @@ public class AssetsController {
             }
             Map<Integer, Set<Integer>> map = new HashMap<>();
             Integer totalBettingNo = 0;
+
+            Integer length = vo.getTimeList().size();
+            Integer[][] bettArray = new Integer[length - 1][5];
+            for (int j = 0; j < length; j++) {
+                TimeBettingBaseVo base = vo.getTimeList().get(j);
+
+                bettArray[j][0] = base.getLotteryOne();
+                bettArray[j][1] = base.getLotteryTwo();
+                bettArray[j][2] = base.getLotteryThree();
+                bettArray[j][3] = base.getLotteryFour();
+                bettArray[j][4] = base.getLotteryFive();
+                bettArray[j][10] = base.getMultiple();
+                if (base.getMultiple() < agentSettingPo.getMinBetNoPerDigital() || base.getMultiple() > agentSettingPo.getMaxBetNoPerDigital()) {
+                    respBody.add(RespCodeEnum.ERROR.getCode(), "单个位数最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "," + agentSettingPo.getMaxBetNoPerDigital() + "】注");
+                    return respBody;
+                }
+                totalBettingNo += base.getMultiple();
+            }
+            for (int j = 0; j < length; j++) {
+                for (int k = 0; k < 5; k++) {
+                    Set<Integer> horizontal = new HashSet<>();
+                    horizontal.add(bettArray[j][k]);
+                    if (k == 4) {
+                        if (horizontal.size() > 1) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "不符合投注规则,单注只能选择0-9中的一个数字");
+                            return respBody;
+                        }
+                    }
+                }
+            }
+            for (int j = 0; j < 5; j++) {
+                for (int k = 0; k < length; k++) {
+                    List<Integer> verticalList = new ArrayList<>();
+                    Set<Integer> verticalSet = new HashSet<>();
+                    if (bettArray[k][j] > 0) {
+                        verticalList.add(bettArray[k][j]);
+                        verticalSet.add(bettArray[k][j]);
+                    }
+                    if (k == length - 1) {
+                        if (verticalSet.size() > agentSettingPo.getMaxBetDigitalNoPerSeat()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat() + "个不同的数字");
+                            return respBody;
+                        }
+                        if (verticalList.size() != verticalSet.size()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "不符合投注规则,单个位如果压注同一个数字,请合并投注,进行倍投");
+                            return respBody;
+                        }
+                    }
+                }
+            }
+
+
+
+/*
+
             for (TimeBettingBaseVo base : vo.getTimeList()) {
                 if (base.getMultiple() < agentSettingPo.getMinBetNoPerDigital() || base.getMultiple() > agentSettingPo.getMaxBetNoPerDigital()) {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "单个位数最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "," + agentSettingPo.getMaxBetNoPerDigital() + "】注");
@@ -128,7 +185,7 @@ public class AssetsController {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "每期单个位数最多下注不同数字个数为" + agentSettingPo.getMaxBetDigitalNoPerSeat());
                     return respBody;
                 }
-            }
+            }*/
             //最大可能中奖金额
             if (userPo.getBalance().compareTo(new BigDecimal(totalBettingNo.toString())) == -1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "用户余额不足，无法完成下注");
@@ -176,22 +233,59 @@ public class AssetsController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
-            Set<Integer> oneSet = new HashSet<>();
             Integer totalBettingNo = 0;
-            for (RacingBettingBaseVo base : vo.getRaingList()) {
+            Integer length = vo.getRaingList().size();
+            Integer[][] bettArray = new Integer[length - 1][10];
+            for (int j = 0; j < length; j++) {
+                RacingBettingBaseVo base = vo.getRaingList().get(j);
+                bettArray[j][0] = base.getLotteryOne();
+                bettArray[j][1] = base.getLotteryTwo();
+                bettArray[j][2] = base.getLotteryThree();
+                bettArray[j][3] = base.getLotteryFour();
+                bettArray[j][4] = base.getLotteryFive();
+                bettArray[j][5] = base.getLotterySix();
+                bettArray[j][6] = base.getLotterySeven();
+                bettArray[j][7] = base.getLotteryEight();
+                bettArray[j][8] = base.getLotteryNine();
+                bettArray[j][9] = base.getLotteryTen();
+                bettArray[j][10] = base.getMultiple();
                 if (base.getMultiple() < agentSettingPo.getMinBetNoPerDigital() || base.getMultiple() > agentSettingPo.getMaxBetNoPerDigital()) {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "单个位数最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "," + agentSettingPo.getMaxBetNoPerDigital() + "】注");
                     return respBody;
                 }
                 totalBettingNo += base.getMultiple();
-                if (base.getLotteryOne() > 0) {
-                    Set<Integer> set = new HashSet<>();
-                    set.add(base.getLotteryOne());
+            }
+            for (int j = 0; j < length; j++) {
+                for (int k = 0; k < 10; k++) {
+                    Set<Integer> horizontal = new HashSet<>();
+                    horizontal.add(bettArray[j][k]);
+                    if (k == 9) {
+                        if (horizontal.size() > 1) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "不符合投注规则,单注只能选择1-10中的一个数字");
+                            return respBody;
+                        }
+                    }
                 }
             }
-            if (oneSet.size() > agentSettingPo.getMaxBetSeats()) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "每期最多下注位数为" + agentSettingPo.getMaxBetSeats());
-                return respBody;
+            for (int j = 0; j < 10; j++) {
+                for (int k = 0; k < length; k++) {
+                    List<Integer> verticalList = new ArrayList<>();
+                    Set<Integer> verticalSet = new HashSet<>();
+                    if (bettArray[k][j] > 0) {
+                        verticalList.add(bettArray[k][j]);
+                        verticalSet.add(bettArray[k][j]);
+                    }
+                    if (k == length - 1) {
+                        if (verticalSet.size() > agentSettingPo.getMaxBetDigitalNoPerSeat()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "不符合投注规则,每个赛道最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat() + "个不同的数字");
+                            return respBody;
+                        }
+                        if (verticalList.size() != verticalSet.size()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "不符合投注规则,单个赛道如果压注同一个数字,请合并投注,进行倍投");
+                            return respBody;
+                        }
+                    }
+                }
             }
             //最大可能中奖金额
             if (userPo.getBalance().compareTo(new BigDecimal(totalBettingNo.toString())) == -1) {
@@ -199,11 +293,17 @@ public class AssetsController {
                 return respBody;
             }
             BigDecimal maximumAward = new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds());
-//            appTimeBettingService.timeBettingService(userPo.getId(), vo, new BigDecimal(totalBettingNo));
+            appRacingBettingService.racingBettingService(userPo.getId(), vo, new BigDecimal(totalBettingNo));
             respBody.add(RespCodeEnum.SUCCESS.getCode(), msgUtil.getMsg(AppMessage.WAIT_PAYING, "投注成功,等待开奖"));
-        } catch (CommException ex) {
+        } catch (
+                CommException ex)
+
+        {
             respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
-        } catch (Exception ex) {
+        } catch (
+                Exception ex)
+
+        {
             respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.APPLICATION_FAIL, "投注失败"));
             LogUtils.error("投注失败！", ex);
         }

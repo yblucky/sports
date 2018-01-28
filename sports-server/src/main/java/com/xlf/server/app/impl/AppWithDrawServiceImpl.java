@@ -1,5 +1,6 @@
 package com.xlf.server.app.impl;
 
+import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.WithDrawEnum;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.AppWithDrawPo;
@@ -58,17 +59,20 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
     public Boolean epWithDraw(String userId, String bankId, BigDecimal amount) throws Exception {
         BigDecimal withdrawFee = new BigDecimal(commonService.findParameter("withdrawFee"));
         AppUserPo userPo = userService.findUserById(userId);
-        appUserMapper.updateEpBalanceById(amount.multiply(new BigDecimal("-1")), userId);
-        appUserMapper.updateEpBlockBalanceById(amount, userId);
+        appUserMapper.updateBalanceById(userId,amount.multiply(new BigDecimal("-1")));
+        appUserMapper.updateBlockBalanceById(userId,amount);
         BigDecimal am=amount.multiply(new BigDecimal("-1")).setScale(4,BigDecimal.ROUND_HALF_EVEN);
         BigDecimal fee=amount.multiply(withdrawFee).setScale(4,BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal before=userPo.getBalance();
+        BigDecimal after=userPo.getBalance().subtract(amount);
+
         AppWithDrawPo model = new AppWithDrawPo();
         model.setFee(fee);
         model.setAmount(amount);
         model.setUserId(userId);
         model.setBankCardId(bankId);
         this.save(model);
-//        billRecordService.saveBillRecord(ToolUtils.getUUID(),userId, BusnessTypeEnum.EP_WITHDRAWALS.getCode(), CurrencyTypeEnum.EP_BALANCE.getCode(),am,"用户提现",userPo.getNickName());
+        billRecordService.saveBillRecord(ToolUtils.getUUID(),userId, BusnessTypeEnum.WITHDRAWALS.getCode(),am,before,after,"用户提现",userPo.getNickName());
         return true;
     }
 

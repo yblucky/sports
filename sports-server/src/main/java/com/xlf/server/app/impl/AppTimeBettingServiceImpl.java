@@ -57,11 +57,10 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         AppUserPo userPo=appUserService.findUserById(userId);
         BigDecimal before=userPo.getBalance();
         BigDecimal after=userPo.getBalance().subtract(totalPrice);
-
         String businessNumber = ToolUtils.getUUID();
         appUserService.updateBalanceById(userId,totalPrice.multiply(new BigDecimal("-1")));
         appUserService.updateBettingAmoutById(userId,totalPrice);
-        appBillRecordService.saveBillRecord(businessNumber,userId, BusnessTypeEnum.TIME_BETTING.getCode(),totalPrice,before,after,"用户下注","");
+        appBillRecordService.saveBillRecord(businessNumber,userId, BusnessTypeEnum.TIME_BETTING.getCode(),totalPrice.multiply(new BigDecimal("-1")),before,after,"用户"+userPo.getMobile()+"时时彩下注","");
         for (TimeBettingBaseVo base : vo.getTimeList()) {
             this.save(businessNumber, vo.getIssueNo(), userId, base.getLotteryOne(), base.getLotteryTwo(), base.getLotteryThree(), base.getLotteryFour(), base.getLotteryFive(), base.getMultiple());
         }
