@@ -4,6 +4,8 @@ package com.xlf.server.mapper;
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppRacingLotteryPo;
 import com.xlf.server.base.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 赛车开奖
@@ -11,5 +13,8 @@ import com.xlf.server.base.BaseMapper;
  * @date 2017年6月14日
  */
 public interface AppRacingLotteryMapper extends BaseMapper<AppRacingLotteryPo> {
+    @Select("SELECT * FROM `app_racing_lottery` ORDER BY createTime desc LIMIT 1")
+    AppRacingLotteryPo findLast();
 
+    Integer updateFlagById(@Param("id") String id);
 }

@@ -26,6 +26,7 @@ public class AppRacingLotteryPo implements Serializable {
     private Integer lotteryTen;
     private Date createTime;
     private Date lotteryTime;
+    private Integer flag;
 
     public String getId() {
         return id;
@@ -137,5 +138,13 @@ public class AppRacingLotteryPo implements Serializable {
 
     public void setLotteryTen(Integer lotteryTen) {
         this.lotteryTen = lotteryTen;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
     }
 }

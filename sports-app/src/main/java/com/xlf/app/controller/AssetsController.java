@@ -15,7 +15,6 @@ import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.*;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.*;
-import com.xlf.server.app.impl.AppBillRecordServiceImpl;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import org.apache.commons.lang3.ArrayUtils;
@@ -37,7 +36,7 @@ public class AssetsController {
     @Resource
     private CommonService commonService;
     @Resource
-    private AppBillRecordServiceImpl billRecordService;
+    private AppBillRecordService billRecordService;
     @Resource
     private LanguageUtil msgUtil;
     @Resource

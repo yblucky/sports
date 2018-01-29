@@ -22,6 +22,7 @@ public class AppTimeLotteryPo implements Serializable {
     private Integer lotteryFive;
     private Date createTime;
     private Date lotteryTime;
+    private Integer flag;
 
     public String getId() {
         return id;
@@ -93,5 +94,13 @@ public class AppTimeLotteryPo implements Serializable {
 
     public void setLotteryTime(Date lotteryTime) {
         this.lotteryTime = lotteryTime;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
     }
 }

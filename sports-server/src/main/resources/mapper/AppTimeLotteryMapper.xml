@@ -4,7 +4,7 @@
 
 
     <sql id="fields">
-        issueNo,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryTime,createTime
+        issueNo,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryTime,createTime, flag
     </sql>
 
     <sql id="fields_id">
@@ -62,9 +62,12 @@
 		</where>
     	
     </select>
-    
-    
-    
+
+
+    <!--修改为已完成本期全部结算-->
+    <update id="updateFlagById">
+        update <include refid="table_name"/> set flag = 20   where id=#{id}
+    </update>
     
     
 </mapper>
