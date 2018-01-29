@@ -25,7 +25,12 @@
     <select id="wininggCount">
         select count(id)   from   <include refid="table_name"/>
         <where>
-
+            issuNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}
+            <if test="seat==1"> AND lotteryOne=#{digital} </if>
+            <if test="seat==2"> AND lotteryTwo=#{digital} </if>
+            <if test="seat==3"> AND lotteryOne=#{digital} </if>
+            <if test="seat==4"> AND lotteryOne=#{digital} </if>
+            <if test="seat==5"> AND lotteryOne=#{digital} </if>
         </where>
     </select>
     
