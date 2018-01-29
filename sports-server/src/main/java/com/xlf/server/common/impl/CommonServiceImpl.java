@@ -7,11 +7,13 @@ import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.service.RedisService;
+import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppRacingBettingMapper;
 import com.xlf.server.web.ParameterService;
 import com.xlf.common.util.*;
+import com.xlf.server.web.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -35,6 +37,8 @@ public class CommonServiceImpl implements CommonService {
     private HttpServletRequest request;
     @Resource
     private AppUserService appUserService;
+    @Resource
+    private SysUserService sysUserService;
     @Resource
     private RedisService redisService;
     @Resource
@@ -94,6 +98,19 @@ public class CommonServiceImpl implements CommonService {
         return appUserService.getUserByToken(token);
     }
 
+    public SysUserVo findSysUser() throws Exception {
+        String token = request.getHeader("token");
+        if (null == token) {
+            token = request.getParameter("token");
+        }
+        LogUtils.info("获取Token:" + token);
+        if(null == token){
+            LogUtils.error("登录已失效，，，，，"+request.getRequestURI());
+        }
+        //读取系统用户信息
+        return sysUserService.getUserByToken(token);
+    }
+
     /**
      * 校验token的用户信息
      */
@@ -110,6 +127,28 @@ public class CommonServiceImpl implements CommonService {
         }
         if (StringUtils.isEmpty(userPo.getParentId())) {
             throw new CommException("没有代理挂靠");
+        }
+        if (StateEnum.DISABLE.getCode().equals(userPo.getState())) {
+            //清除token缓存，强制用户下线
+            String token_key = redisService.getString(userPo.getId());
+            if(!StringUtils.isEmpty(token_key)){
+                //删除token_key值
+                redisService.del(token_key);
+            }
+            throw new CommException(languageUtil.getMsg(AppMessage.USER_DISABLE,"用户已被禁用"));
+        }
+        return userPo;
+    }
+    @Override
+    public SysUserVo checkWebToken() throws Exception {
+        SysUserVo userPo = this.findSysUser();
+        if (userPo == null) {
+            throw new CommException("登录已失效:"+request.getRequestURI());
+        }
+        //重新获取用户最新信息
+        userPo = sysUserService.findById(userPo.getId());
+        if (userPo == null) {
+            throw new CommException(languageUtil.getMsg(AppMessage.USER_INVALID,"用户不存在"));
         }
         if (StateEnum.DISABLE.getCode().equals(userPo.getState())) {
             //清除token缓存，强制用户下线

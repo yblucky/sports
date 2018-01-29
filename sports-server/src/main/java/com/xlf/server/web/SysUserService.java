@@ -35,14 +35,14 @@ public interface SysUserService {
 	 * @param roleType
      * @return
 	 */
-	public List<SysUserVo> findAll(Paging paging, String roleType);
+	public List<SysUserVo> findAll(Paging paging, SysUserVo vo);
 
 	/**
 	 * 查找总记录数
 	 * @return
 	 * @param roleType
 	 */
-	public long findCount(String roleType);
+	public long findCount(SysUserVo roleType);
 
 	/**
 	 * 新增用户
@@ -98,4 +98,5 @@ public interface SysUserService {
 	 */
 	public void updatePw(String newPw, String id);
 
+	SysUserVo getUserByToken(String token) throws Exception;
 }

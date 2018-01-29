@@ -1,5 +1,6 @@
 package com.xlf.server.web.impl;
 
+import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.service.RedisService;
@@ -46,14 +47,14 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public List<SysUserVo> findAll(Paging paging, String roleType) {
+    public List<SysUserVo> findAll(Paging paging, SysUserVo vo) {
         RowBounds rwoBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
-        return userMapper.findAll(rwoBounds, roleType);
+        return userMapper.findAll(rwoBounds, vo);
     }
 
     @Override
-    public long findCount(String roleType) {
-        return userMapper.findCount(roleType);
+    public long findCount(SysUserVo vo) {
+        return userMapper.findCount(vo);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUserVo findByLoginName(String loginName,Integer roleType) {
+    public SysUserVo findByLoginName(String loginName, Integer roleType) {
         return userMapper.findByloginName(loginName, roleType);
     }
 
@@ -110,5 +111,16 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUserVo findById(String id) {
         return userMapper.findById(id);
+    }
+
+
+    @Override
+    public SysUserVo getUserByToken(String token) throws Exception {
+        SysUserVo user = null;
+        Object obj = redisService.getObj(token);
+        if (obj != null && obj instanceof SysUserVo) {
+            user = (SysUserVo) obj;
+        }
+        return user;
     }
 }

@@ -44,20 +44,20 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 	/**
 	 * 分页查询
 	 * @param rwoBounds
-	 * @param roleType
+	 * @param vo
 	 * @return
 	 */
-	@Select("select u.id,u.userName,u.loginName,u.mobile,u.roleId,u.roleName,u.userIcon,u.createTime,u.lastTime,u.state,u.totayReturnWater,u.totalReturnWater,t.angetName " +
-			"  from sys_user u left join sys_agent_setting t on u.agentLevelId=t.id where roleType=#{roleType} by createTime desc")
-	public List<SysUserVo> findAll(RowBounds rwoBounds, @Param("roleType") String roleType);
+/*	@Select("select u.id,u.userName,u.loginName,u.mobile,u.roleId,u.roleName,u.roleType,u.userIcon,u.createTime,u.lastTime,u.state,u.totayReturnWater,u.totalReturnWater,t.agentName,u.agentLevelId " +
+			"  from sys_user u left join sys_agent_setting t on u.agentLevelId=t.id where roleType=#{roleType} order by u.createTime desc")*/
+	public List<SysUserVo> findAll(RowBounds rwoBounds, @Param("model") SysUserVo vo);
 
 	/**
 	 * 查总记录数
 	 * @return
 	 * @param roleType
 	 */
-	@Select("select count(1) from sys_user where roleType=#{roleType}")
-	public long findCount(@Param("roleType") String roleType);
+//	@Select("select count(1) from sys_user where roleType=#{roleType}")
+	public long findCount(@Param("model") SysUserVo roleType);
 
 	/**
 	 * 查找登录名是否存在

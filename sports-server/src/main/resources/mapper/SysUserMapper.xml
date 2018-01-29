@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlf.server.mapper.SysUserMapper">
+
+    <resultMap type="java.util.HashMap" id="resultMap">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="uid" property="uid" jdbcType="VARCHAR"/>
+        <result column="userType" property="userType" jdbcType="CHAR"/>
+    </resultMap>
+
+    <sql id="fields">
+       userName,loginName,password,salt,mobile,agentLevelId,roleId,roleName,userIcon,createTime,lastTime,state,roleType,totayReturnWater,totalReturnWater
+    </sql>
+
+    <sql id="fields_id">
+        id,
+        <include refid="fields"/>
+    </sql>
+
+    <sql id="table_name">sys_user</sql>
+
+    <sql id="selector">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+    </sql>
+
+    <sql id="condition">
+        <where>
+            <if test="model.userName != null and model.userName != ''">userName likt concat('%',#{model.userName})</if>
+            <if test="model.mobile != null and model.mobile != ''">and mobile=#{model.mobile}</if>
+            <if test="model.loginName != null and model.loginName != ''">and  loginName like concat('%',#{model.loginName})</if>
+            <if test="model.agentLevelId != null and model.agentLevelId != ''">and  agentLevelId=#{model.agentLevelId}</if>
+            <if test="model.state != null and model.state != ''">and state=#{model.state}</if>
+            <if test="model.roleType != null and model.roleType != ''">and roleType=#{model.roleType}</if>
+        </where>
+    </sql>
+	
+    <select id="readById" resultType="com.xlf.common.po.AppUserPo">
+        <include refid="selector"/>
+        where id=#{id} limit 1;
+    </select>
+
+    <select id="findUserByCondition" resultType="com.xlf.common.po.AppUserPo">
+        <include refid="selector"/>
+        <include refid="condition"/>
+        limit 1;
+    </select>
+
+    <select id="findAll" resultType="com.xlf.common.vo.pc.SysUserVo">
+        select u.id,u.userName,u.loginName,u.mobile,u.roleId,u.roleName,u.roleType,u.userIcon,u.createTime,u.lastTime,u.state,u.totayReturnWater,u.totalReturnWater,t.agentName,u.agentLevelId
+        from sys_user u left join sys_agent_setting t on u.agentLevelId=t.id
+        <include refid="condition"/>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="findCount" resultType="java.lang.Long">
+        select count(1)
+        from sys_user u left join sys_agent_setting t on u.agentLevelId=t.id
+        <include refid="condition"/>
+    </select>
+
+    
+
+</mapper>
+
+
+

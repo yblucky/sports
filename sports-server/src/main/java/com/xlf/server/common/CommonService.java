@@ -2,6 +2,8 @@ package com.xlf.server.common;
 
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppUserPo;
+import com.xlf.common.po.SysUserPo;
+import com.xlf.common.vo.pc.SysUserVo;
 
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,8 @@ public interface CommonService {
      * @return 验证码
      */
     public AppUserPo checkToken() throws Exception;
+
+    public SysUserVo checkWebToken() throws Exception;
 
     /**
      * 查询系统参数
