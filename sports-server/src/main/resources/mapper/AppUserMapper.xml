@@ -144,18 +144,7 @@
     <select id="getPoList" resultType="com.xlf.common.po.AppUserPo">
         <include refid="selector"/>
         <include refid="condition"/>
-        ORDER BY  
-         
-         <if test="model.epBalance == 1 ">state asc,epBalance DESC,</if>
-         <if test="model.epBalance == 2 ">state asc,epBalance ASC,</if>
-         <if test="model.birdScore == 1 " >state asc,birdScore DESC,</if>
-         <if test="model.birdScore == 2 " >state asc,birdScore ASC,</if>
-         <if test="model.assets == 1">state asc,assets DESC,</if>
-         <if test="model.assets == 2">state asc,assets ASC,</if>
-         <if test="model.blockedEpBalance == 1">state asc,blockedEpBalance DESC,</if>
-         <if test="model.blockedEpBalance == 2">state asc,blockedEpBalance ASC,</if>
-         
-       
+        ORDER BY
 	createTime DESC
 	limit #{startRow}, #{pageSize};
     </select>

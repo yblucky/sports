@@ -24,6 +24,8 @@ import com.xlf.common.vo.pc.UpdatePwVo;
 import com.xlf.server.web.LoginService;
 import com.xlf.server.web.SysUserService;
 
+import java.util.Collections;
+
 /**
  * 用户控制器
  * @author qsy
@@ -34,7 +36,7 @@ import com.xlf.server.web.SysUserService;
 @RequestMapping(value = "/sysUser")
 public class SysUserController {
 	@Resource
-	private SysUserService webUserService;//用户业务层
+	private SysUserService sysUserService;//用户业务层
 	@Resource
 	private HttpServletRequest request;
 	@Resource
@@ -54,7 +56,7 @@ public class SysUserController {
 		try {
 			String token = request.getHeader("token");
 			//读取用户信息
-			SysUserVo userVo = webUserService.SysUserVo(token);
+			SysUserVo userVo = sysUserService.SysUserVo(token);
 			//用户是否存在
 			if(userVo != null){
 				userVo.setPassword("");
@@ -73,14 +75,19 @@ public class SysUserController {
 	}
 
 	@GetMapping("/findAll")
-	public RespBody findAll(Paging paging,String roleType){
+	public RespBody findAll(Paging paging,SysUserVo vo){
 		RespBody respBody = new RespBody();
 		try {
-			//保存返回数据
-			respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有用户信息数据成功", webUserService.findAll(paging,roleType));
-			//保存分页对象
-			paging.setTotalCount(webUserService.findCount(roleType));
-			respBody.setPage(paging);
+			long total =sysUserService.findCount(vo);
+			if(total >0) {
+				//保存返回数据
+				respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有用户信息数据成功", sysUserService.findAll(paging, vo));
+				//保存分页对象
+				paging.setTotalCount(total);
+				respBody.setPage(paging);
+			}else {
+				respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有用户信息数据成功", Collections.emptyList());
+			}
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "查找所有用户信息数据失败");
 			LogUtils.error("查找所有用户信息数据失败！",ex);
@@ -92,7 +99,7 @@ public class SysUserController {
 	public RespBody loadAgentSetting(){
 		RespBody respBody = new RespBody();
 		try {
-			commonService.checkToken();
+			commonService.checkWebToken();
 			//保存返回数据
 			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载代理等级参数成功", sysAgentSettingService.loadAgentSetting());
 		} catch (Exception ex) {
@@ -107,7 +114,7 @@ public class SysUserController {
 		RespBody respBody = new RespBody();
 		try {
 			//保存返回数据
-			respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有角色数据成功", webUserService.findRoles());
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "查找所有角色数据成功", sysUserService.findRoles());
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "查找所有角色数据失败");
 			LogUtils.error("查找所有角色数据失败！",ex);
@@ -120,9 +127,13 @@ public class SysUserController {
 		RespBody respBody = new RespBody();
 		try {
 			//判断用户是否存在
-			SysUserVo findUser = webUserService.findByMobile(userVo.getMobile());
+			SysUserVo findUser = sysUserService.findByLoginName(userVo.getMobile(),userVo.getRoleType());
 			if(findUser == null){
-				webUserService.add(userVo);
+				if(userVo.getRoleType().intValue() ==20){
+					//默认角色就是代理
+					userVo.setRoleId("1001");
+				}
+				sysUserService.add(userVo);
 				respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息保存成功");
 			}else{
 				respBody.add(RespCodeEnum.ERROR.getCode(), "登录名已经存在");
@@ -139,7 +150,7 @@ public class SysUserController {
 	public RespBody update(@RequestBody SysUserVo userVo){
 		RespBody respBody = new RespBody();
 		try {
-			webUserService.update(userVo);
+			sysUserService.update(userVo);
 			respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息修改成功");
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "用户信息修改失败");
@@ -152,7 +163,7 @@ public class SysUserController {
 	public RespBody delete(@RequestBody SysUserVo userVo){
 		RespBody respBody = new RespBody();
 		try {
-			webUserService.delete(userVo);
+			sysUserService.delete(userVo);
 			//取出用户Token  退出其登录
 			String outToken = redisService.getString(userVo.getId());
 			if(null!=outToken&&!"".equals(outToken)){
@@ -171,7 +182,7 @@ public class SysUserController {
 		RespBody respBody = new RespBody();
 		try {
 			userVo.setState(String.valueOf(StateEnum.DISABLE.getCode()));
-			webUserService.update(userVo);
+			sysUserService.update(userVo);
 			//取出用户Token  退出其登录
 			String outToken = redisService.getString(userVo.getId());
 			if(null!=outToken&&!"".equals(outToken)){
@@ -190,7 +201,7 @@ public class SysUserController {
 		RespBody respBody = new RespBody();
 		try {
 			userVo.setState(String.valueOf(StateEnum.NORMAL.getCode()));
-			webUserService.update(userVo);
+			sysUserService.update(userVo);
 			respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户启用成功");
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "用户启用失败");
@@ -209,14 +220,14 @@ public class SysUserController {
 			}
 			String token = request.getHeader("token");
 			//读取用户信息
-			SysUserVo userVo = webUserService.SysUserVo(token);
+			SysUserVo userVo = sysUserService.SysUserVo(token);
 			// 对输入密码进行加密
 			String oldPw = CryptUtils.hmacSHA1Encrypt(updatePwVo.getOldPw(), userVo.getSalt());
 			if(userVo.getPassword().equals(oldPw)){
 				//对新密码进行加密
 				String newPw = CryptUtils.hmacSHA1Encrypt(updatePwVo.getNewPw(), userVo.getSalt());
 				//旧密码正确，调用业务层执行密码更新
-				webUserService.updatePw(newPw,userVo.getId());
+				sysUserService.updatePw(newPw,userVo.getId());
 				respBody.add(RespCodeEnum.SUCCESS.getCode(), "修改密码成功");
 				//更新redis数据
 				userVo.setPassword(newPw);

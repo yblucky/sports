@@ -78,7 +78,7 @@ public class SysUserVo implements Serializable{
 	/**
 	 * 角色类型
 	 */
-	private String roleType;
+	private Integer roleType;
 	/**
 	 * 代理等级别称
 	 */
@@ -280,11 +280,11 @@ public class SysUserVo implements Serializable{
 		this.agentLevelId = agentLevelId;
 	}
 
-	public String getRoleType() {
+	public Integer getRoleType() {
 		return roleType;
 	}
 
-	public void setRoleType(String roleType) {
+	public void setRoleType(Integer roleType) {
 		this.roleType = roleType;
 	}
 
