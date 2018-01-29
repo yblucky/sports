@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Select;
  * @date 2017年6月14日
  */
 public interface AppRacingLotteryMapper extends BaseMapper<AppRacingLotteryPo> {
-    @Select("SELECT * FROM `app_racing_lottery` ORDER BY createTime desc LIMIT 1")
+    @Select("SELECT * FROM `app_racing_lottery` ORDER BY createTime asc LIMIT 1")
     AppRacingLotteryPo findLast();
 
     Integer updateFlagById(@Param("id") String id);

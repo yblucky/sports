@@ -20,7 +20,14 @@
         from
         <include refid="table_name"/>
     </sql>
-    
+
+
+    <select id="wininggCount">
+        select count(id)   from   <include refid="table_name"/>
+        <where>
+
+        </where>
+    </select>
     
 </mapper>
 

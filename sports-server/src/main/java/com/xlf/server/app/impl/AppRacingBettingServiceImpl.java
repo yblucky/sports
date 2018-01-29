@@ -4,6 +4,7 @@ import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlag;
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppUserPo;
+import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.RacingBettingBaseVo;
 import com.xlf.common.vo.app.RacingBettingVo;
@@ -11,11 +12,15 @@ import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.mapper.AppRacingBettingMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 时时彩投注业务类
@@ -62,9 +67,34 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         String businessNumber = ToolUtils.getUUID();
         appUserService.updateBalanceById(userId, totalPrice.multiply(new BigDecimal("-1")));
         appUserService.updateBettingAmoutById(userId, totalPrice);
-        appBillRecordService.saveBillRecord(businessNumber, userId, BusnessTypeEnum.RACING_BETTING.getCode(), totalPrice, before, after, "用户"+userPo.getMobile()+"北京赛车下注", "");
+        appBillRecordService.saveBillRecord(businessNumber, userId, BusnessTypeEnum.RACING_BETTING.getCode(), totalPrice, before, after, "用户" + userPo.getMobile() + "北京赛车下注", "");
         for (RacingBettingBaseVo base : vo.getRaingList()) {
-            this.save(businessNumber, vo.getIssueNo(), userId, base.getLotteryOne(), base.getLotteryTwo(), base.getLotteryThree(), base.getLotteryFour(), base.getLotteryFive(),base.getLotterySix(),base.getLotterySeven(),base.getLotteryEight(),base.getLotteryNine(),base.getLotteryTen(), base.getMultiple());
+            this.save(businessNumber, vo.getIssueNo(), userId, base.getLotteryOne(), base.getLotteryTwo(), base.getLotteryThree(), base.getLotteryFour(), base.getLotteryFive(), base.getLotterySix(), base.getLotterySeven(), base.getLotteryEight(), base.getLotteryNine(), base.getLotteryTen(), base.getMultiple());
         }
+    }
+
+    @Override
+    public List<AppRacingBettingPo> listByIssuNo(String issuNo, Integer lotteryFlag, Paging paging) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        if (StringUtils.isEmpty(issuNo)) {
+            return Collections.emptyList();
+        }
+        AppRacingBettingPo model = new AppRacingBettingPo();
+        model.setIssueNo(issuNo);
+        List<AppRacingBettingPo> list = appRacingBettingMapper.list(issuNo, lotteryFlag, rowBounds);
+        if (list == null) {
+            list = Collections.emptyList();
+        }
+        return list;
+    }
+
+    @Override
+    public Integer count(String issuNo, Integer lotteryFlag) {
+        Integer count = 0;
+        count = appRacingBettingMapper.count(issuNo, lotteryFlag);
+        if (count == null) {
+            count = 0;
+        }
+        return count;
     }
 }
