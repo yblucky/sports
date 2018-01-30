@@ -11,4 +11,6 @@ import java.util.List;
 public interface SysAgentSettingService {
 
     List<SysAgentSettingPo> loadAgentSetting();
+
+    SysAgentSettingPo findById(String id);
 }

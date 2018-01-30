@@ -3,17 +3,20 @@ package com.xlf.common.enums;
 /**
  * 是否开奖
  */
-public enum LotteryFlag {
-    YES(10,"未开奖"),
-    NO(20,"已开奖");
+public enum TimeSeatEnum {
+    ONE(1, "个位开奖号"),
+    TWO(2, "十位开奖号"),
+    THREE(3, "百位开奖号"),
+    FOURE(4, "千位开奖号"),
+    FIVE(5, "万位开奖号");
 
-    LotteryFlag(Integer code, String name) {
+    TimeSeatEnum(Integer code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    private  Integer code;
-    private  String name;
+    private Integer code;
+    private String name;
 
     public Integer getCode() {
         return code;

@@ -1,5 +1,6 @@
 package com.xlf.server.app;
 
+import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.app.TimeBettingVo;
@@ -16,11 +17,19 @@ public interface AppTimeBettingService {
 
     public void timeBettingService(String userId, TimeBettingVo vo, BigDecimal totalPrice) throws Exception;
 
-    public List<AppTimeBettingPo> listByIssuNo(String issuNo,Integer lotteryFlag, Paging paging);
+    public List<AppTimeBettingPo> listByIssuNo(String issuNo, Integer lotteryFlag, Paging paging);
 
-    Integer count( String issuNo,Integer lotteryFlag);
+    Integer count(String issuNo, Integer lotteryFlag);
 
-    public List<AppTimeBettingPo> listWininggByIssuNo(String issuNo,Integer lotteryFlag, Paging paging,Integer digital,Integer seat);
+    public List<AppTimeBettingPo> listWininggByIssuNo(String issuNo, Integer lotteryFlag, Paging paging, Integer digital, TimeSeatEnum seat);
 
-    Integer wininggCount( String issuNo,Integer lotteryFlag, Integer digital,Integer seat);
+    Integer wininggCount(String issuNo, Integer lotteryFlag, Integer digital, TimeSeatEnum seat);
+
+    public Integer updateLotteryFlagById(String id, BigDecimal winingAmout);
+
+    public Integer updateBatchLotteryFlagByIds(List<String> list);
+
+    public Integer updateBatchLotteryFlag(String issueNo);
+
+
 }

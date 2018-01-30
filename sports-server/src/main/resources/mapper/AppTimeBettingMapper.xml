@@ -23,17 +23,51 @@
 
 
     <select id="wininggCount">
-        select count(id)   from   <include refid="table_name"/>
+        select count(id) from
+        <include refid="table_name"/>
         <where>
             issuNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}
-            <if test="seat==1"> AND lotteryOne=#{digital} </if>
-            <if test="seat==2"> AND lotteryTwo=#{digital} </if>
-            <if test="seat==3"> AND lotteryOne=#{digital} </if>
-            <if test="seat==4"> AND lotteryOne=#{digital} </if>
-            <if test="seat==5"> AND lotteryOne=#{digital} </if>
+            <if test="seat==1">AND lotteryOne=#{digital}</if>
+            <if test="seat==2">AND lotteryTwo=#{digital}</if>
+            <if test="seat==3">AND lotteryThree=#{digital}</if>
+            <if test="seat==4">AND lotteryFour=#{digital}</if>
+            <if test="seat==5">AND lotteryFive=#{digital}</if>
         </where>
     </select>
-    
+
+
+    <select id="listWininggByIssuNo">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+        <where>
+            issuNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}
+            <if test="seat==1">AND lotteryOne=#{digital}</if>
+            <if test="seat==2">AND lotteryTwo=#{digital}</if>
+            <if test="seat==3">AND lotteryThree=#{digital}</if>
+            <if test="seat==4">AND lotteryFour=#{digital}</if>
+            <if test="seat==5">AND lotteryFive=#{digital}</if>
+        </where>
+    </select>
+
+    <update id="updateBatchLotteryFlagByIds">
+        UPDATE
+        <include refid="table_name"/>
+        SET lotteryFlag=20,winningAmount=0
+        WHERE
+        id IN
+        <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
+    </update>
+
+    <update id="updateBatchLotteryFlag">
+        UPDATE
+        <include refid="table_name"/>
+        SET lotteryFlag=20,winningAmount=0 WHERE issueNo=#{issueNo} and lotteryFlag=10
+
+    </update>
+
+
 </mapper>
 
 

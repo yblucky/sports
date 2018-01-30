@@ -1,7 +1,7 @@
 package com.xlf.server.app.impl;
 
 import com.xlf.common.enums.BusnessTypeEnum;
-import com.xlf.common.enums.LotteryFlag;
+import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
@@ -49,7 +49,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         model.setLotteryEight(lotteryEight);
         model.setLotteryNine(lotteryNine);
         model.setLotteryTen(lotteryTen);
-        model.setLotteryFlag(LotteryFlag.NO.getCode());
+        model.setLotteryFlag(LotteryFlagEnum.NO.getCode());
         model.setCreateTime(new Date());
         model.setWinningAmount(BigDecimal.ZERO);
         model.setMultiple(multiple);
@@ -96,5 +96,10 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
             count = 0;
         }
         return count;
+    }
+
+    @Override
+    public Integer updateLotteryFlagById(String id, BigDecimal winingAmout) {
+        return appRacingBettingMapper.updateLotteryFlagById(id,winingAmout);
     }
 }

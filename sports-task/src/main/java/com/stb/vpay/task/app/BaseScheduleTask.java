@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
  * @author zzwei
  * @since 2017/06/06
  */
-public abstract class BaseScheduleTask {
+public abstract class BaseScheduleTask  {
     protected final Log logger = LogFactory.getLog(this.getClass());
     //是否开启
     protected boolean devmode = false;

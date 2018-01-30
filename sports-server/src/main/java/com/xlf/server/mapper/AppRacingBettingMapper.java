@@ -5,8 +5,10 @@ import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,4 +23,7 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
 
     @Select("SELECT count(id) FROM `app_racing_betting` where issueNo=#{issueNo} and lotteryFlag=#{lotteryFlag}")
     Integer count(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag);
+
+    @Update("update  `app_racing_betting` set lotteryFlag=20 and  winningAmount=#{winingAmout} where id=#{id}")
+    Integer updateLotteryFlagById(@Param("id")String id,@Param("winingAmout") BigDecimal winingAmout);
 }

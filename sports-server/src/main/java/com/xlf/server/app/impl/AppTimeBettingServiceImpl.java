@@ -1,7 +1,8 @@
 package com.xlf.server.app.impl;
 
 import com.xlf.common.enums.BusnessTypeEnum;
-import com.xlf.common.enums.LotteryFlag;
+import com.xlf.common.enums.LotteryFlagEnum;
+import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
@@ -37,6 +38,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     @Resource
     private AppBillRecordService appBillRecordService;
 
+
     @Override
     public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer multiple) throws Exception {
         AppTimeBettingPo model = new AppTimeBettingPo();
@@ -47,7 +49,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         model.setLotteryThree(lotteryThree);
         model.setLotteryFour(lotteryFour);
         model.setLotteryFive(lotteryFive);
-        model.setLotteryFlag(LotteryFlag.NO.getCode());
+        model.setLotteryFlag(LotteryFlagEnum.NO.getCode());
         model.setCreateTime(new Date());
         model.setWinningAmount(BigDecimal.ZERO);
         model.setMultiple(multiple);
@@ -71,14 +73,13 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
 
-
     @Override
     public List<AppTimeBettingPo> listByIssuNo(String issuNo, Integer lotteryFlag, Paging paging) {
-        RowBounds rowBounds=new RowBounds(paging.getPageNumber(),paging.getPageSize());
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
         if (StringUtils.isEmpty(issuNo)) {
             return Collections.emptyList();
         }
-        List<AppTimeBettingPo> list = appTimeBettingMapper.list(issuNo,lotteryFlag,rowBounds);
+        List<AppTimeBettingPo> list = appTimeBettingMapper.list(issuNo, lotteryFlag, rowBounds);
         if (list == null) {
             list = Collections.emptyList();
         }
@@ -87,25 +88,22 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
 
     @Override
     public Integer count(String issuNo, Integer lotteryFlag) {
-        Integer count =0;
-        count= appTimeBettingMapper.count(issuNo,lotteryFlag);
-        if (count==null){
-            count=0;
+        Integer count = 0;
+        count = appTimeBettingMapper.count(issuNo, lotteryFlag);
+        if (count == null) {
+            count = 0;
         }
         return count;
     }
 
 
-
-
-
     @Override
-    public List<AppTimeBettingPo> listWininggByIssuNo(String issuNo, Integer lotteryFlag, Paging paging, Integer digital, Integer seat) {
-        RowBounds rowBounds=new RowBounds(paging.getPageNumber(),paging.getPageSize());
+    public List<AppTimeBettingPo> listWininggByIssuNo(String issuNo, Integer lotteryFlag, Paging paging, Integer digital, TimeSeatEnum seat) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
         if (StringUtils.isEmpty(issuNo)) {
             return Collections.emptyList();
         }
-        List<AppTimeBettingPo> list = appTimeBettingMapper.listWininggByIssuNo(issuNo,lotteryFlag,digital,seat,rowBounds);
+        List<AppTimeBettingPo> list = appTimeBettingMapper.listWininggByIssuNo(issuNo, lotteryFlag, digital, seat.getCode(), rowBounds);
         if (list == null) {
             list = Collections.emptyList();
         }
@@ -113,12 +111,28 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
     @Override
-    public Integer wininggCount(String issuNo, Integer lotteryFlag, Integer digital, Integer seat) {
-        Integer count =0;
-        count= appTimeBettingMapper.wininggCount(issuNo,lotteryFlag,digital,seat);
-        if (count==null){
-            count=0;
+    public Integer wininggCount(String issuNo, Integer lotteryFlag, Integer digital, TimeSeatEnum seat) {
+        Integer count = 0;
+        count = appTimeBettingMapper.wininggCount(issuNo, lotteryFlag, digital, seat.getCode());
+        if (count == null) {
+            count = 0;
         }
         return count;
+    }
+
+    @Override
+    public Integer updateLotteryFlagById(String id, BigDecimal winingAmout) {
+        return appTimeBettingMapper.updateLotteryFlagById(id, winingAmout);
+    }
+
+
+    @Override
+    public Integer updateBatchLotteryFlagByIds(List<String> list) {
+        return appTimeBettingMapper.updateBatchLotteryFlagByIds(list);
+    }
+
+    @Override
+    public Integer updateBatchLotteryFlag(String issueNo) {
+        return appTimeBettingMapper.updateBatchLotteryFlag(issueNo);
     }
 }

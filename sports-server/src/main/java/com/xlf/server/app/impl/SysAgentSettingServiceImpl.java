@@ -42,4 +42,12 @@ public class SysAgentSettingServiceImpl implements SysAgentSettingService {
     public List<SysAgentSettingPo> loadAgentSetting() {
         return sysAgentSettingMapper.selectAll();
     }
+
+    @Override
+    public SysAgentSettingPo findById(String id) {
+        if (StringUtils.isEmpty(id)){
+            return null;
+        }
+        return sysAgentSettingMapper.selectByPrimaryKey(id);
+    }
 }

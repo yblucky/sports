@@ -20,4 +20,7 @@ public interface AppRacingBettingService {
 
 
     Integer count( String issuNo,Integer lotteryFlag);
+
+
+    public Integer updateLotteryFlagById( String id,  BigDecimal winingAmout);
 }

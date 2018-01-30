@@ -1,5 +1,6 @@
 package com.xlf.server.app;
 
+import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppTimeLotteryPo;
 
 /**
@@ -11,4 +12,8 @@ public interface AppTimeLotteryService {
     public AppTimeLotteryPo findById(String id);
 
     Integer updateFlagById(String id);
+
+    public Boolean timeLotteryHandleService(AppTimeBettingPo bettingPo) throws Exception;
+
+    public Boolean batchTimeLotteryHandleService(AppTimeLotteryPo lotteryPo, Boolean flag) throws Exception;
 }
