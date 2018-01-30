@@ -26,4 +26,6 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
 
     @Update("update  `app_racing_betting` set lotteryFlag=20 and  winningAmount=#{winingAmout} where id=#{id}")
     Integer updateLotteryFlagById(@Param("id")String id,@Param("winingAmout") BigDecimal winingAmout);
+
+    Integer updateBatchLotteryFlag(@Param("issueNo") String issueNo);
 }

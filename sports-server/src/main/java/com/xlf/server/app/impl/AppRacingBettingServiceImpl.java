@@ -102,4 +102,11 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     public Integer updateLotteryFlagById(String id, BigDecimal winingAmout) {
         return appRacingBettingMapper.updateLotteryFlagById(id,winingAmout);
     }
+
+    @Override
+    public Integer updateBatchLotteryFlag(String issueNo) {
+        return appRacingBettingMapper.updateBatchLotteryFlag(issueNo);
+    }
+
+
 }

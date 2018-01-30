@@ -27,8 +27,6 @@ public interface AppTimeBettingService {
 
     public Integer updateLotteryFlagById(String id, BigDecimal winingAmout);
 
-    public Integer updateBatchLotteryFlagByIds(List<String> list);
-
     public Integer updateBatchLotteryFlag(String issueNo);
 
 

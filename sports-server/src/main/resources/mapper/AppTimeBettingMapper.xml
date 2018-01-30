@@ -64,7 +64,6 @@
         UPDATE
         <include refid="table_name"/>
         SET lotteryFlag=20,winningAmount=0 WHERE issueNo=#{issueNo} and lotteryFlag=10
-
     </update>
 
 

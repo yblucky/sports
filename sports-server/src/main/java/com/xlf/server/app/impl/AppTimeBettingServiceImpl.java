@@ -126,10 +126,6 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
 
-    @Override
-    public Integer updateBatchLotteryFlagByIds(List<String> list) {
-        return appTimeBettingMapper.updateBatchLotteryFlagByIds(list);
-    }
 
     @Override
     public Integer updateBatchLotteryFlag(String issueNo) {
