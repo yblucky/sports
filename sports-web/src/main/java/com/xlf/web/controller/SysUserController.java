@@ -3,6 +3,7 @@ package com.xlf.web.controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.common.CommonService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -145,12 +146,40 @@ public class SysUserController {
 		}
 		return respBody;
 	}
+
+	@PostMapping("/addAgentLevel")
+	public RespBody addAgentLevel(@RequestBody SysAgentSettingPo vo){
+		RespBody respBody = new RespBody();
+		try {
+			//判断用户是否存在
+			commonService.checkWebToken();
+			sysAgentSettingService.add(vo);
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息保存成功");
+		} catch (Exception ex) {
+			respBody.add(RespCodeEnum.ERROR.getCode(), "用户信息保存失败");
+			LogUtils.error("用户信息保存失败！",ex);
+		}
+		return respBody;
+	}
 	
 	@PostMapping("/update")
 	public RespBody update(@RequestBody SysUserVo userVo){
 		RespBody respBody = new RespBody();
 		try {
 			sysUserService.update(userVo);
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息修改成功");
+		} catch (Exception ex) {
+			respBody.add(RespCodeEnum.ERROR.getCode(), "用户信息修改失败");
+			LogUtils.error("用户信息修改失败！",ex);
+		}
+		return respBody;
+	}
+
+	@PostMapping("/updateAgentLevel")
+	public RespBody updateAgentLevel(@RequestBody SysAgentSettingPo vo){
+		RespBody respBody = new RespBody();
+		try {
+			sysAgentSettingService.update(vo);
 			respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息修改成功");
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "用户信息修改失败");
@@ -169,6 +198,18 @@ public class SysUserController {
 			if(null!=outToken&&!"".equals(outToken)){
 				loginService.LoginOut(outToken);
 			}
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息删除成功");
+		} catch (Exception ex) {
+			respBody.add(RespCodeEnum.ERROR.getCode(), "用户信息删除失败");
+			LogUtils.error("用户信息删除失败！",ex);
+		}
+		return respBody;
+	}
+	@PostMapping("/deleteAgentLevel")
+	public RespBody deleteAgentLevel(@RequestBody SysAgentSettingPo vo){
+		RespBody respBody = new RespBody();
+		try {
+			sysAgentSettingService.delete(vo);
 			respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息删除成功");
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "用户信息删除失败");

@@ -8,21 +8,21 @@
 package com.xlf.web.controller;
 
 import com.xlf.common.enums.RespCodeEnum;
+import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.enums.StateEnum;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.app.BankCardVo;
-import com.xlf.server.web.LoginService;
+import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
-import com.xlf.server.web.WebBankCardService;
 import com.xlf.server.web.WebUserService;
 import org.springframework.web.bind.annotation.*;
-import tk.mybatis.mapper.util.StringUtil;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 /**
  * 用户管理控制器
@@ -40,6 +40,8 @@ public class WebUserController {
     private RedisService redisService;
     @Resource
     private SysUserService sysUserService;
+    @Resource
+    private CommonService commonService;
 
 
     /**
@@ -115,6 +117,38 @@ public class WebUserController {
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "修改失败");
             LogUtils.error("修改用户状态失败", ex);
+        }
+        return respBody;
+    }
+
+    /**
+     * 充值积分
+     *
+     * @return 响应对象
+     */
+    @PostMapping("/recharge")
+    public RespBody recharge(@RequestBody AppUserPo po) {
+        RespBody respBody = new RespBody();
+        try {
+            SysUserVo token = commonService.checkWebToken();
+            if(token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
+                return respBody;
+            }
+            AppUserPo find = webAppUserService.findUid(po.getUid()+"");
+            if (null == find) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "找不到用户");
+                return respBody;
+            }
+            if(BigDecimal.ZERO.compareTo(po.getBalance()) >= 0){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "请输入正整数的数额");
+                return respBody;
+            }
+            webAppUserService.updateBalance(find.getId(),po.getBalance());
+            respBody.add(RespCodeEnum.SUCCESS.getCode(),"充值成功");
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "充值失败");
+            LogUtils.error("充值失败", ex);
         }
         return respBody;
     }

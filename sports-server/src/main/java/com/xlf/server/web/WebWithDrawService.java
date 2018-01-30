@@ -20,4 +20,7 @@ public interface WebWithDrawService {
 	 
 	 public BigDecimal findSUM(AppWithDrawVo vo);
 
+    int successState(String id);
+
+	void erroeState(String id);
 }

@@ -13,4 +13,10 @@ public interface SysAgentSettingService {
     List<SysAgentSettingPo> loadAgentSetting();
 
     SysAgentSettingPo findById(String id);
+
+    void add(SysAgentSettingPo vo);
+
+    void update(SysAgentSettingPo vo);
+
+    void delete(SysAgentSettingPo vo);
 }
