@@ -64,7 +64,7 @@
     </select>
 
 
-    <!--修改为已完成本期全部结算-->
+    <!--修改为已完成本注全部结算-->
     <update id="updateFlagById">
         update <include refid="table_name"/> set flag = 20   where id=#{id}
     </update>
