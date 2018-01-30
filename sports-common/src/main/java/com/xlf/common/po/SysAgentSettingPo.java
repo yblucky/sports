@@ -84,7 +84,7 @@ public class SysAgentSettingPo implements Serializable {
     /**
      * '状态'
      * */
-    private String  state;
+    private Integer  state;
 
     /**
      * '赔率'
@@ -187,11 +187,11 @@ public class SysAgentSettingPo implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 

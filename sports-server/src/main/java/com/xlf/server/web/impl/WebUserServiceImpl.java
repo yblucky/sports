@@ -1,6 +1,7 @@
 package com.xlf.server.web.impl;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -157,4 +158,8 @@ public class WebUserServiceImpl implements WebUserService {
 		return appUserMapper.updateActiveNoCount(activeNo, id);
 	}
 
+    @Override
+    public int updateBalance(String userId, BigDecimal balance) {
+        return appUserMapper.updateBalanceById(userId,balance);
+    }
 }

@@ -2,6 +2,7 @@ package com.xlf.web.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
 import com.xlf.common.enums.RespCodeEnum;
+import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.enums.WithDrawEnum;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppUserPo;
@@ -10,16 +11,18 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.AppWithDrawVo;
+import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.server.common.CommonService;
+import com.xlf.server.web.WebBillRecordService;
 import com.xlf.server.web.WebUserService;
 import com.xlf.server.web.WebWithDrawService;
-import com.xlf.server.web.WebBillRecordService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/appWithDraw")
+@RequestMapping(value = "/webWithDraw")
 public class WebWithDrawController {
     @Resource
     private WebWithDrawService webWithDrawService;
@@ -28,6 +31,8 @@ public class WebWithDrawController {
     private WebUserService appUserService;
     @Resource
     private WebBillRecordService webBillRecordService;
+    @Resource
+    private CommonService commonService;
 
     @GetMapping("/findAll")
     public RespBody findAllRerocd(AppWithDrawVo vo, Paging paging) {
@@ -55,21 +60,17 @@ public class WebWithDrawController {
     public RespBody successState(@RequestBody AppWithDrawPo po) {
         RespBody respBody = new RespBody();
         try {
-
-
-            po.setState(20);
-            webWithDrawService.update(po);
-            /**
-             * 修改用户冻结资金（冻结资金-提现金额）
-             */
-            AppUserPo appuser = appUserService.findUserById(po.getUserId());
-            appUserService.updateById(appuser, appuser.getId());
-
-
+            SysUserVo token = commonService.checkWebToken();
+            if(token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
+                return respBody;
+            }
+            //确认打款
+            webWithDrawService.successState(po.getId());
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "操作成功");
         } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), "操作成功");
-            LogUtils.error("操作成功！", ex);
+            respBody.add(RespCodeEnum.ERROR.getCode(), "操作失败");
+            LogUtils.error("操作失败！", ex);
         }
         return respBody;
     }
@@ -80,27 +81,13 @@ public class WebWithDrawController {
     public RespBody erroeState(@RequestBody AppWithDrawPo po) {
         RespBody respBody = new RespBody();
         try {
-
-
-            po.setState(30);
-            webWithDrawService.update(po);
-            /**
-             * 修改用户冻结资金（冻结资金 = 冻结资金-提现金额   用户ep余额 = 用户ep余额 +提现金额 ）
-             */
-            AppUserPo appuser = appUserService.findUserById(po.getUserId());
-            appUserService.updateById(appuser, appuser.getId());
-
-
-            AppBillRecordPo appBillRecordPo = new AppBillRecordPo();
-
-            appBillRecordPo.setUserId(po.getUserId());
-            appBillRecordPo.setBalance(po.getAmount());
-            appBillRecordPo.setBusinessNumber(po.getId());
-
-            appBillRecordPo.setBusnessType(22);
-            appBillRecordPo.setRemark("提现驳回记录");
-            webBillRecordService.add(appBillRecordPo);
-
+            SysUserVo token = commonService.checkWebToken();
+            if(token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
+                return respBody;
+            }
+            //驳回提现
+            webWithDrawService.erroeState(po.getId());
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "操作成功");
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "操作成功");

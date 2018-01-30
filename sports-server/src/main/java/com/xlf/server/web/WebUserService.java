@@ -7,6 +7,7 @@
 */
 package com.xlf.server.web;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -95,4 +96,5 @@ public interface WebUserService {
 	public  Integer updateActiveNoCount(Integer activeNo,String id);
 
 
+    int updateBalance(String userId, BigDecimal balance);
 }

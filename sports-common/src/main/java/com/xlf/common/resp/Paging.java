@@ -26,6 +26,9 @@ public class Paging extends RowBounds{
 	 */
 	protected int	pageCount	= 0;
 
+	public Paging() {
+
+	}
 	public Paging(int pageNumber, int pageSize) {
 		this.pageNumber = pageNumber;
 		this.pageSize = pageSize;

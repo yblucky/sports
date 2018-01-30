@@ -11,9 +11,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class AppWithDrawVo {
 	/**
+	 *
+	 */
+	private static final long serialVersionUID = 16440422133307890L;
+	/**
      * 主键编号
      */
-    @Id
     private String id;
     /**
      * '提现人主键编号'

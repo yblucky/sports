@@ -1,6 +1,7 @@
 package com.xlf.server.app.impl;
 
 import com.xlf.common.enums.BankEnum;
+import com.xlf.common.enums.StateEnum;
 import com.xlf.common.enums.YNEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,5 +51,23 @@ public class SysAgentSettingServiceImpl implements SysAgentSettingService {
             return null;
         }
         return sysAgentSettingMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void add(SysAgentSettingPo vo) {
+        vo.setId(ToolUtils.getUUID());
+        vo.setCreateTime(new Date());
+        vo.setState(StateEnum.NORMAL.getCode());
+        sysAgentSettingMapper.insertSelective(vo);
+    }
+
+    @Override
+    public void update(SysAgentSettingPo vo) {
+        sysAgentSettingMapper.updateByPrimaryKeySelective(vo);
+    }
+
+    @Override
+    public void delete(SysAgentSettingPo vo) {
+        sysAgentSettingMapper.deleteByPrimaryKey(vo);
     }
 }
