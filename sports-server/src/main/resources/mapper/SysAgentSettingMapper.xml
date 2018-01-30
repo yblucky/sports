@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xlf.server.mapper.SysAgentSettingMapper">
+
+
+    <sql id="fields">
+        agentName,deposit,maxProfitPerDay,minBetNoPerDigital,maxBetNoPerDigital,returnWaterScale,maxWithdrawPerDay,maxBetSeats,maxBetDigitalNoPerSeat,createTime,updateTime,state
+    </sql>
+
+    <sql id="fields_id">
+        id,
+        <include refid="fields"/>
+    </sql>
+
+    <sql id="table_name">sys_agent_setting</sql>
+
+    <sql id="selector">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+    </sql>
+
+    <insert id="insertPerformanceRecordList" parameterType="com.xlf.common.po.AppTimeBettingPo" keyProperty="id" useGeneratedKeys="true">
+        insert into app_performance_record(id,orderId,userId,type,amount,department,createTime)
+        VALUES
+        <foreach item="item" collection="list" separator=",">
+            (#{item.id},#{item.orderId},#{item.userId},#{item.type},#{item.amount},#{item.department},#{item.createTime})
+        </foreach>
+    </insert>
+    
+    
+    <select id="findAll" resultType="com.xlf.common.vo.pc.AppPerformanceRecordVo">
+       	SELECT p.*,u.uid,u.mobile from app_performance_record p left join app_user u on p.userId=u.id
+       	<where>
+       	 1 = 1
+		<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
+		<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
+		<if test="model.orderId != null and model.orderId != ''">AND p.orderId=#{model.orderId}</if>
+		<if test="model.type != null and model.type != ''">AND p.type=#{model.type}</if>
+		<if test="model.id != null and model.id != ''">AND p.id=#{model.id}</if>
+		<if test="model.startTime != null">AND p.createTime&gt;=#{model.startTime}</if>
+		<if test="model.endTime != null">AND p.createTime&lt;#{model.endTime}</if>
+		
+		
+		</where>
+		ORDER BY p.createTime DESC
+		limit #{startRow}, #{pageSize};
+    </select>
+    
+    <select id="findCount" resultType="int">
+    	SELECT count(1) from app_performance_record p  left join app_user u on p.userId=u.id
+    	<where>
+       	 1 = 1
+		<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
+		<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
+		<if test="model.orderId != null and model.orderId != ''">AND p.orderId=#{model.orderId}</if>
+		<if test="model.type != null and model.type != ''">AND p.type=#{model.type}</if>
+		<if test="model.id != null and model.id != ''">AND p.id=#{model.id}</if>
+		<if test="model.startTime != null">AND p.createTime&gt;=#{model.startTime}</if>
+		<if test="model.endTime != null">AND p.createTime&lt;#{model.endTime}</if>
+		</where>
+    	
+    </select>
+    
+    
+    
+    
+    
+</mapper>
+
+
+
