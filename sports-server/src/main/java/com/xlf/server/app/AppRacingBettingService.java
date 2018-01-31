@@ -1,5 +1,6 @@
 package com.xlf.server.app;
 
+import com.xlf.common.enums.RacingSeatEnum;
 import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeBettingPo;
@@ -23,9 +24,11 @@ public interface AppRacingBettingService {
 
     public Integer updateLotteryFlagById( String id,  BigDecimal winingAmout);
 
-    public List<AppTimeBettingPo> listWininggByIssuNo(String issuNo, Integer lotteryFlag, Paging paging, Integer digital, TimeSeatEnum seat);
+    public List<AppRacingBettingPo> listWininggByIssuNo(String issuNo, Integer lotteryFlag, Paging paging, Integer digital, RacingSeatEnum seat);
 
-    Integer wininggCount(String issuNo, Integer lotteryFlag, Integer digital, TimeSeatEnum seat);
+    Integer wininggCount(String issuNo, Integer lotteryFlag, Integer digital, RacingSeatEnum seat);
 
     public Integer updateBatchLotteryFlag(String issueNo);
+
+
 }

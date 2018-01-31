@@ -36,7 +36,7 @@ public class RacingBettingScheduleTask extends BaseScheduleTask {
             flag = appRacingLotteryService.batchRacingLotteryHandleService(lotteryPo, flag);
             if (!flag) {
                 //本期北京赛车全部设置为未中奖
-                appRacingLotteryService.updateBatchLotteryFlag(lotteryPo.getIssueNo());
+                appRacingBettingService.updateBatchLotteryFlag(lotteryPo.getIssueNo());
                 //修改本期为全部已结算完成
                 appRacingLotteryService.updateFlagById(lotteryPo.getId());
             }

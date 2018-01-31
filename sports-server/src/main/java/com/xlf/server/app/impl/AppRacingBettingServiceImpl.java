@@ -2,7 +2,10 @@ package com.xlf.server.app.impl;
 
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
+import com.xlf.common.enums.RacingSeatEnum;
+import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.AppRacingBettingPo;
+import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
@@ -109,4 +112,28 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     }
 
 
+
+
+    @Override
+    public List<AppRacingBettingPo> listWininggByIssuNo(String issuNo, Integer lotteryFlag, Paging paging, Integer digital, RacingSeatEnum seat) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        if (StringUtils.isEmpty(issuNo)) {
+            return Collections.emptyList();
+        }
+        List<AppRacingBettingPo> list = appRacingBettingMapper.listWininggByIssuNo(issuNo, lotteryFlag, digital, seat.getCode(), rowBounds);
+        if (list == null) {
+            list = Collections.emptyList();
+        }
+        return list;
+    }
+
+    @Override
+    public Integer wininggCount(String issuNo, Integer lotteryFlag, Integer digital, RacingSeatEnum seat) {
+        Integer count = 0;
+        count = appRacingBettingMapper.wininggCount(issuNo, lotteryFlag, digital, seat.getCode());
+        if (count == null) {
+            count = 0;
+        }
+        return count;
+    }
 }
