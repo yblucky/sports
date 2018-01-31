@@ -51,14 +51,14 @@
         </where>
     </select>
 
-    <update id="updateBatchLotteryFlagByIds">
+  <!--  <update id="updateBatchLotteryFlagByIds">
         UPDATE
         <include refid="table_name"/>
         SET lotteryFlag=20,winningAmount=0
         WHERE
         id IN
         <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
-    </update>
+    </update>-->
 
     <update id="updateBatchLotteryFlag">
         UPDATE

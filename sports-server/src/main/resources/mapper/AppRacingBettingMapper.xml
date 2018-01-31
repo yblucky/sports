@@ -30,6 +30,11 @@
             <if test="seat==3">AND lotteryThree=#{digital}</if>
             <if test="seat==4">AND lotteryFour=#{digital}</if>
             <if test="seat==5">AND lotteryFive=#{digital}</if>
+            <if test="seat==6">AND lotterySix=#{digital}</if>
+            <if test="seat==7">AND lotterySeven=#{digital}</if>
+            <if test="seat==8">AND lotteryEight=#{digital}</if>
+            <if test="seat==9">AND lotteryNine=#{digital}</if>
+            <if test="seat==10">AND lotteryTen=#{digital}</if>
         </where>
     </select>
 
@@ -46,17 +51,22 @@
             <if test="seat==3">AND lotteryThree=#{digital}</if>
             <if test="seat==4">AND lotteryFour=#{digital}</if>
             <if test="seat==5">AND lotteryFive=#{digital}</if>
+            <if test="seat==6">AND lotterySix=#{digital}</if>
+            <if test="seat==7">AND lotterySeven=#{digital}</if>
+            <if test="seat==8">AND lotteryEight=#{digital}</if>
+            <if test="seat==9">AND lotteryNine=#{digital}</if>
+            <if test="seat==10">AND lotteryTen=#{digital}</if>
         </where>
     </select>
 
-    <update id="updateBatchLotteryFlagByIds">
+<!--    <update id="updateBatchLotteryFlagByIds">
         UPDATE
         <include refid="table_name"/>
         SET lotteryFlag=20,winningAmount=0
         WHERE
         id IN
         <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
-    </update>
+    </update>-->
 
     <update id="updateBatchLotteryFlag">
         UPDATE
