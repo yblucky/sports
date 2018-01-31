@@ -11,11 +11,13 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.RacingBettingBaseVo;
 import com.xlf.common.vo.app.RacingBettingVo;
+import com.xlf.common.vo.pc.LotteryVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.mapper.AppRacingBettingMapper;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -28,6 +30,7 @@ import java.util.List;
 /**
  * 时时彩投注业务类
  */
+@Service
 public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     @Resource
     private AppRacingBettingMapper appRacingBettingMapper;
@@ -135,5 +138,10 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
             count = 0;
         }
         return count;
+    }
+
+    @Override
+    public LotteryVo findAll(LotteryVo vo, Paging paging) {
+        return appRacingBettingMapper.findAll(vo,paging);
     }
 }

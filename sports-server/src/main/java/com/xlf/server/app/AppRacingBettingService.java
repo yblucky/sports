@@ -6,6 +6,7 @@ import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.app.RacingBettingVo;
+import com.xlf.common.vo.pc.LotteryVo;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,4 +32,6 @@ public interface AppRacingBettingService {
     public Integer updateBatchLotteryFlag(String issueNo);
 
 
+
+    LotteryVo findAll(LotteryVo vo, Paging paging);
 }

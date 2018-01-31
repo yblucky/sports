@@ -2,6 +2,8 @@ package com.xlf.server.mapper;
 
 
 import com.xlf.common.po.AppRacingBettingPo;
+import com.xlf.common.resp.Paging;
+import com.xlf.common.vo.pc.LotteryVo;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -33,4 +35,6 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
     List<AppRacingBettingPo> listWininggByIssuNo(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag, @Param("digital") Integer digital, @Param("seat") Integer seat, RowBounds rowBounds);
 
     Integer updateBatchLotteryFlag(@Param("issueNo") String issueNo);
+
+    LotteryVo findAll(@Param("model") LotteryVo vo, Paging paging);
 }

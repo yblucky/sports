@@ -30,6 +30,10 @@ public class AppRacingBettingPo {
     private Integer multiple;
     private Date createTime;
     private String businessNumber;
+    /**
+     * 投注类型
+     * */
+    private Integer betType;
 
     public String getId() {
         return id;
@@ -173,5 +177,13 @@ public class AppRacingBettingPo {
 
     public void setBusinessNumber(String businessNumber) {
         this.businessNumber = businessNumber;
+    }
+
+    public Integer getBetType() {
+        return betType;
+    }
+
+    public void setBetType(Integer betType) {
+        this.betType = betType;
     }
 }

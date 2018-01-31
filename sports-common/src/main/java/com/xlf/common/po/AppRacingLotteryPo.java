@@ -19,14 +19,13 @@ public class AppRacingLotteryPo implements Serializable {
     private Integer lotteryThree;
     private Integer lotteryFour;
     private Integer lotteryFive;
-    private Integer lotterySix;
-    private Integer lotterySeven;
-    private Integer lotteryEight;
-    private Integer lotteryNine;
-    private Integer lotteryTen;
     private Date createTime;
     private Date lotteryTime;
     private Integer flag;
+    /**
+     * 投注类型
+     * */
+    private Integer betType;
 
     public String getId() {
         return id;
@@ -100,51 +99,19 @@ public class AppRacingLotteryPo implements Serializable {
         this.lotteryTime = lotteryTime;
     }
 
-    public Integer getLotterySix() {
-        return lotterySix;
-    }
-
-    public void setLotterySix(Integer lotterySix) {
-        this.lotterySix = lotterySix;
-    }
-
-    public Integer getLotterySeven() {
-        return lotterySeven;
-    }
-
-    public void setLotterySeven(Integer lotterySeven) {
-        this.lotterySeven = lotterySeven;
-    }
-
-    public Integer getLotteryEight() {
-        return lotteryEight;
-    }
-
-    public void setLotteryEight(Integer lotteryEight) {
-        this.lotteryEight = lotteryEight;
-    }
-
-    public Integer getLotteryNine() {
-        return lotteryNine;
-    }
-
-    public void setLotteryNine(Integer lotteryNine) {
-        this.lotteryNine = lotteryNine;
-    }
-
-    public Integer getLotteryTen() {
-        return lotteryTen;
-    }
-
-    public void setLotteryTen(Integer lotteryTen) {
-        this.lotteryTen = lotteryTen;
-    }
-
     public Integer getFlag() {
         return flag;
     }
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public Integer getBetType() {
+        return betType;
+    }
+
+    public void setBetType(Integer betType) {
+        this.betType = betType;
     }
 }
