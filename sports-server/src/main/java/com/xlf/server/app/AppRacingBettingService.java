@@ -33,5 +33,5 @@ public interface AppRacingBettingService {
 
 
 
-    LotteryVo findAll(LotteryVo vo, Paging paging);
+    List<LotteryVo> findAll(LotteryVo vo, Paging paging);
 }
