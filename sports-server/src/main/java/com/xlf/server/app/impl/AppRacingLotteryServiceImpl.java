@@ -2,6 +2,7 @@ package com.xlf.server.app.impl;
 
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
+import com.xlf.common.enums.RacingSeatEnum;
 import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.*;
 import com.xlf.common.resp.Paging;
@@ -34,7 +35,9 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
     private SysAgentSettingService sysAgentSettingService;
 
     @Resource
-    private AppTimeBettingService appTimeBettingService;
+    private AppRacingBettingService appRacingBettingService;
+    @Resource
+    private AppRacingLotteryService appRacingLotteryService;
     @Resource
     private AppUserService appUserService;
     @Resource
@@ -58,16 +61,16 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
     @Override
     public Boolean batchRacingLotteryHandleService(AppRacingLotteryPo lotteryPo, Boolean flag) throws Exception {
         List<AppRacingBettingPo> list;
-        for (TimeSeatEnum seat : TimeSeatEnum.values()) {
-            Integer winingCount = appTimeBettingService.wininggCount(lotteryPo.getIssueNo(), LotteryFlagEnum.NO.getCode(), lotteryPo.getLotteryOne(), seat);
+        for (RacingSeatEnum seat : RacingSeatEnum.values()) {
+            Integer winingCount = appRacingBettingService.wininggCount(lotteryPo.getIssueNo(), LotteryFlagEnum.NO.getCode(), lotteryPo.getLotteryOne(), seat);
             if (winingCount > 10) {
                 flag = true;
             }
             if (winingCount > 0) {
-                list = appTimeBettingService.listWininggByIssuNo(lotteryPo.getIssueNo(), LotteryFlagEnum.NO.getCode(), new Paging(0, 10), lotteryPo.getLotteryOne(), seat);
+                list = appRacingBettingService.listWininggByIssuNo(lotteryPo.getIssueNo(), LotteryFlagEnum.NO.getCode(), new Paging(0, 10), lotteryPo.getLotteryOne(), seat);
                 if (list.size() > 0) {
-                    for (AppTimeBettingPo bettingPo : list) {
-                        timeLotteryHandleService(bettingPo);
+                    for (AppRacingBettingPo bettingPo : list) {
+                        racingLotteryHandleService(bettingPo);
                     }
                 }
             } else {
@@ -76,7 +79,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
             log.info("时时彩第" + lotteryPo.getIssueNo() + "期开奖:" + seat.getName() + " 没有待结算的投注订单");
         }
         if (flag) {
-            this.batchTimeLotteryHandleService(lotteryPo, flag);
+            this.batchRacingLotteryHandleService(lotteryPo, flag);
         }
         return flag;
     }
@@ -106,7 +109,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
         //更新用户当天累计盈亏
         appUserService.updateCurrentProfitById(userPo.getId(), award);
         //更改投注状态为已开奖
-        appTimeBettingService.updateLotteryFlagById(bettingPo.getId(), award);
+        appRacingBettingService.updateLotteryFlagById(bettingPo.getId(), award);
         log.error("-------------------------------------------时时彩订单结束处理中奖流程-------------订单号：" + bettingPo.getId() + "----------------------------------------------------------------------------------------------------------------");
         return true;
     }
