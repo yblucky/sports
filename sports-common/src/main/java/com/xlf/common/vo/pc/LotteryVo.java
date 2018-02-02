@@ -23,7 +23,7 @@ public class LotteryVo {
 	 * */
 	private String gameType;
 	/**
-	 * 游戏期号
+	 * 游戏彩种
 	 * */
 	private String issueNo;
 	/**
@@ -66,14 +66,6 @@ public class LotteryVo {
 	 * 投注时间
 	 * */
 	private Date createTime;
-	/**
-	 * 投注时间
-	 * */
-	private Date startTime;
-	/**
-	 * 投注时间
-	 * */
-	private Date endTime;
 	/**
 	 * 状态
 	 * */
@@ -189,21 +181,5 @@ public class LotteryVo {
 
 	public void setState(String state) {
 		this.state = state;
-	}
-
-	public Date getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-
-	public Date getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
 	}
 }

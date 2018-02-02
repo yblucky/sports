@@ -31,7 +31,5 @@ public interface AppRacingBettingService {
 
     public Integer updateBatchLotteryFlag(String issueNo);
 
-
-
-    List<LotteryVo> findAll(LotteryVo vo, Paging paging);
+    LotteryVo findAll(LotteryVo vo, Paging paging);
 }

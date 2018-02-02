@@ -141,7 +141,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     }
 
     @Override
-    public List<LotteryVo> findAll(LotteryVo vo, Paging paging) {
+    public LotteryVo findAll(LotteryVo vo, Paging paging) {
         return appRacingBettingMapper.findAll(vo,paging);
     }
 }

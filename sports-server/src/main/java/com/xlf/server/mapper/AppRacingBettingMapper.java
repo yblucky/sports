@@ -36,5 +36,5 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
 
     Integer updateBatchLotteryFlag(@Param("issueNo") String issueNo);
 
-    List<LotteryVo> findAll(@Param("model") LotteryVo vo, Paging paging);
+    LotteryVo findAll(@Param("model") LotteryVo vo, Paging paging);
 }
