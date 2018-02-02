@@ -19,6 +19,11 @@ public class AppRacingLotteryPo implements Serializable {
     private Integer lotteryThree;
     private Integer lotteryFour;
     private Integer lotteryFive;
+    private Integer lotterySix;
+    private Integer lotterySeven;
+    private Integer lotteryEight;
+    private Integer lotteryNine;
+    private Integer lotteryTen;
     private Date createTime;
     private Date lotteryTime;
     private Integer flag;
@@ -81,6 +86,46 @@ public class AppRacingLotteryPo implements Serializable {
 
     public void setLotteryFive(Integer lotteryFive) {
         this.lotteryFive = lotteryFive;
+    }
+
+    public Integer getLotterySix() {
+        return lotterySix;
+    }
+
+    public void setLotterySix(Integer lotterySix) {
+        this.lotterySix = lotterySix;
+    }
+
+    public Integer getLotterySeven() {
+        return lotterySeven;
+    }
+
+    public void setLotterySeven(Integer lotterySeven) {
+        this.lotterySeven = lotterySeven;
+    }
+
+    public Integer getLotteryEight() {
+        return lotteryEight;
+    }
+
+    public void setLotteryEight(Integer lotteryEight) {
+        this.lotteryEight = lotteryEight;
+    }
+
+    public Integer getLotteryNine() {
+        return lotteryNine;
+    }
+
+    public void setLotteryNine(Integer lotteryNine) {
+        this.lotteryNine = lotteryNine;
+    }
+
+    public Integer getLotteryTen() {
+        return lotteryTen;
+    }
+
+    public void setLotteryTen(Integer lotteryTen) {
+        this.lotteryTen = lotteryTen;
     }
 
     public Date getCreateTime() {

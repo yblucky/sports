@@ -18,4 +18,6 @@ public interface AppTimeLotteryMapper extends BaseMapper<AppTimeLotteryPo> {
 
     Integer updateFlagById(@Param("id") String id);
 
+    @Select("SELECT * FROM `app_time_lottery` where issueNo=#{issueNo}")
+    AppTimeLotteryPo findAppTimeLotteryPoByIssuNo(@Param("issueNo") String issuNo);
 }

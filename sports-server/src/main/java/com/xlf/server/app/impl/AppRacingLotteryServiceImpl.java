@@ -7,6 +7,7 @@ import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.*;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.common.vo.task.RacingLotteryVo;
 import com.xlf.server.app.*;
 import com.xlf.server.mapper.AppRacingLotteryMapper;
 import com.xlf.server.mapper.AppTimeLotteryMapper;
@@ -112,6 +113,21 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
         appRacingBettingService.updateLotteryFlagById(bettingPo.getId(), award);
         log.error("-------------------------------------------时时彩订单结束处理中奖流程-------------订单号：" + bettingPo.getId() + "----------------------------------------------------------------------------------------------------------------");
         return true;
+    }
+
+    @Override
+    public RacingLotteryVo getLatestRacingLottery() {
+        return appRacingLotteryService.getLatestRacingLottery();
+    }
+
+    @Override
+    public Integer save(AppRacingLotteryPo po) {
+        return appRacingLotteryMapper.insert(po);
+    }
+
+    @Override
+    public AppTimeLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo) {
+        return appRacingLotteryMapper.findAppRacingLotteryPoByIssuNo(issuNo);
     }
 
 

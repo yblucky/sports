@@ -60,9 +60,6 @@ public class HttpUtils {
             	LogUtils.error("关闭输入流出现异常！" + ex);
             }
         }
-        System.out.println("000000000000000000000000000000000000000000000000000");
-        System.out.println("000000000000000000000000000000000000000000000000000");
-        System.out.println("000000000000000000000000000000000000000000000000000");
         return result;
     }
 
