@@ -15,6 +15,14 @@ public final class DateTimeUtil {
      */
     public final static String PATTERN_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
     /**
+     * yyyy-MM-dd HH:mm:ss
+     */
+    public final static String PATTERN_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
+    /**
+     * yyyy-MM-dd HH:mm:ss
+     */
+    public final static String PATTERN_HH_MM = "HH:mm";
+    /**
      * yyyyMM
      */
     public final static String PATTERN_YYYYMM = "yyyyMM";
@@ -185,5 +193,34 @@ public final class DateTimeUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        int minute=5;
+        Map<Integer,String > map=new HashMap<>();
+        Calendar c = Calendar.getInstance();
+        c.set(2018,2,2,0,0,0);
+        for (int i=1;i<24;i++){
+            c.add(Calendar.MINUTE,5);
+            String mmss=formatDate(c.getTime(), DateTimeUtil.PATTERN_HH_MM);
+            map.put(i,mmss);
+        }
+        c.set(Calendar.HOUR,9);
+        for (int i=24;i<120;i++){
+            c.add(Calendar.MINUTE,10);
+            String mmss=formatDate(c.getTime(), DateTimeUtil.PATTERN_HH_MM);
+            map.put(i,mmss);
+        }
+        System.out.println("9999999999999999999999999");
+        System.out.println(map.size());
+        for (Map.Entry m:map.entrySet()){
+            System.out.println(m.getValue());
+            map.remove(m.getKey());
+        }
+        System.out.println("8888888888888888888888888");
+
+
+
+
     }
 }
