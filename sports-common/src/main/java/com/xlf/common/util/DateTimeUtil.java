@@ -195,32 +195,41 @@ public final class DateTimeUtil {
         return null;
     }
 
-    public static void main(String[] args) {
+
+
+    public static void createTimeInterval() {
+        String id;
+        int issuNo;
+        String time;
+        int type;
+        String str="INSERT INTO app_time_interval (id,issuNo,time,type) VALUES({id},{issuNo},{time},20)";
         int minute=5;
         Map<Integer,String > map=new HashMap<>();
         Calendar c = Calendar.getInstance();
-        c.set(2018,2,2,0,0,0);
-        for (int i=1;i<24;i++){
+        c.set(2018,2,2,9,0,0);
+        StringBuffer stringBuffer=new StringBuffer();
+
+        for (int i=1;i<180;i++){
             c.add(Calendar.MINUTE,5);
             String mmss=formatDate(c.getTime(), DateTimeUtil.PATTERN_HH_MM);
             map.put(i,mmss);
         }
-        c.set(Calendar.HOUR,9);
-        for (int i=24;i<120;i++){
-            c.add(Calendar.MINUTE,10);
-            String mmss=formatDate(c.getTime(), DateTimeUtil.PATTERN_HH_MM);
-            map.put(i,mmss);
-        }
+
         System.out.println("9999999999999999999999999");
         System.out.println(map.size());
+
         for (Map.Entry m:map.entrySet()){
             System.out.println(m.getValue());
-            map.remove(m.getKey());
+            String s=str.replace("{id}", "'"+ ToolUtils.getUUID()+"'").replace("{issuNo}", m.getKey().toString()).replace("{time}", "'"+(String)m.getValue()+"'");
+           stringBuffer.append(s).append(";");
         }
         System.out.println("8888888888888888888888888");
 
+        System.out.println("6666666666666666666666666");
+        System.out.println(stringBuffer.toString());
+    }
 
-
-
+    public static void main(String[] args) {
+        createTimeInterval();
     }
 }
