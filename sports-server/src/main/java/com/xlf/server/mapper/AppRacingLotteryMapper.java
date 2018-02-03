@@ -1,7 +1,6 @@
 package com.xlf.server.mapper;
 
 
-import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppRacingLotteryPo;
 import com.xlf.common.po.AppTimeLotteryPo;
 import com.xlf.server.base.BaseMapper;
@@ -10,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 /**
  * 赛车开奖
+ *
  * @version v1.0
  * @date 2017年6月14日
  */
