@@ -23,8 +23,8 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 	 * @param roleType
      * @return
 	 */
-	@Select("select * from sys_user where loginName=#{ln} and ifnull(roleType,'')=#{roleType}")
-	public SysUserVo findByloginName(@Param("ln") String loginName, @Param("roleType") Integer roleType);
+	@Select("select * from sys_user where loginName=#{ln}")
+	public SysUserVo findByloginName(@Param("ln") String loginName);
 
 	/**
 	 * 用户登录

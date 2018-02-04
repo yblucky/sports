@@ -38,17 +38,17 @@ public class FinanceController {
 	private CommonService commonService;
 	
 	/**
-	 * 加载银行卡类型
+	 * 注单列表
 	 * @return 响应对象
 	 */
 	@GetMapping("/findAll")
 	public RespBody findAll(LotteryVo vo, Paging paging){
 		RespBody respBody = new RespBody();
 		try {
-			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载银行成功",appRacingBettingService.findAll(vo,paging));
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功",appRacingBettingService.findAll(vo,paging));
 		} catch (Exception ex) {
-			respBody.add(RespCodeEnum.ERROR.getCode(), "加载银行失败");
-			LogUtils.error("加载银行失败！",ex);
+			respBody.add(RespCodeEnum.ERROR.getCode(), "加载注单失败");
+			LogUtils.error("加载注单失败！",ex);
 		}
 		return respBody;
 	}

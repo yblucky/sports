@@ -22,5 +22,5 @@ public interface WebWithDrawService {
 
     int successState(String id);
 
-	void erroeState(String id);
+	void erroeState(String id) throws Exception;
 }
