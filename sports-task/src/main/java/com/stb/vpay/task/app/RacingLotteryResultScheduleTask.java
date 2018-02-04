@@ -12,6 +12,7 @@ import com.xlf.server.app.AppRacingLotteryService;
 import com.xlf.server.app.AppTimeIntervalService;
 import com.xlf.server.common.CommonService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +53,9 @@ public class RacingLotteryResultScheduleTask extends BaseScheduleTask {
         if (!lastIssuNo.equals(lotteryVo.getIssue())){
             log.error("获取北京赛车投注结果的期数和本平台不一致，无法正常开奖");
             return;
+        }
+        if (timeIntervalPo.getIssueNo()==179){
+            commonService.updateParameterByName("yesterdayRacingIssuNo",lastIssuNo);
         }
         //将正确的开奖结果写入数据库
         AppRacingLotteryPo model = appRacingLotteryService.findById(lotteryVo.getPreIssue());

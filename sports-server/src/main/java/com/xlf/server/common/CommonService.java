@@ -57,6 +57,8 @@ public interface CommonService {
      */
     public String findParameter(String paraName);
 
+    Integer  updateParameterByName(String paraName,String value);
+
     /**
      * 获取全球国家代码
      * @throws Exception

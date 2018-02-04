@@ -168,6 +168,11 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
+    public Integer updateParameterByName(String paraName, String value) {
+        return parameterService.updateParameterByName(paraName,value);
+    }
+
+    @Override
     public List<AppRacingBettingPo> findCountryCode() throws Exception {
         return appCountryCodeMapper.selectAll();
     }

@@ -57,13 +57,15 @@ public interface ParameterService {
     public long findCount();
 
     String findParameter(String paraName);
-    
+
+
     /**
      * 根据条件查询
-     * @param SysParameterVo
+     * @param sysParameterVo
      * @param paging
      * @return
      */
     public List<SysParameterVo> getInfoByTime(SysParameterVo sysParameterVo, Paging paging);
 
+    Integer  updateParameterByName(String paraName,String value);
 }

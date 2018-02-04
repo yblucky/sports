@@ -87,7 +87,10 @@ public class ParameterServiceImpl implements ParameterService {
 			pageSize=Integer.MAX_VALUE;
 		}
 		return parameterMapper.getInfoByTime(parameterVo, startRow, pageSize);
-	
 	}
 
+    @Override
+    public Integer updateParameterByName(String paraName,String value) {
+        return parameterMapper.updateParameterByName(paraName, value);
+    }
 }
