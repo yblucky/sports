@@ -61,8 +61,9 @@ public class TimeBettingController {
             Calendar calendar = Calendar.getInstance ();
             calendar.setTime (new Date ());
             Integer hour = calendar.get (Calendar.HOUR);
-            if (hour >= 10 && hour <= 22) {
-
+            if (hour >= 2 && hour <= 10) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
+                return respBody;
             }
             String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, 5);
             AppTimeIntervalPo intervalPo = appTimeIntervalService.findByTime (hhmm, LotteryTypeEnum.RACING.getCode ());
@@ -118,6 +119,16 @@ public class TimeBettingController {
             Boolean flag = commonService.checkSign (vo);
             if (!flag) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
+                return respBody;
+            }
+            if (vo.getSerialNumber ()==null){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
+                return respBody;
+            }
+            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (),10);
+            Long longDate=DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
+            if (System.currentTimeMillis ()>(longDate-30*1000)){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
@@ -191,8 +202,6 @@ public class TimeBettingController {
                     }
                 }
             }
-
-
             //最大可能中奖金额
             if (userPo.getBalance ().compareTo (new BigDecimal (totalBettingNo.toString ())) == -1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "用户余额不足，无法完成下注");
@@ -209,6 +218,4 @@ public class TimeBettingController {
         }
         return respBody;
     }
-
-
 }

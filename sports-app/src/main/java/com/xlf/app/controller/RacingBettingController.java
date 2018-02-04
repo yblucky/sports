@@ -60,9 +60,16 @@ public class RacingBettingController {
     public RespBody racingInfo(HttpServletRequest request, @RequestBody RacingBettingVo vo) throws Exception {
         RespBody respBody = new RespBody ();
         try {
+            Calendar calendar = Calendar.getInstance ();
+            calendar.setTime (new Date ());
+            Integer hour = calendar.get (Calendar.HOUR);
             String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, 10);
             AppTimeIntervalPo intervalPo = appTimeIntervalService.findByTime (hhmm, LotteryTypeEnum.RACING.getCode ());
             if (intervalPo == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
+                return respBody;
+            }
+            if (hour >= 2 && hour <= 10) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
                 return respBody;
             }
@@ -113,6 +120,22 @@ public class RacingBettingController {
             Boolean flag = commonService.checkSign (vo);
             if (!flag) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
+                return respBody;
+            }
+            if (vo.getSerialNumber ()==null){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
+                return respBody;
+            }
+            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (),20);
+            Integer yesterdayRacingIssuNo=Integer.valueOf (commonService.findParameter ("yesterdayRacingIssuNo"));
+            String historyIssuNo=(yesterdayRacingIssuNo+vo.getSerialNumber())+"";
+            if (!historyIssuNo.equals (vo.getIssueNo ())){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
+                return respBody;
+            }
+            Long longDate=DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
+            if (System.currentTimeMillis ()>(longDate-30*1000)){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
@@ -209,6 +232,12 @@ public class RacingBettingController {
             LogUtils.error ("投注失败！", ex);
         }
         return respBody;
+    }
+
+    private void getLongTimeByDatrStr(String  time) {
+        String dateStr= DateTimeUtil.formatDate (new Date (),DateTimeUtil.PATTERN_YYYYMMDD)+time;
+        Date date  = DateTimeUtil.parseDateFromStr (dateStr,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
+        Long dateLong= date.getTime ();
     }
 
 

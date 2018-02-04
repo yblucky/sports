@@ -25,7 +25,7 @@ public class AppTimeIntervalServiceImpl implements AppTimeIntervalService {
     }
 
     @Override
-    public AppTimeIntervalPo findByIssNo(String issuNo, Integer type) {
+    public AppTimeIntervalPo findByIssNo(Integer issuNo, Integer type) {
         return appTimeIntervalMapper.findByIssNo(issuNo, type);
     }
 

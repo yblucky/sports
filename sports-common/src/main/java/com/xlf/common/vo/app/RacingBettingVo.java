@@ -6,7 +6,9 @@ import java.util.List;
 public class RacingBettingVo {
     private String issueNo;
     private String payPwd;
+    private Integer serialNumber;
     private List<RacingBettingBaseVo> raingList = new ArrayList<>();
+
 
     public String getIssueNo() {
         return issueNo;
@@ -22,6 +24,14 @@ public class RacingBettingVo {
 
     public void setPayPwd(String payPwd) {
         this.payPwd = payPwd;
+    }
+
+    public Integer getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(Integer serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     public List<RacingBettingBaseVo> getRaingList() {

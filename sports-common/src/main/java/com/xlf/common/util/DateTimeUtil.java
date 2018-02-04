@@ -217,7 +217,7 @@ public final class DateTimeUtil {
 
 
 
-    public static void createTimeInterval() {
+    public static void createRacingInterval() {
         String id;
         int issuNo;
         String time;
@@ -249,12 +249,65 @@ public final class DateTimeUtil {
         System.out.println(stringBuffer.toString());
     }
 
+
+
+
+    public static void createTimeInterval() {
+        String id;
+        int issuNo;
+        String time;
+        int type;
+        String str="INSERT INTO app_time_interval(id,issuNo,time,type) VALUES({id},{issuNo},{time},10)";
+        int minute=5;
+        Map<Integer,String > map=new HashMap<>();
+        Calendar c = Calendar.getInstance();
+        c.set(2018,2,2,0,0,0);
+        StringBuffer stringBuffer=new StringBuffer();
+
+        for (int i=1;i<121;i++){
+            if (i<24){
+                c.add(Calendar.MINUTE,5);
+            }else if (i<=96){
+                if (i==24){
+                    c.set(2018,2,2,10,0,0);
+                }else {
+                    c.add(Calendar.MINUTE,10);
+                }
+
+            }else if (i<121){
+                c.add(Calendar.MINUTE,5);
+            }
+
+            String mmss=formatDate(c.getTime(), DateTimeUtil.PATTERN_HH_MM);
+            map.put(i,mmss);
+        }
+
+        System.out.println("9999999999999999999999999");
+        System.out.println(map.size());
+
+        for (Map.Entry m:map.entrySet()){
+            System.out.println(m.getValue());
+            String s=str.replace("{id}", "'"+ ToolUtils.getUUID()+"'").replace("{issuNo}", m.getKey().toString()).replace("{time}", "'"+(String)m.getValue()+"'");
+           stringBuffer.append(s).append(";");
+        }
+        System.out.println("8888888888888888888888888");
+
+        System.out.println("6666666666666666666666666");
+        System.out.println(stringBuffer.toString());
+    }
+
+    public static Long getLongTimeByDatrStr(String  time) {
+        String dateStr= DateTimeUtil.formatDate (new Date (),DateTimeUtil.PATTERN_YYYYMMDD)+time;
+        Date date  = DateTimeUtil.parseDateFromStr (dateStr,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
+        return date.getTime ();
+    }
+
     public static void main(String[] args) {
 //        createTimeInterval();
-
-        parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5);
-        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5));
-        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,-10));
-        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,10));
+        createTimeInterval();
+//        parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5);
+//        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5));
+//        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,-10));
+//        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,10));
     }
 }

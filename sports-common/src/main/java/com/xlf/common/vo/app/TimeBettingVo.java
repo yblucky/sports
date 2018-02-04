@@ -7,6 +7,7 @@ import java.util.List;
 
 public class TimeBettingVo {
     private String issueNo;
+    private Integer serialNumber;
     private String payPwd;
     private List<TimeBettingBaseVo> timeList=new ArrayList<>();
 
@@ -18,6 +19,14 @@ public class TimeBettingVo {
         this.issueNo = issueNo;
     }
 
+    public Integer getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(Integer serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
     public String getPayPwd() {
         return payPwd;
     }
@@ -25,7 +34,6 @@ public class TimeBettingVo {
     public void setPayPwd(String payPwd) {
         this.payPwd = payPwd;
     }
-
 
     public List<TimeBettingBaseVo> getTimeList() {
         return timeList;
