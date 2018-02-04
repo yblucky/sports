@@ -128,7 +128,7 @@ public class TimeBettingController {
             }
             AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (),10);
             Long longDate=DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
-            if (System.currentTimeMillis ()>(longDate-30*1000)){
+            if (System.currentTimeMillis ()>(longDate-60*1000)){
                 respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
