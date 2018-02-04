@@ -37,6 +37,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/time")
 public class TimeBettingController {
+    public static  List<Integer> list=new ArrayList<> ();
     @Resource
     private CommonService commonService;
     @Resource
