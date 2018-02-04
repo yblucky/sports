@@ -131,4 +131,27 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     public Integer updateBatchLotteryFlag(String issueNo) {
         return appTimeBettingMapper.updateBatchLotteryFlag(issueNo);
     }
+
+    @Override
+    public Integer recordListTotal(String id, String businessNumber) {
+        Integer count = 0;
+        count = appTimeBettingMapper.recordListTotal(id, businessNumber);
+        if (count == null) {
+            count = 0;
+        }
+        return count;
+    }
+
+    @Override
+    public List<AppTimeBettingPo> findRecordList(String userId, String businessNumber, Paging paging) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        if (StringUtils.isEmpty(businessNumber) || StringUtils.isEmpty (userId)) {
+            return Collections.emptyList();
+        }
+        List<AppTimeBettingPo> list = appTimeBettingMapper.findRecordList(userId, businessNumber, rowBounds);
+        if (list == null) {
+            list = Collections.emptyList();
+        }
+        return list;
+    }
 }

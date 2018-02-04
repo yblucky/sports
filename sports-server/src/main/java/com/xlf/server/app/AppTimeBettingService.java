@@ -30,4 +30,7 @@ public interface AppTimeBettingService {
     public Integer updateBatchLotteryFlag(String issueNo);
 
 
+    Integer recordListTotal(String id, String businessNumber);
+
+    List<AppTimeBettingPo> findRecordList (String userId,String businessNumber,Paging paging);
 }
