@@ -97,6 +97,10 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
         BigDecimal award = mutiple.multiply(sysAgentSettingPo.getOdds()).setScale(2, BigDecimal.ROUND_HALF_EVEN);
         //中奖后用户奖金
         BigDecimal after = userPo.getBalance().add(award).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+        //盈亏衡量
+        //中奖后用户奖金
+        BigDecimal afterKick = userPo.getBalance().subtract (award).setScale(2, BigDecimal.ROUND_HALF_EVEN);
         //分发奖金
         appUserService.updateBalanceById(userPo.getId(), award);
         //写入派奖流水
@@ -106,7 +110,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
         //更新用户盈亏返水衡量值
         appUserService.updateKickBackAmountById(userPo.getId(), award.multiply(new BigDecimal(-1)));
         //写入盈亏返水衡量值流水(此处酌情写入)
-        appBillRecordService.saveBillRecord(bettingPo.getBusinessNumber(), userPo.getId(), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode(), award, userPo.getBalance(), after, "下级" + userPo.getMobile() + "【" + userPo.getNickName() + "】" + "中奖返水减少", "");
+        appBillRecordService.saveBillRecord(bettingPo.getBusinessNumber(), userPo.getId(), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode(), award.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, "下级" + userPo.getMobile() + "【" + userPo.getNickName() + "】" + "中奖返水减少", "");
         //更新用户当天累计盈亏
         appUserService.updateCurrentProfitById(userPo.getId(), award);
         //更改投注状态为已开奖

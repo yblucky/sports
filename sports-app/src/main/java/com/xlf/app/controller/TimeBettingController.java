@@ -5,17 +5,12 @@ import com.xlf.common.enums.LotteryTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.AppTimeIntervalPo;
-import com.xlf.common.po.AppUserPo;
-import com.xlf.common.po.SysAgentSettingPo;
+import com.xlf.common.po.*;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.app.BettingInfoVo;
-import com.xlf.common.vo.app.RacingBettingVo;
-import com.xlf.common.vo.app.TimeBettingBaseVo;
-import com.xlf.common.vo.app.TimeBettingVo;
+import com.xlf.common.vo.app.*;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppSysAgentSettingService;
 import com.xlf.server.app.AppTimeBettingService;
@@ -216,6 +211,44 @@ public class TimeBettingController {
         } catch (Exception ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "投注失败"));
             LogUtils.error ("投注失败！", ex);
+        }
+        return respBody;
+    }
+
+
+    @PostMapping("/undobetting")
+    @SystemControllerLog(description = "时时彩撤单")
+    public RespBody undoBetting(HttpServletRequest request, @RequestBody UndoBettingVo vo) throws Exception {
+        RespBody respBody = new RespBody ();
+        try {
+
+            if (vo.getId () == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
+                return respBody;
+            }
+            AppTimeBettingPo bettingPo = appTimeBettingService.findById (vo.getId ());
+            if (bettingPo == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "找不到下单记录");
+                return respBody;
+            }
+            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (bettingPo.getSerialNumber (), 10);
+            if (timeIntervalPo == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
+                return respBody;
+            }
+            Long openDate = DateTimeUtil.getLongTimeByDatrStr (DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + timeIntervalPo.getTime ());
+            if ((System.currentTimeMillis () + 60 * 1000) >= openDate) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "开奖不足一分钟,无法撤单");
+                return respBody;
+            }
+            AppUserPo userPo = commonService.checkToken ();
+            appTimeBettingService.undoTimeBettingService (userPo.getId (),vo.getId ());
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
+        } catch (CommException ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "撤单失败"));
+            LogUtils.error ("撤单失败！", ex);
         }
         return respBody;
     }

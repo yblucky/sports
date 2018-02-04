@@ -5,7 +5,8 @@ package com.xlf.common.enums;
  */
 public enum LotteryFlagEnum {
     YES(10,"未开奖"),
-    NO(20,"已开奖");
+    NO(20,"已开奖"),
+    UNDO(30,"已撤单");
 
     LotteryFlagEnum(Integer code, String name) {
         this.code = code;

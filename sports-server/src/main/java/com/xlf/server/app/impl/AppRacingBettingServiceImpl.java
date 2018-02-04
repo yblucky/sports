@@ -3,6 +3,7 @@ package com.xlf.server.app.impl;
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.RacingSeatEnum;
+import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
@@ -162,5 +163,38 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
             list = Collections.emptyList ();
         }
         return list;
+    }
+
+    @Override
+    public AppRacingBettingPo findById(String id) {
+        if (StringUtils.isEmpty (id)) {
+            return null;
+        }
+        return appRacingBettingMapper.selectByPrimaryKey (id);
+    }
+
+    @Override
+    @Transactional
+    public Boolean undoRacingBettingService(String userId, String bettingId) throws Exception {
+        AppRacingBettingPo bettingPo = this.findById (bettingId);
+        if (!bettingPo.getUserId ().equals (userId)){
+            throw new CommException ("只能撤销自己的下注单");
+        }
+        BigDecimal totalPrice = new BigDecimal (bettingPo.getMultiple ());
+        AppUserPo userPo = appUserService.findUserById (userId);
+        BigDecimal before = userPo.getBalance ();
+        BigDecimal after = userPo.getBalance ().add (totalPrice);
+
+        //盈亏衡量
+        BigDecimal afterKick = userPo.getBalance ().subtract (totalPrice).setScale (2, BigDecimal.ROUND_HALF_EVEN);
+
+        String businessNumber = bettingPo.getBusinessNumber ();
+        appUserService.updateBalanceById (userId, totalPrice);
+        appUserService.updateBettingAmoutById (userId, totalPrice.multiply (new BigDecimal ("-1")));
+        appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.RACING_UNDO.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "北京赛车下注后撤单", "");
+        appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
+        appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", "");
+        appUserService.updateCurrentProfitById (userId, totalPrice);
+        return true;
     }
 }

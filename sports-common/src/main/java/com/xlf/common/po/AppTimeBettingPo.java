@@ -26,6 +26,7 @@ public class AppTimeBettingPo implements Serializable {
     private Integer multiple;
     private Date createTime;
     private String businessNumber;
+    private Integer serialNumber;
 
     public String getId() {
         return id;
@@ -129,5 +130,13 @@ public class AppTimeBettingPo implements Serializable {
 
     public void setBusinessNumber(String businessNumber) {
         this.businessNumber = businessNumber;
+    }
+
+    public Integer getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(Integer serialNumber) {
+        this.serialNumber = serialNumber;
     }
 }

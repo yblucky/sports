@@ -5,6 +5,7 @@ import com.xlf.common.enums.LotteryTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
+import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeIntervalPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
@@ -15,6 +16,7 @@ import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.app.BettingInfoVo;
 import com.xlf.common.vo.app.RacingBettingBaseVo;
 import com.xlf.common.vo.app.RacingBettingVo;
+import com.xlf.common.vo.app.UndoBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.app.AppSysAgentSettingService;
@@ -122,19 +124,19 @@ public class RacingBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
             }
-            if (vo.getSerialNumber ()==null){
+            if (vo.getSerialNumber () == null) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
-            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (),20);
-            Integer yesterdayRacingIssuNo=Integer.valueOf (commonService.findParameter ("yesterdayRacingIssuNo"));
-            String historyIssuNo=(yesterdayRacingIssuNo+vo.getSerialNumber())+"";
-            if (!historyIssuNo.equals (vo.getIssueNo ())){
+            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (), 20);
+            Integer yesterdayRacingIssuNo = Integer.valueOf (commonService.findParameter ("yesterdayRacingIssuNo"));
+            String historyIssuNo = (yesterdayRacingIssuNo + vo.getSerialNumber ()) + "";
+            if (!historyIssuNo.equals (vo.getIssueNo ())) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
-            Long longDate=DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
-            if (System.currentTimeMillis ()>(longDate-60*1000)){
+            Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
+            if (System.currentTimeMillis () > (longDate - 60 * 1000)) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
@@ -234,10 +236,48 @@ public class RacingBettingController {
         return respBody;
     }
 
-    private void getLongTimeByDatrStr(String  time) {
-        String dateStr= DateTimeUtil.formatDate (new Date (),DateTimeUtil.PATTERN_YYYYMMDD)+time;
-        Date date  = DateTimeUtil.parseDateFromStr (dateStr,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
-        Long dateLong= date.getTime ();
+    @PostMapping("/undobetting")
+    @SystemControllerLog(description = "北京赛车撤单")
+    public RespBody undoBetting(HttpServletRequest request, @RequestBody UndoBettingVo vo) throws Exception {
+        RespBody respBody = new RespBody ();
+        try {
+
+            if (vo.getId () == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
+                return respBody;
+            }
+            AppRacingBettingPo bettingPo = appRacingBettingService.findById (vo.getId ());
+            if (bettingPo == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "找不到下单记录");
+                return respBody;
+            }
+
+            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (bettingPo.getSerialNumber (), 20);
+            if (timeIntervalPo == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
+                return respBody;
+            }
+            Long openDate = DateTimeUtil.getLongTimeByDatrStr (DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + timeIntervalPo.getTime ());
+            if ((System.currentTimeMillis () + 60 * 1000) >= openDate) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "开奖不足一分钟,无法撤单");
+                return respBody;
+            }
+            AppUserPo userPo = commonService.checkToken ();
+            appRacingBettingService.undoRacingBettingService (userPo.getId (),vo.getId ());
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
+        } catch (CommException ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "撤单失败"));
+            LogUtils.error ("撤单失败！", ex);
+        }
+        return respBody;
+    }
+
+    private void getLongTimeByDatrStr(String time) {
+        String dateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYYMMDD) + time;
+        Date date = DateTimeUtil.parseDateFromStr (dateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
+        Long dateLong = date.getTime ();
     }
 
 

@@ -9,7 +9,7 @@ import java.util.Date;
  * 北京赛车投注表po类
  * Created by Administrator on 2017/8/17.
  */
-@Table(name="app_racing_betting")
+@Table(name = "app_racing_betting")
 public class AppRacingBettingPo {
     @Id
     private String id;
@@ -30,9 +30,10 @@ public class AppRacingBettingPo {
     private Integer multiple;
     private Date createTime;
     private String businessNumber;
+    private Integer serialNumber;
     /**
      * 投注类型
-     * */
+     */
     private Integer betType;
 
     public String getId() {
@@ -185,5 +186,13 @@ public class AppRacingBettingPo {
 
     public void setBetType(Integer betType) {
         this.betType = betType;
+    }
+
+    public Integer getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(Integer serialNumber) {
+        this.serialNumber = serialNumber;
     }
 }

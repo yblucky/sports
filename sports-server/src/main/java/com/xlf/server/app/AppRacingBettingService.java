@@ -35,4 +35,8 @@ public interface AppRacingBettingService {
     Integer recordListTotal(String id, String businessNumber);
 
     List<AppRacingBettingPo> findRecordList(String userId, String businessNumber, Paging paging);
+
+    AppRacingBettingPo findById(String id);
+
+    Boolean undoRacingBettingService(String userId,String bettingId) throws Exception;
 }
