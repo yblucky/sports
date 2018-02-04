@@ -3,11 +3,8 @@ package com.stb.vpay.task.app;
 
 import com.xlf.common.po.AppRacingLotteryPo;
 import com.xlf.common.po.AppTimeBettingPo;
-import com.xlf.common.po.AppTimeLotteryPo;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.app.AppRacingLotteryService;
-import com.xlf.server.app.AppTimeBettingService;
-import com.xlf.server.app.AppTimeLotteryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

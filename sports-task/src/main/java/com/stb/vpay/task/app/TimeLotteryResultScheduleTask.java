@@ -32,6 +32,7 @@ public class TimeLotteryResultScheduleTask extends BaseScheduleTask {
             } else {
                 po.setId(ToolUtils.getUUID());
                 po.setLotteryTime(null);
+                po.setFlag(LotteryFlagEnum.NO.getCode());
                 appTimeLotteryService.save(po);
             }
         }

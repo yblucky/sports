@@ -19,7 +19,7 @@ public final class DateTimeUtil {
      */
     public final static String PATTERN_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
     /**
-     * yyyy-MM-dd HH:mm:ss
+     * HH:mm
      */
     public final static String PATTERN_HH_MM = "HH:mm";
     /**
@@ -197,12 +197,32 @@ public final class DateTimeUtil {
 
 
 
+    /**
+     * 格式化当前时间,取间隔分钟区间值
+     */
+
+    public static String parseCurrentDateMinuteIntervalToStr( String pattern,Integer interval) {
+        if (StringUtils.isEmpty(pattern)) {
+            return null;
+        }
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.MINUTE,interval*(1+calendar.get(Calendar.MINUTE)/interval));
+        Date date=calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return  format.format(date);
+    }
+
+
+
+
+
     public static void createTimeInterval() {
         String id;
         int issuNo;
         String time;
         int type;
-        String str="INSERT INTO app_time_interval (id,issuNo,time,type) VALUES({id},{issuNo},{time},20)";
+        String str="INSERT INTO app_time_interval(id,issuNo,time,type) VALUES({id},{issuNo},{time},20)";
         int minute=5;
         Map<Integer,String > map=new HashMap<>();
         Calendar c = Calendar.getInstance();
@@ -230,6 +250,11 @@ public final class DateTimeUtil {
     }
 
     public static void main(String[] args) {
-        createTimeInterval();
+//        createTimeInterval();
+
+        parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5);
+        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5));
+        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,-10));
+        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,10));
     }
 }
