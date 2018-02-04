@@ -12,9 +12,11 @@ import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.app.AppBillRecordVo;
 import com.xlf.common.vo.app.DrawRecordVo;
-import com.xlf.server.app.*;
+import com.xlf.server.app.AppBillRecordService;
+import com.xlf.server.app.AppRacingBettingService;
+import com.xlf.server.app.AppTimeBettingService;
+import com.xlf.server.app.AppWithDrawService;
 import com.xlf.server.common.CommonService;
-import com.xlf.server.web.SysUserService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,16 +43,6 @@ public class RecordController {
     private LanguageUtil msgUtil;
     @Resource
     private AppWithDrawService appWithDrawService;
-    @Resource
-    private AppBankCardService appBankCardService;
-    @Resource
-    private AppUserService appUserService;
-    @Resource
-    private SysUserService sysUserService;
-    @Resource
-    private LanguageUtil languageUtil;
-    @Resource
-    private AppSysAgentSettingService appSysAgentSettingService;
     @Resource
     private AppTimeBettingService appTimeBettingService;
     @Resource

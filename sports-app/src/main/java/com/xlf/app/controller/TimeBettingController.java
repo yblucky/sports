@@ -1,26 +1,30 @@
 package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
+import com.xlf.common.enums.LotteryTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
+import com.xlf.common.po.AppTimeIntervalPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.resp.RespBody;
+import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
+import com.xlf.common.vo.app.BettingInfoVo;
+import com.xlf.common.vo.app.RacingBettingVo;
 import com.xlf.common.vo.app.TimeBettingBaseVo;
 import com.xlf.common.vo.app.TimeBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppSysAgentSettingService;
 import com.xlf.server.app.AppTimeBettingService;
+import com.xlf.server.app.AppTimeIntervalService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +49,65 @@ public class TimeBettingController {
     private AppSysAgentSettingService appSysAgentSettingService;
     @Resource
     private AppTimeBettingService appTimeBettingService;
+    @Resource
+    private AppTimeIntervalService appTimeIntervalService;
+
+
+    @GetMapping("/timeInfo")
+    @SystemControllerLog(description = "时时彩投注信息")
+    public RespBody timeInfo(HttpServletRequest request, @RequestBody RacingBettingVo vo) throws Exception {
+        RespBody respBody = new RespBody ();
+        try {
+            Calendar calendar = Calendar.getInstance ();
+            calendar.setTime (new Date ());
+            Integer hour = calendar.get (Calendar.HOUR);
+            if (hour >= 10 && hour <= 22) {
+
+            }
+            String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, 5);
+            AppTimeIntervalPo intervalPo = appTimeIntervalService.findByTime (hhmm, LotteryTypeEnum.RACING.getCode ());
+            if (intervalPo == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
+                return respBody;
+            }
+            String yesterdayRacingIssuNo = commonService.findParameter ("yesterdayRacingIssuNo");
+            if (StringUtils.isEmpty (yesterdayRacingIssuNo)) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "获取昨日北京赛车最后期数失败，须检查参数配置");
+                return respBody;
+            }
+            //本期期号
+            String historyIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ())) + "";
+            String nextIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ()) + 1) + "";
+            //本期投注截止时间
+            String endDateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
+            Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS);
+            Long end = endDate.getTime () - 30 * 1000;
+            Long start = endDate.getTime () - 10 * 60 * 1000 + 30 * 1000;
+            Long open = endDate.getTime () + 3 * 60 * 1000;
+            Date bettingEnd = new Date (endDate.getTime () - 30 * 1000);
+            Date bettingStart = new Date (endDate.getTime () - 10 * 60 * 1000 + 30 * 1000);
+            Date bettingOpen = new Date (endDate.getTime () + 3 * 60 * 1000);
+            BettingInfoVo infoVo = new BettingInfoVo ();
+            infoVo.setHhmm (hhmm);
+            infoVo.setHistoryIssuNo (historyIssuNo);
+            infoVo.setCurrentIssueNo (intervalPo.getIssueNo ().toString ());
+            infoVo.setNextIssuNo (nextIssuNo);
+            infoVo.setEndDateStr (endDateStr);
+            infoVo.setEndDate (endDate);
+            infoVo.setEnd (end);
+            infoVo.setStart (start);
+            infoVo.setOpen (open);
+            infoVo.setBettingStart (bettingStart);
+            infoVo.setBettingEnd (bettingEnd);
+            infoVo.setBettingOpen (bettingOpen);
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功", infoVo);
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "获取时时彩信息失败"));
+            LogUtils.error ("获取时时彩信息失败！", ex);
+        }
+        return respBody;
+    }
+
 
     @PostMapping("/timebetting")
     @SystemControllerLog(description = "时时彩投注")
