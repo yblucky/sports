@@ -3,6 +3,8 @@ package com.xlf.server.app;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.app.AppBillRecordVo;
+import com.xlf.common.vo.pc.LotteryVo;
+import com.xlf.common.vo.pc.RevenueVo;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -48,4 +50,5 @@ public interface AppBillRecordService {
     List<AppBillRecordVo> findBillRecordList(String userId, List<Integer> busnessTypeList, Paging paging);
 
 
+    List<RevenueVo> revenueList(LotteryVo vo, Paging paging);
 }

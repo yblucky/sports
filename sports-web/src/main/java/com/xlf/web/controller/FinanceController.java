@@ -8,11 +8,14 @@
 package com.xlf.web.controller;
 
 import com.xlf.common.enums.RespCodeEnum;
+import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.AppBankCardVo;
 import com.xlf.common.vo.pc.LotteryVo;
+import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.WebBankCardService;
@@ -36,6 +39,8 @@ public class FinanceController {
 	private AppRacingBettingService  appRacingBettingService;
 	@Resource
 	private CommonService commonService;
+	@Resource
+	private AppBillRecordService appBillRecordService;
 	
 	/**
 	 * 注单列表
@@ -46,6 +51,26 @@ public class FinanceController {
 		RespBody respBody = new RespBody();
 		try {
 			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功",appRacingBettingService.findAll(vo,paging));
+		} catch (Exception ex) {
+			respBody.add(RespCodeEnum.ERROR.getCode(), "加载注单失败");
+			LogUtils.error("加载注单失败！",ex);
+		}
+		return respBody;
+	}
+	/**
+	 * 营收列表
+	 * @return 响应对象
+	 */
+	@GetMapping("/revenueList")
+	public RespBody revenueList(LotteryVo vo, Paging paging){
+		RespBody respBody = new RespBody();
+		try {
+			SysUserVo userVo =commonService.checkWebToken();
+			//代理登录只能查看自己的营收记录
+			if(userVo.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()){
+				vo.setUserId(userVo.getId());
+			}
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功",appBillRecordService.revenueList(vo,paging));
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "加载注单失败");
 			LogUtils.error("加载注单失败！",ex);
