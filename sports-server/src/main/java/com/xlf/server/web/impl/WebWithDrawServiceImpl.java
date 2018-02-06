@@ -5,9 +5,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.WithDrawEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppUserPo;
+import com.xlf.common.util.ToolUtils;
+import com.xlf.server.app.AppBillRecordService;
+import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppUserMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,8 @@ public class WebWithDrawServiceImpl implements WebWithDrawService {
 
 	@Resource
 	AppUserMapper appUserMapper;
+	@Resource
+	AppBillRecordService appBillRecordService;
 
 	
 	@Override
@@ -82,7 +88,7 @@ public class WebWithDrawServiceImpl implements WebWithDrawService {
 	}
 
 	@Override
-	public void erroeState(String id) {
+	public void erroeState(String id) throws Exception {
 		AppWithDrawPo po = appWithDrawMapper.selectByPrimaryKey(id);
 		if(po.getState().intValue() != WithDrawEnum.PENDING.getCode()){
 			throw new CommException("此提现订单状态错误");
@@ -103,5 +109,8 @@ public class WebWithDrawServiceImpl implements WebWithDrawService {
 		model.setState(WithDrawEnum.DENIED.getCode());
 		model.setId(po.getId());
 		appWithDrawMapper.updateByPrimaryKeySelective(model);
+		//保存流水记录
+		appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(),userPo.getId(),BusnessTypeEnum.WITHDRAWALS_FAIL.getCode(),po.getAmount(),userPo.getBalance()
+		,userPo.getBalance().add(po.getAmount()),"提现驳回-退回余额","");
 	}
 }

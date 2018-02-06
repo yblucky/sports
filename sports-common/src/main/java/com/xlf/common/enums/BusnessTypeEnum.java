@@ -8,6 +8,7 @@ public enum BusnessTypeEnum {
 
     BACK_RECHARGE (11, "后台充值", "back_recharge"),
     WITHDRAWALS (12, "提现", "withdrawals"),
+    WITHDRAWALS_FAIL (13, "提现驳回", "withdrawals fail"),
     TIME_BETTING (21, "时时彩投注", "time_betting"),
     TIME_LOTTERY (22, "时时彩开奖", "time_lottery"),
     TIME_UNDO (23, "时时彩撤单", "time_undo"),

@@ -3,7 +3,8 @@ package com.xlf.server.mapper;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.xlf.common.vo.task.ReturnWaterVo;
+import com.xlf.common.vo.pc.LotteryVo;
+import com.xlf.common.vo.pc.RevenueVo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -77,8 +78,8 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
      * @param vo
      * @return
      */
-    
     BigDecimal SUMCount(@Param("model") WebBillRecordVo vo);
 
     Integer batchSaveKickBackAmoutRecord(@Param ("list") List<AppBillRecordPo> list);
+    List<RevenueVo> revenueList(@Param("model")LotteryVo vo, RowBounds rowBounds);
 }

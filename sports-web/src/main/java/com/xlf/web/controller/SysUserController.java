@@ -128,7 +128,7 @@ public class SysUserController {
 		RespBody respBody = new RespBody();
 		try {
 			//判断用户是否存在
-			SysUserVo findUser = sysUserService.findByLoginName(userVo.getMobile(),userVo.getRoleType());
+			SysUserVo findUser = sysUserService.findByLoginName(userVo.getMobile());
 			if(findUser == null){
 				if(userVo.getRoleType().intValue() ==20){
 					//默认角色就是代理

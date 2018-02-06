@@ -4,7 +4,6 @@ import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.AppBillRecordVo;
-import com.xlf.common.vo.task.ReturnWaterVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.mapper.AppBillRecordMapper;
 import org.apache.ibatis.session.RowBounds;
@@ -109,5 +108,10 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
     @Override
     public Integer batchSaveKickBackAmoutRecord(List<AppBillRecordPo> list) {
         return billRecordMapper.batchSaveKickBackAmoutRecord(list);
+    }
+    @Override
+    public List<RevenueVo> revenueList(LotteryVo vo, Paging paging) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        return billRecordMapper.revenueList(vo,rowBounds);
     }
 }

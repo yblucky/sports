@@ -92,8 +92,8 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUserVo findByLoginName(String loginName, Integer roleType) {
-        return userMapper.findByloginName(loginName, roleType);
+    public SysUserVo findByLoginName(String loginName) {
+        return userMapper.findByloginName(loginName);
     }
 
     @Override

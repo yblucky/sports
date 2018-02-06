@@ -76,7 +76,7 @@ public interface SysUserService {
 	 * @param loginName
 	 * @return
 	 */
-	SysUserVo findByLoginName(String loginName, Integer roleType);
+	SysUserVo findByLoginName(String loginName);
 
 	/**
 	 * 查找登录名是否存在

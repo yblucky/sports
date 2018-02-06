@@ -7,6 +7,7 @@
 */
 package com.xlf.web.controller;
 
+import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.enums.StateEnum;
@@ -15,7 +16,9 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LogUtils;
+import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import com.xlf.server.web.WebUserService;
@@ -42,6 +45,8 @@ public class WebUserController {
     private SysUserService sysUserService;
     @Resource
     private CommonService commonService;
+    @Resource
+    private AppBillRecordService appBillRecordService;
 
 
     /**
@@ -145,6 +150,9 @@ public class WebUserController {
                 return respBody;
             }
             webAppUserService.updateBalance(find.getId(),po.getBalance());
+            //流水记录
+            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(),find.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
+            ,po.getBalance(),find.getBalance(),find.getBalance().add(po.getBalance()),"后台充值","");
             respBody.add(RespCodeEnum.SUCCESS.getCode(),"充值成功");
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "充值失败");

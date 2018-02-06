@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -28,17 +25,20 @@ public class WebBillRecordController {
     public RespBody findAll(WebBillRecordVo vo, Paging paging) {
         RespBody respBody = new RespBody();
         try {
-            //保存返回数据
-            List<WebBillRecordVo> list = appBillRecordService.findAll(vo, paging);
-            for (WebBillRecordVo vo1 : list) {
-                vo1.setBusnessTypeName(BusnessTypeEnum.getName(vo1.getBusnessType()));
-
+            int total = appBillRecordService.findCount(vo);
+            if(total >0) {
+                //保存返回数据
+                List<WebBillRecordVo> list = appBillRecordService.findAll(vo, paging);
+                for (WebBillRecordVo vo1 : list) {
+                    vo1.setBusnessTypeName(BusnessTypeEnum.getName(vo1.getBusnessType()));
+                }
+                respBody.add(RespCodeEnum.SUCCESS.getCode(), "查询记录数据成功", list);
+                //保存分页对象
+                paging.setTotalCount(total);
+                respBody.setPage(paging);
+            }else{
+                respBody.add(RespCodeEnum.SUCCESS.getCode(), "查询记录数据成功", Collections.emptyList());
             }
-
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "查询记录数据成功", list);
-            //保存分页对象
-            paging.setTotalCount(appBillRecordService.findCount(vo));
-            respBody.setPage(paging);
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "查询记录数据失败");
             LogUtils.error("查找所有数据失败！", ex);
