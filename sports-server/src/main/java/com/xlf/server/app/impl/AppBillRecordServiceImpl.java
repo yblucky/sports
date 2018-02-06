@@ -4,6 +4,8 @@ import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.AppBillRecordVo;
+import com.xlf.common.vo.pc.LotteryVo;
+import com.xlf.common.vo.pc.RevenueVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.mapper.AppBillRecordMapper;
 import org.apache.ibatis.session.RowBounds;
