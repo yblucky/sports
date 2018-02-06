@@ -140,7 +140,10 @@
     <update id="updateLoginTimeById">
         update <include refid="table_name"/> set loginTime = #{loginTime}   where id=#{id}
     </update>
-    
+
+
+
+
     <select id="getPoList" resultType="com.xlf.common.po.AppUserPo">
         <include refid="selector"/>
         <include refid="condition"/>
@@ -170,8 +173,12 @@
 		<if test="model.createTime != null">AND createTime&gt;=#{model.createTime}</if>
 		</where>
 	</select>
-    
-    
+
+    <!--批量清理用户返水衡量值-->
+    <update id="batchUpdateKickBackAmout">
+        update <include refid="table_name"/> set kickBackAmount = 0   where id IN
+        <foreach collection="ids" item="item" open="(" separator="," close=")" index="index">#{item}</foreach>
+    </update>
     
 
 </mapper>

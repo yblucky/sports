@@ -3,6 +3,7 @@ package com.xlf.server.app;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.app.AppBillRecordVo;
+import com.xlf.common.vo.task.ReturnWaterVo;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -46,6 +47,8 @@ public interface AppBillRecordService {
      * 根据货币类型查找用户流水记录
      */
     List<AppBillRecordVo> findBillRecordList(String userId, List<Integer> busnessTypeList, Paging paging);
+
+    Integer   batchSaveKickBackAmoutRecord(List<AppBillRecordPo> list);
 
 
 }

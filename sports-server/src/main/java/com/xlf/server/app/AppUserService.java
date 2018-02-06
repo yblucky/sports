@@ -1,10 +1,12 @@
 package com.xlf.server.app;
 
+import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.vo.app.UserVo;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户相关业务
@@ -15,6 +17,7 @@ public interface AppUserService {
 
     /**
      * 根据用户id查询用户
+     *
      * @param id
      * @return
      * @throws Exception
@@ -23,6 +26,7 @@ public interface AppUserService {
 
     /**
      * 根据token查询用户信息
+     *
      * @param token
      * @return
      * @throws Exception
@@ -49,7 +53,7 @@ public interface AppUserService {
 
     /**
      * 是否是关键词汇
-     * */
+     */
     int findKeyWords(String nickName);
 
     /**
@@ -75,11 +79,11 @@ public interface AppUserService {
     public int delUser(String userId) throws Exception;
 
 
-
     public AppUserPo findUserByParentId(String parentId) throws Exception;
 
     /**
      * 根据用户id修改用户信息
+     *
      * @param userPo
      * @param userId
      * @return
@@ -95,7 +99,7 @@ public interface AppUserService {
      * @param id
      * @return
      */
-    public int updateBalanceById( String id, BigDecimal balance);
+    public int updateBalanceById(String id, BigDecimal balance);
 
     /**
      * 修改用户冻结余额
@@ -104,7 +108,7 @@ public interface AppUserService {
      * @param id
      * @return
      */
-    public int updateBlockBalanceById( String id,  BigDecimal blockedBalance);
+    public int updateBlockBalanceById(String id, BigDecimal blockedBalance);
 
     /**
      * 修改用户累计投注金额
@@ -113,7 +117,7 @@ public interface AppUserService {
      * @param id
      * @return
      */
-    public int updateBettingAmoutById( String id, BigDecimal bettingAmout);
+    public int updateBettingAmoutById(String id, BigDecimal bettingAmout);
 
     /**
      * 修改用户当天盈亏：每日凌晨清零
@@ -122,7 +126,7 @@ public interface AppUserService {
      * @param id
      * @return
      */
-    public int updateCurrentProfitById( String id,  BigDecimal currentProfit);
+    public int updateCurrentProfitById(String id, BigDecimal currentProfit);
 
 
     /**
@@ -132,7 +136,7 @@ public interface AppUserService {
      * @param winingAmout
      * @return
      */
-    public Integer updateWiningAmoutById( String id,  BigDecimal winingAmout);
+    public Integer updateWiningAmoutById(String id, BigDecimal winingAmout);
 
 
     /**
@@ -142,14 +146,29 @@ public interface AppUserService {
      * @param kickBackAmount
      * @return
      */
-    public Integer updateKickBackAmountById( String id,   BigDecimal kickBackAmount);
+    public Integer updateKickBackAmountById(String id, BigDecimal kickBackAmount);
 
 
+    public Integer updateUserStateById(String id, Integer state);
 
-    public Integer updateUserStateById( String id,  Integer state);
+
+    public Integer updateLoginTimeById(String id, Date loginTime);
 
 
-    public Integer updateLoginTimeById( String id,   Date loginTime);
+    /**
+     * 根据需要返水的用户
+     *
+     * @return
+     * @throws Exception
+     */
+    public List<AppUserPo> listWaitingReturnWaterUser() throws Exception;
+
+    public Integer countWaitingReturnWaterUser() throws Exception;
+
+
+    Integer batchUpdateKickBackAmout(List<String> ids);
+
+    public Boolean returnWaterService(List<AppBillRecordPo> waterList, List<String> userIds);
 
 
 }

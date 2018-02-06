@@ -16,7 +16,8 @@ public enum BusnessTypeEnum {
     RACING_UNDO (33, "北京赛车撤单", "racing_undo"),
     ADD_KICKBACKAMOUNT_RECORD (41, "上级返水衡量值加", "add_kickbackamount_record"),
     REDUCE_KICKBACKAMOUNT_RECORD (42, "上级返水衡量值减", "reduce_kickbackamount_record"),
-    FREE_FORZEN (41, "解除冻结", "free_forzen");
+    FREE_FORZEN (41, "解除冻结", "free_forzen"),
+    RETURN_WATER (51, "代理返水", "return_water");
 
 
     private Integer code;

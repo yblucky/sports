@@ -20,6 +20,7 @@ import java.util.List;
 @Repository
 public interface AppUserMapper extends BaseMapper<AppUserPo> {
 
+
     /**
      * 根据id查询用户
      *
@@ -93,7 +94,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
      * @param id
      * @return
      */
-    public int updateBalanceById(@Param("id") String id,@Param("balance") BigDecimal balance);
+    public int updateBalanceById(@Param("id") String id, @Param("balance") BigDecimal balance);
 
     /**
      * 修改用户冻结余额
@@ -102,7 +103,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
      * @param id
      * @return
      */
-    public int updateBlockBalanceById(@Param("id") String id,@Param("blockedBalance") BigDecimal blockedBalance);
+    public int updateBlockBalanceById(@Param("id") String id, @Param("blockedBalance") BigDecimal blockedBalance);
 
     /**
      * 修改用户累计投注金额
@@ -111,7 +112,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
      * @param id
      * @return
      */
-    public int updateBettingAmoutById(@Param("id") String id,@Param("bettingAmout") BigDecimal bettingAmout);
+    public int updateBettingAmoutById(@Param("id") String id, @Param("bettingAmout") BigDecimal bettingAmout);
 
     /**
      * 修改用户当天盈亏：每日凌晨清零
@@ -120,7 +121,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
      * @param id
      * @return
      */
-    public int updateCurrentProfitById(@Param("id") String id,@Param("currentProfit") BigDecimal currentProfit);
+    public int updateCurrentProfitById(@Param("id") String id, @Param("currentProfit") BigDecimal currentProfit);
 
 
     /**
@@ -143,7 +144,6 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     public Integer updateKickBackAmountById(@Param("id") String id, @Param("kickBackAmount") BigDecimal kickBackAmount);
 
 
-
     public Integer updateUserStateById(@Param("id") String id, @Param("state") Integer state);
 
 
@@ -159,6 +159,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
 
     /**
      * 查询用户列表总数
+     *
      * @param userPo
      * @return
      */
@@ -189,11 +190,9 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
 
     @Select("select * from app_user where parentId=#{parentId}")
     public List<AppUserPo> getLowerPoList(@Param("parentId") String parentId);
-    
+
     /**
      * 根据uid查询用户
-     * 
-     * 
      */
     @Select("select * from app_user where uid=#{uid} or mobile=#{uid}")
     public AppUserPo findUid(@Param("uid") String uid);
@@ -207,5 +206,11 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     @Update("update app_user set activeNo=activeNo+#{activeNo} where id = #{id}")
     int updateActiveNoCount(@Param("activeNo") Integer activeNo, @Param("id") String id);
 
+    @Select("SELECT id,kickBackAmount FROM `app_user` WHERE kickBackAmount>0 LIMIT 10")
+    List<AppUserPo> listWaitingReturnWaterUser();
 
+    @Select("SELECT COUNT(id) FROM `app_user` WHERE kickBackAmount>0")
+    Integer countWaitingReturnWaterUser();
+
+    Integer batchUpdateKickBackAmout(@Param ("ids") List<String> ids);
 }
