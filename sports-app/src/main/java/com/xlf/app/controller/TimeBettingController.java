@@ -2,11 +2,13 @@ package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
 import com.xlf.common.enums.LotteryTypeEnum;
+import com.xlf.common.enums.RedisKeyEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.*;
 import com.xlf.common.resp.RespBody;
+import com.xlf.common.service.RedisService;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
@@ -47,6 +49,8 @@ public class TimeBettingController {
     private AppTimeBettingService appTimeBettingService;
     @Resource
     private AppTimeIntervalService appTimeIntervalService;
+    @Resource
+    private RedisService redisService;
 
 
     @GetMapping("/timeInfo")
@@ -146,14 +150,17 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
-            Map<Integer, Set<Integer>> map = new HashMap<> ();
             Integer totalBettingNo = 0;
+
+            //期数前缀：固定前缀+用户id+当天期数
+            String keyprefix= RedisKeyEnum.TIME_BETTIING_ISSUNO.getKey ()+":"+userPo.getId ()+":"+vo.getSerialNumber ();
+            //key 每个位置投了哪些数字，set
+            //key ，每个数字投了多少注
 
             Integer length = vo.getTimeList ().size ();
             Integer[][] bettArray = new Integer[length - 1][5];
             for (int j = 0; j < length; j++) {
                 TimeBettingBaseVo base = vo.getTimeList ().get (j);
-
                 bettArray[j][0] = base.getLotteryOne ();
                 bettArray[j][1] = base.getLotteryTwo ();
                 bettArray[j][2] = base.getLotteryThree ();

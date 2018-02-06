@@ -1,5 +1,7 @@
 package com.xlf.common.service;
 
+import java.util.Set;
+
 /**
  * Redis数据库操作接口
  * @author qsy
@@ -60,4 +62,8 @@ public interface RedisService {
 	public byte[] lpop(byte[] key);
 
 	public byte[] getList(byte[] key);
+
+	public Long sadd(String key,String value);
+
+	public Set<String> smembers (String key);
 }
