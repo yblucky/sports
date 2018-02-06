@@ -8,7 +8,6 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
-import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppTimeLotteryService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.app.SysAgentSettingService;
@@ -30,8 +29,6 @@ public class ReturnWalterScheduleTask extends BaseScheduleTask {
     private SysUserService sysUserService;
     @Resource
     private SysAgentSettingService sysAgentSettingService;
-    @Resource
-    private AppBillRecordService appBillRecordService;
 
 
     @Override
