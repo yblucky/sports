@@ -27,8 +27,6 @@ public class RacingBettingScheduleTask extends BaseScheduleTask {
                 log.info("没有待结算的投注订单");
                 return;
             }
-            List<AppTimeBettingPo> list = null;
-
             Boolean flag = false;
             flag = appRacingLotteryService.batchRacingLotteryHandleService(lotteryPo, flag);
             if (!flag) {
