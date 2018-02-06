@@ -15,41 +15,43 @@ import java.util.List;
  */
 public interface AppBillRecordService {
 
-    public void saveBillRecord(String businessNumber, String userId, Integer busnessType,  BigDecimal amount, BigDecimal beforeAmout, BigDecimal afterAmout, String remark,String extend) throws Exception;
+    public void saveBillRecord(String businessNumber, String userId, Integer busnessType, BigDecimal amount, BigDecimal beforeAmout, BigDecimal afterAmout, String remark, String extend) throws Exception;
 
-    Integer  countCurrentDayWithDraw(String userId) throws Exception;
+    Integer countCurrentDayWithDraw(String userId) throws Exception;
 
 
     /**
      * 根据货币类型查找用户流水记录
      */
-    List<AppBillRecordVo> findBillRecord( Integer busnessType, String userId, Paging paging);
+    List<AppBillRecordVo> findBillRecord(Integer busnessType, String userId, Paging paging);
 
     /**
      * 根据货币类型统计用户流水数量
-     * @param currencyType
+     *
      * @param busnessType
      * @param userId
      * @return
      */
-    int billRecordTotal( Integer busnessType, String userId);
-    
+    int billRecordTotal(Integer busnessType, String userId);
+
     public void add(AppBillRecordPo po) throws Exception;
 
     /**
      * 根据货币类型统计用户流水数量
+     *
      * @param currencyType
      * @param busnessTypeList
      * @param userId
      * @return
      */
-    Integer billRecordListTotal(String userId,List<Integer> busnessTypeList,Integer currencyType);
+    Integer billRecordListTotal(String userId, List<Integer> busnessTypeList, Integer currencyType);
+
     /**
      * 根据货币类型查找用户流水记录
      */
     List<AppBillRecordVo> findBillRecordList(String userId, List<Integer> busnessTypeList, Paging paging);
 
-    Integer   batchSaveKickBackAmoutRecord(List<AppBillRecordPo> list);
+    Integer batchSaveKickBackAmoutRecord(List<AppBillRecordPo> list);
 
 
     List<RevenueVo> revenueList(LotteryVo vo, Paging paging);

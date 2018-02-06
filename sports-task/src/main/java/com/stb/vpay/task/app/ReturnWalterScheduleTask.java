@@ -8,7 +8,6 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
-import com.xlf.common.vo.task.ReturnWaterVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppTimeLotteryService;
 import com.xlf.server.app.AppUserService;
@@ -42,25 +41,25 @@ public class ReturnWalterScheduleTask extends BaseScheduleTask {
             if (count == 0) {
                 return;
             }
-            List<AppBillRecordPo> waterList=new ArrayList<> ();
-            List<String> userIds=new ArrayList<> ();
+            List<AppBillRecordPo> waterList = new ArrayList<> ();
+            List<String> userIds = new ArrayList<> ();
             List<AppUserPo> appUserPoList = appUserService.listWaitingReturnWaterUser ();
-            String bunessNum=ToolUtils.getUUID ();
+            String bunessNum = ToolUtils.getUUID ();
             for (AppUserPo po : appUserPoList) {
                 SysUserVo sysUserVo = sysUserService.findById (po.getParentId ());
                 SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
                 //获取赔率
-                BigDecimal rate=sysAgentSettingPo.getReturnWaterScale ();
-                AppBillRecordPo billRecordPo=new AppBillRecordPo ();
+                BigDecimal rate = sysAgentSettingPo.getReturnWaterScale ();
+                AppBillRecordPo billRecordPo = new AppBillRecordPo ();
                 billRecordPo.setId (ToolUtils.getUUID ());
                 billRecordPo.setUserId (po.getId ());
                 billRecordPo.setBeforeBalance (BigDecimal.ONE);
                 billRecordPo.setAfterBalance (BigDecimal.ZERO);
-                billRecordPo.setBalance (po.getKickBackAmount ().multiply (rate).setScale (2,BigDecimal.ROUND_HALF_EVEN));
+                billRecordPo.setBalance (po.getKickBackAmount ().multiply (rate).setScale (2, BigDecimal.ROUND_HALF_EVEN));
                 billRecordPo.setBusinessNumber (bunessNum);
                 billRecordPo.setBusnessType (BusnessTypeEnum.RETURN_WATER.getCode ());
                 billRecordPo.setCreateTime (new Date ());
-                billRecordPo.setRemark ("代理返水结算,此次返水基数是:"+po.getKickBackAmount ()+"，返水比例是:"+sysAgentSettingPo.getReturnWaterScale ());
+                billRecordPo.setRemark ("代理返水结算,此次返水基数是:" + po.getKickBackAmount () + "，返水比例是:" + sysAgentSettingPo.getReturnWaterScale ());
                 billRecordPo.setExtend ("");
                 waterList.add (billRecordPo);
                 userIds.add (po.getId ());
