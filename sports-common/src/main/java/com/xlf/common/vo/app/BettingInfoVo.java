@@ -13,9 +13,9 @@ public class BettingInfoVo {
     private Long end;
     private Long start;
     private Long open;
-    private Date bettingEnd;
-    private Date bettingStart;
-    private Date bettingOpen;
+    private String bettingEnd;
+    private String bettingStart;
+    private String bettingOpen;
 
     public String getHhmm() {
         return hhmm;
@@ -89,27 +89,27 @@ public class BettingInfoVo {
         this.open = open;
     }
 
-    public Date getBettingEnd() {
+    public String getBettingEnd() {
         return bettingEnd;
     }
 
-    public void setBettingEnd(Date bettingEnd) {
+    public void setBettingEnd(String bettingEnd) {
         this.bettingEnd = bettingEnd;
     }
 
-    public Date getBettingStart() {
+    public String getBettingStart() {
         return bettingStart;
     }
 
-    public void setBettingStart(Date bettingStart) {
+    public void setBettingStart(String bettingStart) {
         this.bettingStart = bettingStart;
     }
 
-    public Date getBettingOpen() {
+    public String getBettingOpen() {
         return bettingOpen;
     }
 
-    public void setBettingOpen(Date bettingOpen) {
+    public void setBettingOpen(String bettingOpen) {
         this.bettingOpen = bettingOpen;
     }
 }

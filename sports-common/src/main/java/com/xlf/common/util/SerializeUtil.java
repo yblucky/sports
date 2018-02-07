@@ -1,5 +1,7 @@
 package com.xlf.common.util;
 
+import com.xlf.common.vo.pc.SysLogsVo;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -55,6 +57,7 @@ public class SerializeUtil {
 
 
     public static void main(String[] args) {
-
+        SysLogsVo sysLogsVo=new SysLogsVo ();
+        System.out.println (SerializeUtil.serialize (sysLogsVo));
     }
 }

@@ -98,9 +98,9 @@ public class TimeBettingController {
             infoVo.setEnd (end);
             infoVo.setStart (start);
             infoVo.setOpen (open);
-            infoVo.setBettingStart (bettingStart);
-            infoVo.setBettingEnd (bettingEnd);
-            infoVo.setBettingOpen (bettingOpen);
+            infoVo.setBettingStart (DateTimeUtil.formatDate (bettingStart,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), "获取时时彩信息失败!");
