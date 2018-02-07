@@ -73,7 +73,7 @@ public class TimeBettingController {
             }
             String yesterdayRacingIssuNo = commonService.findParameter ("yesterdayRacingIssuNo");
             if (StringUtils.isEmpty (yesterdayRacingIssuNo)) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), "获取昨日北京赛车最后期数失败，须检查参数配置");
+                respBody.add (RespCodeEnum.ERROR.getCode (), "获取昨日时时彩最后期数失败，须检查参数配置");
                 return respBody;
             }
             //本期期号
