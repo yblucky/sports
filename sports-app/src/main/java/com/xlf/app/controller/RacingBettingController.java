@@ -15,10 +15,7 @@ import com.xlf.common.vo.app.RacingBettingBaseVo;
 import com.xlf.common.vo.app.RacingBettingVo;
 import com.xlf.common.vo.app.UndoBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
-import com.xlf.server.app.AppRacingBettingService;
-import com.xlf.server.app.AppRacingLotteryService;
-import com.xlf.server.app.AppSysAgentSettingService;
-import com.xlf.server.app.AppTimeIntervalService;
+import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +52,8 @@ public class RacingBettingController {
     private AppTimeIntervalService appTimeIntervalService;
     @Resource
     private AppRacingLotteryService appRacingLotteryService;
+    @Resource
+    private KeyService keyService;
 
 
     @GetMapping("/racingInfo")
@@ -220,7 +219,24 @@ public class RacingBettingController {
                             return respBody;
                         }
                     }
+                    //记录历史的每个位投注的数字集合
+                    Set<String> set = keyService.getRacingSetMembers (userPo.getId (), vo.getSerialNumber (), j);
+                    if (set.size ()> agentSettingPo.getMaxBetDigitalNoPerSeat()) {
+                        respBody.add (RespCodeEnum.ERROR.getCode (), "不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat () + "个不同的数字");
+                        return respBody;
+                    }
+                    keyService.saddRacingSetMember (userPo.getId (), vo.getSerialNumber (), k, bettArray[k][j]);
+                    //记录每个数字投了多少注
+                    Long count = keyService.racingBettingHget (userPo.getId (), vo.getSerialNumber (), bettArray[k][j]);
+                    Long currentCount=count+Long.valueOf (bettArray[k][5]);
+                    if (currentCount < agentSettingPo.getMinBetNoPerDigital () || currentCount > agentSettingPo.getMaxBetNoPerDigital ()) {
+                        respBody.add (RespCodeEnum.ERROR.getCode (), "单个位数最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
+                        return respBody;
+                    }
+                    keyService.racingBettingHset (userPo.getId (), vo.getSerialNumber (), bettArray[k][j],currentCount);
                 }
+
+
             }
             //最大可能中奖金额
             if (userPo.getBalance ().compareTo (new BigDecimal (totalBettingNo.toString ())) == -1) {

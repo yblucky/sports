@@ -16,10 +16,7 @@ import com.xlf.common.vo.app.TimeBettingBaseVo;
 import com.xlf.common.vo.app.TimeBettingVo;
 import com.xlf.common.vo.app.UndoBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
-import com.xlf.server.app.AppSysAgentSettingService;
-import com.xlf.server.app.AppTimeBettingService;
-import com.xlf.server.app.AppTimeIntervalService;
-import com.xlf.server.app.AppTimeLotteryService;
+import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import org.springframework.util.CollectionUtils;
@@ -53,6 +50,8 @@ public class TimeBettingController {
     private AppTimeIntervalService appTimeIntervalService;
     @Resource
     private RedisService redisService;
+    @Resource
+    private KeyService keyService;
     @Resource
     private AppTimeLotteryService appTimeLotteryService;
 
@@ -101,13 +100,13 @@ public class TimeBettingController {
             infoVo.setBettingStart (DateTimeUtil.formatDate (bettingStart, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-            if (System.currentTimeMillis ()>end && System.currentTimeMillis ()<endDate.getTime ()){
-                infoVo.setRestTime (start-System.currentTimeMillis ());
-            }else {
+            if (System.currentTimeMillis () > end && System.currentTimeMillis () < endDate.getTime ()) {
+                infoVo.setRestTime (start - System.currentTimeMillis ());
+            } else {
                 infoVo.setRestTime (0L);
             }
             //查询上期的开奖结果
-            AppTimeLotteryPo timeLotteryPo= appTimeLotteryService.findAppTimeLotteryPoByIssuNo (currentDate+(intervalPo.getIssueNo () - 1));
+            AppTimeLotteryPo timeLotteryPo = appTimeLotteryService.findAppTimeLotteryPoByIssuNo (currentDate + (intervalPo.getIssueNo () - 1));
             infoVo.setAppTimeLotteryPo (timeLotteryPo);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {
@@ -191,6 +190,7 @@ public class TimeBettingController {
                             return respBody;
                         }
                     }
+
                 }
             }
             for (int j = 0; j < 5; j++) {
@@ -211,8 +211,25 @@ public class TimeBettingController {
                             return respBody;
                         }
                     }
+                    //记录历史的每个位投注的数字集合
+                    Set<String> set = keyService.getTimeSetMembers (userPo.getId (), vo.getSerialNumber (), j);
+                    if (set.size ()> agentSettingPo.getMaxBetDigitalNoPerSeat()) {
+                        respBody.add (RespCodeEnum.ERROR.getCode (), "不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat () + "个不同的数字");
+                        return respBody;
+                    }
+                    keyService.saddTimeSetMember (userPo.getId (), vo.getSerialNumber (), k, bettArray[k][j]);
+                    //记录每个数字投了多少注
+                    Long count = keyService.timebettingHget (userPo.getId (), vo.getSerialNumber (), bettArray[k][j]);
+                    Long currentCount=count+Long.valueOf (bettArray[k][5]);
+                    if (currentCount < agentSettingPo.getMinBetNoPerDigital () || currentCount > agentSettingPo.getMaxBetNoPerDigital ()) {
+                        respBody.add (RespCodeEnum.ERROR.getCode (), "单个位数最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
+                        return respBody;
+                    }
+                    keyService.timebettingHset (userPo.getId (), vo.getSerialNumber (), bettArray[k][j],currentCount);
+
                 }
             }
+
             //最大可能中奖金额
             if (userPo.getBalance ().compareTo (new BigDecimal (totalBettingNo.toString ())) == -1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "用户余额不足，无法完成下注");
