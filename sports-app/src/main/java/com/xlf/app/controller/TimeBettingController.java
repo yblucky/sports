@@ -55,7 +55,7 @@ public class TimeBettingController {
 
     @GetMapping("/timeInfo")
     @SystemControllerLog(description = "时时彩投注信息")
-    public RespBody timeInfo(HttpServletRequest request, @RequestBody RacingBettingVo vo) throws Exception {
+    public RespBody timeInfo() throws Exception {
         RespBody respBody = new RespBody ();
         try {
             Calendar calendar = Calendar.getInstance ();
