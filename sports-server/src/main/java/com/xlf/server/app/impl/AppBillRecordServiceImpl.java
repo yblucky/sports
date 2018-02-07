@@ -80,8 +80,8 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
      * 查看用户交易流水记录总数
      */
     @Override
-    public Integer billRecordListTotal(String userId, List busnessTypeList,Integer currencyType) {
-        Integer count =billRecordMapper.billRecordListTotal(userId,busnessTypeList,currencyType);
+    public Integer billRecordListTotal(String userId, List busnessTypeList) {
+        Integer count =billRecordMapper.billRecordListTotal(userId,busnessTypeList);
         if (count==null){
             count=0;
         }

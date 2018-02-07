@@ -1,6 +1,7 @@
 package com.xlf.common.vo.app;
 
 
+import com.xlf.common.po.AppRacingLotteryPo;
 import com.xlf.common.po.AppTimeLotteryPo;
 
 import java.util.Date;
@@ -20,6 +21,7 @@ public class BettingInfoVo {
     private String bettingOpen;
     private Long restTime;
     private AppTimeLotteryPo appTimeLotteryPo;
+    private AppRacingLotteryPo appRacingLotteryPo;
 
     public String getHhmm() {
         return hhmm;
@@ -131,5 +133,13 @@ public class BettingInfoVo {
 
     public void setAppTimeLotteryPo(AppTimeLotteryPo appTimeLotteryPo) {
         this.appTimeLotteryPo = appTimeLotteryPo;
+    }
+
+    public AppRacingLotteryPo getAppRacingLotteryPo() {
+        return appRacingLotteryPo;
+    }
+
+    public void setAppRacingLotteryPo(AppRacingLotteryPo appRacingLotteryPo) {
+        this.appRacingLotteryPo = appRacingLotteryPo;
     }
 }

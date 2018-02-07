@@ -1,6 +1,7 @@
 package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
+import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.LotteryTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
@@ -111,6 +112,18 @@ public class TimeBettingController {
             }
             //查询上期的开奖结果
             AppTimeLotteryPo timeLotteryPo = appTimeLotteryService.findAppTimeLotteryPoByIssuNo (currentDate + (intervalPo.getIssueNo () - 1));
+            if(timeLotteryPo == null){
+                timeLotteryPo = new AppTimeLotteryPo();
+                timeLotteryPo.setId("1234567890");
+                timeLotteryPo.setIssueNo("20180207110");
+                timeLotteryPo.setFlag(LotteryFlagEnum.NO.getCode());
+                timeLotteryPo.setLotteryOne(3);
+                timeLotteryPo.setLotteryTwo(5);
+                timeLotteryPo.setLotteryThree(2);
+                timeLotteryPo.setLotteryFour(3);
+                timeLotteryPo.setLotteryFive(1);
+                timeLotteryPo.setLotteryTime(new Date());
+            }
             infoVo.setAppTimeLotteryPo (timeLotteryPo);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {

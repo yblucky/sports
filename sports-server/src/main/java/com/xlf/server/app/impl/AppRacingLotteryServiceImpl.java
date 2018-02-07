@@ -132,7 +132,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
     }
 
     @Override
-    public AppTimeLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo) {
+    public AppRacingLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo) {
         return appRacingLotteryMapper.findAppRacingLotteryPoByIssuNo(issuNo);
     }
 

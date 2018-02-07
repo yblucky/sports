@@ -44,6 +44,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         AppRacingBettingPo model = new AppRacingBettingPo ();
         model.setId (ToolUtils.getUUID ());
         model.setIssueNo(issueNo);
+        model.setBusinessNumber(businessNumber);
         model.setUserId (userId);
         model.setLotteryOne (lotteryOne);
         model.setLotteryTwo (lotteryTwo);

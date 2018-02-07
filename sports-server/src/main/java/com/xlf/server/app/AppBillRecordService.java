@@ -39,12 +39,11 @@ public interface AppBillRecordService {
     /**
      * 根据货币类型统计用户流水数量
      *
-     * @param currencyType
      * @param busnessTypeList
      * @param userId
      * @return
      */
-    Integer billRecordListTotal(String userId, List<Integer> busnessTypeList, Integer currencyType);
+    Integer billRecordListTotal(String userId, List<Integer> busnessTypeList);
 
     /**
      * 根据货币类型查找用户流水记录

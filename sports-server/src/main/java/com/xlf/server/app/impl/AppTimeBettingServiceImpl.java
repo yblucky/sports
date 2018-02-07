@@ -45,6 +45,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         AppTimeBettingPo model = new AppTimeBettingPo ();
         model.setId (ToolUtils.getUUID ());
         model.setIssueNo(issueNo);
+        model.setBusinessNumber(businessNumber);
         model.setUserId (userId);
         model.setLotteryOne (lotteryOne);
         model.setLotteryTwo (lotteryTwo);
@@ -136,7 +137,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     @Override
     public Integer recordListTotal(String id, String businessNumber) {
         Integer count = 0;
-        count = appTimeBettingMapper.recordListTotal (id, businessNumber);
+        count = appTimeBettingMapper.recordListTotal(id, businessNumber);
         if (count == null) {
             count = 0;
         }
