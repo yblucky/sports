@@ -106,9 +106,9 @@ public class RacingBettingController {
             infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             if (System.currentTimeMillis () > end && System.currentTimeMillis () < endDate.getTime ()) {
-                infoVo.setRestTime (start - System.currentTimeMillis ());
-            } else {
                 infoVo.setRestTime (0L);
+            } else {
+                infoVo.setRestTime (end - System.currentTimeMillis ());
             }
             //查询上期的开奖结果
             AppTimeLotteryPo timeLotteryPo = appRacingLotteryService.findAppRacingLotteryPoByIssuNo (historyPreIssuNo);
@@ -127,11 +127,11 @@ public class RacingBettingController {
         RespBody respBody = new RespBody ();
         try {
             //验签
-            Boolean flag = commonService.checkSign (vo);
+/*            Boolean flag = commonService.checkSign (vo);
             if (!flag) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
-            }
+            }*/
             if (vo.getSerialNumber () == null) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
@@ -143,14 +143,14 @@ public class RacingBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
-            Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
+            Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime());
             if (System.currentTimeMillis () > (longDate - 60 * 1000)) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
             SysUserVo sysUserVo = sysUserService.findById (userPo.getParentId ());
-            SysAgentSettingPo agentSettingPo = appSysAgentSettingService.findById (userPo.getParentId ());
+            SysAgentSettingPo agentSettingPo = appSysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
             if (agentSettingPo == null) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
@@ -169,7 +169,7 @@ public class RacingBettingController {
             }
             Integer totalBettingNo = 0;
             Integer length = vo.getRaingList ().size ();
-            Integer[][] bettArray = new Integer[length - 1][10];
+            Integer[][] bettArray = new Integer[length][11];
             for (int j = 0; j < length; j++) {
                 RacingBettingBaseVo base = vo.getRaingList ().get (j);
                 bettArray[j][0] = base.getLotteryOne ();
@@ -201,7 +201,7 @@ public class RacingBettingController {
                     }
                 }
             }
-            for (int j = 0; j < 10; j++) {
+            /*for (int j = 0; j < 10; j++) {
                 for (int k = 0; k < length; k++) {
                     List<Integer> verticalList = new ArrayList<> ();
                     Set<Integer> verticalSet = new HashSet<> ();
@@ -235,9 +235,7 @@ public class RacingBettingController {
                     }
                     keyService.racingBettingHset (userPo.getId (), vo.getSerialNumber (), bettArray[k][j], currentCount);
                 }
-
-
-            }
+            }*/
             //最大可能中奖金额
             if (userPo.getBalance ().compareTo (new BigDecimal (totalBettingNo.toString ())) == -1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "用户余额不足，无法完成下注");

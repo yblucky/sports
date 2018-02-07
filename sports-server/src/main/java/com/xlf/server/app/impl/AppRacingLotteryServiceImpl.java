@@ -14,6 +14,7 @@ import com.xlf.server.mapper.AppTimeLotteryMapper;
 import com.xlf.server.web.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 /**
  * 赛车开奖业务类
  */
+@Service
 public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
     private static final Logger log = LoggerFactory.getLogger(AppRacingLotteryServiceImpl.class);
     @Resource

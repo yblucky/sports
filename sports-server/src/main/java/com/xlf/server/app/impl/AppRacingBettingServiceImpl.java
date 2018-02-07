@@ -43,6 +43,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer lotterySix, Integer lotterySeven, Integer lotteryEight, Integer lotteryNine, Integer lotteryTen, Integer multiple) throws Exception {
         AppRacingBettingPo model = new AppRacingBettingPo ();
         model.setId (ToolUtils.getUUID ());
+        model.setIssueNo(issueNo);
         model.setUserId (userId);
         model.setLotteryOne (lotteryOne);
         model.setLotteryTwo (lotteryTwo);
@@ -74,7 +75,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         appUserService.updateBettingAmoutById (userId, totalPrice);
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.RACING_BETTING.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "北京赛车下注", "");
         for (RacingBettingBaseVo base : vo.getRaingList ()) {
-            this.save (businessNumber, vo.getIssueNo (), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getLotterySix (), base.getLotterySeven (), base.getLotteryEight (), base.getLotteryNine (), base.getLotteryTen (), base.getMultiple ());
+            this.save (businessNumber, vo.getIssueNo(), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getLotterySix (), base.getLotterySeven (), base.getLotteryEight (), base.getLotteryNine (), base.getLotteryTen (), base.getMultiple ());
         }
     }
 

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 public interface AppTimeIntervalMapper extends BaseMapper<AppTimeIntervalPo> {
 
-    @Select("SELECT * FROM `app_time_interval` where type=#{type} and issuNo=#{issuNo}")
+    @Select("SELECT * FROM `app_time_interval` where type=#{type} and issueNo=#{issuNo}")
     public AppTimeIntervalPo findByIssNo(@Param("issuNo") Integer issuNo,@Param("type") Integer type);
 
     @Select("SELECT * FROM `app_time_interval` where type=#{type} and time=#{time}")
