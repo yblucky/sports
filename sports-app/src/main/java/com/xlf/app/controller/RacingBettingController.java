@@ -79,7 +79,7 @@ public class RacingBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "获取昨日北京赛车最后期数失败，须检查参数配置");
                 return respBody;
             }
-            String historyPreIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ())-1) + "";
+            String historyPreIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ()) - 1) + "";
             //本期期号
             String historyIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ())) + "";
             String nextIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ()) + 1) + "";
@@ -102,16 +102,16 @@ public class RacingBettingController {
             infoVo.setEnd (end);
             infoVo.setStart (start);
             infoVo.setOpen (open);
-            infoVo.setBettingStart (DateTimeUtil.formatDate (bettingStart,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-            infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-            infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-            if (System.currentTimeMillis ()>end && System.currentTimeMillis ()<endDate.getTime ()){
-                infoVo.setRestTime (start-System.currentTimeMillis ());
-            }else {
+            infoVo.setBettingStart (DateTimeUtil.formatDate (bettingStart, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            if (System.currentTimeMillis () > end && System.currentTimeMillis () < endDate.getTime ()) {
+                infoVo.setRestTime (start - System.currentTimeMillis ());
+            } else {
                 infoVo.setRestTime (0L);
             }
             //查询上期的开奖结果
-            AppTimeLotteryPo timeLotteryPo= appRacingLotteryService.findAppRacingLotteryPoByIssuNo (historyPreIssuNo);
+            AppTimeLotteryPo timeLotteryPo = appRacingLotteryService.findAppRacingLotteryPoByIssuNo (historyPreIssuNo);
             infoVo.setAppTimeLotteryPo (timeLotteryPo);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取北京赛车信息成功", infoVo);
         } catch (Exception ex) {
@@ -221,19 +221,19 @@ public class RacingBettingController {
                     }
                     //记录历史的每个位投注的数字集合
                     Set<String> set = keyService.getRacingSetMembers (userPo.getId (), vo.getSerialNumber (), j);
-                    if (set.size ()> agentSettingPo.getMaxBetDigitalNoPerSeat()) {
+                    if (set.size () > agentSettingPo.getMaxBetDigitalNoPerSeat ()) {
                         respBody.add (RespCodeEnum.ERROR.getCode (), "不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat () + "个不同的数字");
                         return respBody;
                     }
                     keyService.saddRacingSetMember (userPo.getId (), vo.getSerialNumber (), k, bettArray[k][j]);
                     //记录每个数字投了多少注
                     Long count = keyService.racingBettingHget (userPo.getId (), vo.getSerialNumber (), bettArray[k][j]);
-                    Long currentCount=count+Long.valueOf (bettArray[k][5]);
+                    Long currentCount = count + Long.valueOf (bettArray[k][5]);
                     if (currentCount < agentSettingPo.getMinBetNoPerDigital () || currentCount > agentSettingPo.getMaxBetNoPerDigital ()) {
                         respBody.add (RespCodeEnum.ERROR.getCode (), "单个位数最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
                         return respBody;
                     }
-                    keyService.racingBettingHset (userPo.getId (), vo.getSerialNumber (), bettArray[k][j],currentCount);
+                    keyService.racingBettingHset (userPo.getId (), vo.getSerialNumber (), bettArray[k][j], currentCount);
                 }
 
 
