@@ -16,7 +16,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/appBill")
+@RequestMapping("/webBill")
 public class WebBillRecordController {
     @Resource
     private WebBillRecordService appBillRecordService;
