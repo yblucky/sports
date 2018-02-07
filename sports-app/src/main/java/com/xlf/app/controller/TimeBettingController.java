@@ -24,6 +24,7 @@ import com.xlf.server.app.AppTimeBettingService;
 import com.xlf.server.app.AppTimeIntervalService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,7 +59,7 @@ public class TimeBettingController {
 
 
     @GetMapping("/timeInfo")
-    @SystemControllerLog(description = "时时彩投注信息")
+//    @SystemControllerLog(description = "时时彩投注信息")
     public RespBody timeInfo(HttpServletRequest request) throws Exception {
         RespBody respBody = new RespBody ();
         try {

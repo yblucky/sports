@@ -158,11 +158,12 @@ public class UserController {
                 return respBody;
             }
 
-            Boolean signFlag = commonService.checkSign(userVo);
+            //验签
+/*            Boolean signFlag = commonService.checkSign(userVo);
             if (!signFlag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
-            }
+            }*/
 
             //根据手机查询用户信息
             AppUserPo appUserPo = userService.findUserByMobile(userVo.getMobile());
@@ -224,5 +225,9 @@ public class UserController {
         return respBody;
     }
 
+    public static void main(String[] args) {
+        String loginPwd = CryptUtils.hmacSHA1Encrypt("123456", "123456");
+        System.out.println(loginPwd);
+    }
 
 }
