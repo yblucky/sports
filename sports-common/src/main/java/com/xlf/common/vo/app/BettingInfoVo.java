@@ -1,6 +1,8 @@
 package com.xlf.common.vo.app;
 
 
+import com.xlf.common.po.AppTimeLotteryPo;
+
 import java.util.Date;
 
 public class BettingInfoVo {
@@ -17,6 +19,7 @@ public class BettingInfoVo {
     private String bettingStart;
     private String bettingOpen;
     private Long restTime;
+    private AppTimeLotteryPo appTimeLotteryPo;
 
     public String getHhmm() {
         return hhmm;
@@ -120,5 +123,13 @@ public class BettingInfoVo {
 
     public void setRestTime(Long restTime) {
         this.restTime = restTime;
+    }
+
+    public AppTimeLotteryPo getAppTimeLotteryPo() {
+        return appTimeLotteryPo;
+    }
+
+    public void setAppTimeLotteryPo(AppTimeLotteryPo appTimeLotteryPo) {
+        this.appTimeLotteryPo = appTimeLotteryPo;
     }
 }

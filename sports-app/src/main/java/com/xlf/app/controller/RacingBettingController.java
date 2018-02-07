@@ -5,10 +5,7 @@ import com.xlf.common.enums.LotteryTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.AppRacingBettingPo;
-import com.xlf.common.po.AppTimeIntervalPo;
-import com.xlf.common.po.AppUserPo;
-import com.xlf.common.po.SysAgentSettingPo;
+import com.xlf.common.po.*;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
@@ -19,6 +16,7 @@ import com.xlf.common.vo.app.RacingBettingVo;
 import com.xlf.common.vo.app.UndoBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppRacingBettingService;
+import com.xlf.server.app.AppRacingLotteryService;
 import com.xlf.server.app.AppSysAgentSettingService;
 import com.xlf.server.app.AppTimeIntervalService;
 import com.xlf.server.common.CommonService;
@@ -55,6 +53,8 @@ public class RacingBettingController {
     private AppRacingBettingService appRacingBettingService;
     @Resource
     private AppTimeIntervalService appTimeIntervalService;
+    @Resource
+    private AppRacingLotteryService appRacingLotteryService;
 
 
     @GetMapping("/racingInfo")
@@ -80,6 +80,7 @@ public class RacingBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "获取昨日北京赛车最后期数失败，须检查参数配置");
                 return respBody;
             }
+            String historyPreIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ())-1) + "";
             //本期期号
             String historyIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ())) + "";
             String nextIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ()) + 1) + "";
@@ -110,6 +111,9 @@ public class RacingBettingController {
             }else {
                 infoVo.setRestTime (0L);
             }
+            //查询上期的开奖结果
+            AppTimeLotteryPo timeLotteryPo= appRacingLotteryService.findAppRacingLotteryPoByIssuNo (historyPreIssuNo);
+            infoVo.setAppTimeLotteryPo (timeLotteryPo);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取北京赛车信息成功", infoVo);
         } catch (Exception ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), "获取北京赛车信息失败");
