@@ -74,6 +74,10 @@ public class WebBillRecordVo {
      * '手续费'
      */
     private BigDecimal fee;
+    /**
+     * '扩展'
+     */
+    private String extend;
 
 
     public String getBusnessTypeName() {
@@ -227,5 +231,11 @@ public class WebBillRecordVo {
         this.fee = fee;
     }
 
+    public String getExtend() {
+        return extend;
+    }
 
+    public void setExtend(String extend) {
+        this.extend = extend;
+    }
 }
