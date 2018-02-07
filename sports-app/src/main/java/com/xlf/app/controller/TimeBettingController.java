@@ -16,7 +16,10 @@ import com.xlf.common.vo.app.TimeBettingBaseVo;
 import com.xlf.common.vo.app.TimeBettingVo;
 import com.xlf.common.vo.app.UndoBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
-import com.xlf.server.app.*;
+import com.xlf.server.app.AppSysAgentSettingService;
+import com.xlf.server.app.AppTimeBettingService;
+import com.xlf.server.app.AppTimeIntervalService;
+import com.xlf.server.app.AppTimeLotteryService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import org.springframework.util.CollectionUtils;
@@ -100,13 +103,13 @@ public class TimeBettingController {
             infoVo.setBettingStart (DateTimeUtil.formatDate (bettingStart, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-            if (System.currentTimeMillis () > end && System.currentTimeMillis () < endDate.getTime ()) {
-                infoVo.setRestTime (start - System.currentTimeMillis ());
-            } else {
+            if (System.currentTimeMillis ()>end && System.currentTimeMillis ()<endDate.getTime ()){
                 infoVo.setRestTime (0L);
+            }else {
+                infoVo.setRestTime (end-System.currentTimeMillis ());
             }
             //查询上期的开奖结果
-            AppTimeLotteryPo timeLotteryPo = appTimeLotteryService.findAppTimeLotteryPoByIssuNo (currentDate + (intervalPo.getIssueNo () - 1));
+            AppTimeLotteryPo timeLotteryPo= appTimeLotteryService.findAppTimeLotteryPoByIssuNo (currentDate+(intervalPo.getIssueNo () - 1));
             infoVo.setAppTimeLotteryPo (timeLotteryPo);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {
@@ -190,7 +193,6 @@ public class TimeBettingController {
                             return respBody;
                         }
                     }
-
                 }
             }
             for (int j = 0; j < 5; j++) {
