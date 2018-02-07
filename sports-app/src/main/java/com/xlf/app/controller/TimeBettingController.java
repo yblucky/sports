@@ -24,7 +24,6 @@ import com.xlf.server.app.AppTimeBettingService;
 import com.xlf.server.app.AppTimeIntervalService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,9 +101,9 @@ public class TimeBettingController {
             infoVo.setBettingStart (bettingStart);
             infoVo.setBettingEnd (bettingEnd);
             infoVo.setBettingOpen (bettingOpen);
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功", infoVo);
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (), "获取时时彩信息失败");
+            respBody.add (RespCodeEnum.ERROR.getCode (), "获取时时彩信息失败!");
             LogUtils.error ("获取时时彩信息失败！", ex);
         }
         return respBody;
