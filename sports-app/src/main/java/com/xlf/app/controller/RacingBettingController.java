@@ -59,12 +59,12 @@ public class RacingBettingController {
 
     @GetMapping("/racingInfo")
     @SystemControllerLog(description = "赛车投注信息")
-    public RespBody racingInfo(HttpServletRequest request, @RequestBody RacingBettingVo vo) throws Exception {
+    public RespBody racingInfo(HttpServletRequest request) throws Exception {
         RespBody respBody = new RespBody ();
         try {
             Calendar calendar = Calendar.getInstance ();
             calendar.setTime (new Date ());
-            Integer hour = calendar.get (Calendar.HOUR);
+            Integer hour = calendar.get (Calendar.HOUR_OF_DAY);
             String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, 10);
             AppTimeIntervalPo intervalPo = appTimeIntervalService.findByTime (hhmm, LotteryTypeEnum.RACING.getCode ());
             if (intervalPo == null) {
@@ -107,7 +107,7 @@ public class RacingBettingController {
             infoVo.setBettingOpen (bettingOpen);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取北京赛车信息成功", infoVo);
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "获取北京赛车信息失败"));
+            respBody.add (RespCodeEnum.ERROR.getCode (), "获取北京赛车信息失败");
             LogUtils.error ("获取北京赛车信息失败！", ex);
         }
         return respBody;
@@ -220,7 +220,7 @@ public class RacingBettingController {
             }
             BigDecimal maximumAward = new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ());
             appRacingBettingService.racingBettingService (userPo.getId (), vo, new BigDecimal (totalBettingNo));
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "投注成功,等待开奖"));
+            respBody.add (RespCodeEnum.SUCCESS.getCode (),"投注成功,等待开奖");
         } catch (
                 CommException ex)
 
@@ -230,7 +230,7 @@ public class RacingBettingController {
                 Exception ex)
 
         {
-            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "投注失败"));
+            respBody.add (RespCodeEnum.ERROR.getCode (), "投注失败");
             LogUtils.error ("投注失败！", ex);
         }
         return respBody;
@@ -263,12 +263,12 @@ public class RacingBettingController {
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
-            appRacingBettingService.undoRacingBettingService (userPo.getId (),vo.getId ());
+            appRacingBettingService.undoRacingBettingService (userPo.getId (), vo.getId ());
             respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "撤单失败"));
+            respBody.add (RespCodeEnum.ERROR.getCode (), "撤单失败");
             LogUtils.error ("撤单失败！", ex);
         }
         return respBody;

@@ -197,7 +197,7 @@ public class RedisServiceImpl implements RedisService {
         } finally {
             close (jedis);
         }
-        return null;
+        return 0l;
     }
 
     @Override
@@ -212,5 +212,47 @@ public class RedisServiceImpl implements RedisService {
             close (jedis);
         }
         return Collections.emptySet ();
+    }
+
+    @Override
+    public Long scard(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis ();// 获得jedis实例
+            return jedis.scard (key);
+        } catch (Exception ex) {
+            LogUtils.error (ex.getMessage (), ex);
+        } finally {
+            close (jedis);
+        }
+        return 0l;
+    }
+
+    @Override
+    public Long hset(String key,String field,String value) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis ();// 获得jedis实例
+            return jedis.hset (key,field,value);
+        } catch (Exception ex) {
+            LogUtils.error (ex.getMessage (), ex);
+        } finally {
+            close (jedis);
+        }
+        return 0l;
+    }
+
+    @Override
+    public String hget(String key,String field) {
+        Jedis jedis = null;
+        try {
+            jedis = getJedis ();// 获得jedis实例
+            return jedis.hget(key,field);
+        } catch (Exception ex) {
+            LogUtils.error (ex.getMessage (), ex);
+        } finally {
+            close (jedis);
+        }
+        return null;
     }
 }

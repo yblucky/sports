@@ -8,8 +8,9 @@ public enum RedisKeyEnum {
 
     /** Token，保存1天 */
     TOKEN_API("token_api_", 24 * 60 * 60),
-    SYSLOG_FLAG("syslog_flag", 24 * 60 * 60),
-    TIME_BETTIING_ISSUNO("time_bettiing", 5 * 60 * 60);
+    SYSLOG_FLAG("syslog_flag_sports", 24 * 60 * 60),
+    TIME_BETTIING_ISSUNO("time_bettiing", 10 * 60 * 60),
+    RACING_BETTIING_ISSUNO("racing_bettiing", 10 * 60 * 60);
 
     private final String key;
 

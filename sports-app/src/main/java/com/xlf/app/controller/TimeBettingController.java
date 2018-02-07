@@ -2,17 +2,22 @@ package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
 import com.xlf.common.enums.LotteryTypeEnum;
-import com.xlf.common.enums.RedisKeyEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.*;
+import com.xlf.common.po.AppTimeBettingPo;
+import com.xlf.common.po.AppTimeIntervalPo;
+import com.xlf.common.po.AppUserPo;
+import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.app.*;
+import com.xlf.common.vo.app.BettingInfoVo;
+import com.xlf.common.vo.app.TimeBettingBaseVo;
+import com.xlf.common.vo.app.TimeBettingVo;
+import com.xlf.common.vo.app.UndoBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppSysAgentSettingService;
 import com.xlf.server.app.AppTimeBettingService;
@@ -34,7 +39,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/time")
 public class TimeBettingController {
-    public static  List<Integer> list=new ArrayList<> ();
+    public static List<Integer> list = new ArrayList<> ();
     @Resource
     private CommonService commonService;
     @Resource
@@ -54,13 +59,13 @@ public class TimeBettingController {
 
 
     @GetMapping("/timeInfo")
-    @SystemControllerLog(description = "时时彩投注信息")
-    public RespBody timeInfo(HttpServletRequest request, @RequestBody RacingBettingVo vo) throws Exception {
+//    @SystemControllerLog(description = "时时彩投注信息")
+    public RespBody timeInfo(HttpServletRequest request) throws Exception {
         RespBody respBody = new RespBody ();
         try {
             Calendar calendar = Calendar.getInstance ();
             calendar.setTime (new Date ());
-            Integer hour = calendar.get (Calendar.HOUR);
+            Integer hour = calendar.get (Calendar.HOUR_OF_DAY);
             if (hour >= 2 && hour <= 10) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
                 return respBody;
@@ -81,7 +86,7 @@ public class TimeBettingController {
             String nextIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ()) + 1) + "";
             //本期投注截止时间
             String endDateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
-            Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS);
+            Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
             Long end = endDate.getTime () - 30 * 1000;
             Long start = endDate.getTime () - 10 * 60 * 1000 + 30 * 1000;
             Long open = endDate.getTime () + 3 * 60 * 1000;
@@ -103,7 +108,7 @@ public class TimeBettingController {
             infoVo.setBettingOpen (bettingOpen);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功", infoVo);
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "获取时时彩信息失败"));
+            respBody.add (RespCodeEnum.ERROR.getCode (), "获取时时彩信息失败");
             LogUtils.error ("获取时时彩信息失败！", ex);
         }
         return respBody;
@@ -121,13 +126,13 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
             }
-            if (vo.getSerialNumber ()==null){
+            if (vo.getSerialNumber () == null) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
-            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (),10);
-            Long longDate=DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
-            if (System.currentTimeMillis ()>(longDate-60*1000)){
+            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (), 10);
+            Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
+            if (System.currentTimeMillis () > (longDate - 60 * 1000)) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
@@ -153,8 +158,9 @@ public class TimeBettingController {
             Integer totalBettingNo = 0;
 
             //期数前缀：固定前缀+用户id+当天期数
-            String keyprefix= RedisKeyEnum.TIME_BETTIING_ISSUNO.getKey ()+":"+userPo.getId ()+":"+vo.getSerialNumber ();
+//            String keyprefix = RedisKeyUtil.getTimeBettingLocationPrefix (userPo.getId (), vo.getSerialNumber (), TimeSeatEnum.ONE);
             //key 每个位置投了哪些数字，set
+
             //key ，每个数字投了多少注
 
             Integer length = vo.getTimeList ().size ();
@@ -212,11 +218,11 @@ public class TimeBettingController {
             }
             BigDecimal maximumAward = new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ());
             appTimeBettingService.timeBettingService (userPo.getId (), vo, new BigDecimal (totalBettingNo));
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "投注成功,等待开奖"));
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "投注成功,等待开奖");
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "投注失败"));
+            respBody.add (RespCodeEnum.ERROR.getCode (),"投注失败");
             LogUtils.error ("投注失败！", ex);
         }
         return respBody;
@@ -249,14 +255,21 @@ public class TimeBettingController {
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
-            appTimeBettingService.undoTimeBettingService (userPo.getId (),vo.getId ());
+            appTimeBettingService.undoTimeBettingService (userPo.getId (), vo.getId ());
             respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.APPLICATION_FAIL, "撤单失败"));
+            respBody.add (RespCodeEnum.ERROR.getCode (), "撤单失败");
             LogUtils.error ("撤单失败！", ex);
         }
         return respBody;
+    }
+
+    public static void main(String[] args) {
+        Date d=new Date ();
+        Calendar calendar=Calendar.getInstance ();
+        calendar.setTime (d);
+        System.out.println (calendar.get (Calendar.HOUR_OF_DAY));
     }
 }

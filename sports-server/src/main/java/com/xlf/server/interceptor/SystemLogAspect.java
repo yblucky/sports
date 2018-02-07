@@ -91,8 +91,13 @@ public class SystemLogAspect {
 	        //设置操作类型
 	        logVo.setOptType(getControllerMethodDescription(joinPoint));
 			logVo.setOptDate(new Date());
+			logVo.setId (ToolUtils.getUUID ());
+			if (StringUtils.isEmpty (logVo.getUsername ())){
+				logVo.setUsername ("");
+			}
 			//先缓存到redis中
-			redisService.rpush(SerializeUtil.serialize(RedisKeyEnum.SYSLOG_FLAG.getKey()), SerializeUtil.serialize(logVo));
+//			redisService.rpush(SerializeUtil.serialize(RedisKeyEnum.SYSLOG_FLAG.getKey()), SerializeUtil.serialize(logVo));
+			redisService.rpush(RedisKeyEnum.SYSLOG_FLAG.getKey().getBytes (), SerializeUtil.serialize(logVo));
 			//日志线程是否正在运行
 			String isRun = redisService.getString(RedisKeyEnum.SYSLOG_FLAG.getKey()+"_isRun");
 			if(!StringUtils.isEmpty(isRun)){

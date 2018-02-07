@@ -66,4 +66,10 @@ public interface RedisService {
 	public Long sadd(String key,String value);
 
 	public Set<String> smembers (String key);
+
+	public Long scard(String key);
+
+	public Long hset(String key,String field,String value);
+
+	public String hget(String key,String field);
 }
