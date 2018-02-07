@@ -2,17 +2,22 @@ package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
 import com.xlf.common.enums.LotteryTypeEnum;
-import com.xlf.common.enums.RedisKeyEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.*;
+import com.xlf.common.po.AppTimeBettingPo;
+import com.xlf.common.po.AppTimeIntervalPo;
+import com.xlf.common.po.AppUserPo;
+import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.app.*;
+import com.xlf.common.vo.app.BettingInfoVo;
+import com.xlf.common.vo.app.TimeBettingBaseVo;
+import com.xlf.common.vo.app.TimeBettingVo;
+import com.xlf.common.vo.app.UndoBettingVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppSysAgentSettingService;
 import com.xlf.server.app.AppTimeBettingService;
@@ -34,7 +39,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/time")
 public class TimeBettingController {
-    public static  List<Integer> list=new ArrayList<> ();
+    public static List<Integer> list = new ArrayList<> ();
     @Resource
     private CommonService commonService;
     @Resource
@@ -216,7 +221,7 @@ public class TimeBettingController {
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (),"投注失败");
+            respBody.add (RespCodeEnum.ERROR.getCode (), "投注失败");
             LogUtils.error ("投注失败！", ex);
         }
         return respBody;
