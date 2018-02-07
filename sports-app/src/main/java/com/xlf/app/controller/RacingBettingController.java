@@ -85,7 +85,7 @@ public class RacingBettingController {
             String nextIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ()) + 1) + "";
             //本期投注截止时间
             String endDateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
-            Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS);
+            Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
             Long end = endDate.getTime () - 30 * 1000;
             Long start = endDate.getTime () - 10 * 60 * 1000 + 30 * 1000;
             Long open = endDate.getTime () + 3 * 60 * 1000;
