@@ -119,6 +119,6 @@ public class BettingInfoVo {
     }
 
     public void setRestTime(Long restTime) {
-        this.restTime = this.end-this.start;
+        this.restTime = restTime;
     }
 }
