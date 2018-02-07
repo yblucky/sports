@@ -58,7 +58,7 @@ public class TimeBettingController {
 
 
     @GetMapping("/timeInfo")
-//    @SystemControllerLog(description = "时时彩投注信息")
+    @SystemControllerLog(description = "时时彩投注信息")
     public RespBody timeInfo(HttpServletRequest request) throws Exception {
         RespBody respBody = new RespBody ();
         try {
@@ -77,7 +77,7 @@ public class TimeBettingController {
             }
             String currentDate = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYYMMDD);
             //本期期号
-            String historyIssuNo = currentDate +"-"+ Integer.valueOf (intervalPo.getIssueNo ());
+            String historyIssuNo = currentDate + "-" + Integer.valueOf (intervalPo.getIssueNo ());
             String nextIssuNo = currentDate + Integer.valueOf (intervalPo.getIssueNo () + 1);
             //本期投注截止时间
             String endDateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
@@ -98,9 +98,9 @@ public class TimeBettingController {
             infoVo.setEnd (end);
             infoVo.setStart (start);
             infoVo.setOpen (open);
-            infoVo.setBettingStart (DateTimeUtil.formatDate (bettingStart,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-            infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-            infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            infoVo.setBettingStart (DateTimeUtil.formatDate (bettingStart, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+            infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), "获取时时彩信息失败!");

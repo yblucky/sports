@@ -16,6 +16,7 @@ public class BettingInfoVo {
     private String bettingEnd;
     private String bettingStart;
     private String bettingOpen;
+    private Long restTime;
 
     public String getHhmm() {
         return hhmm;
@@ -111,5 +112,13 @@ public class BettingInfoVo {
 
     public void setBettingOpen(String bettingOpen) {
         this.bettingOpen = bettingOpen;
+    }
+
+    public Long getRestTime() {
+        return restTime;
+    }
+
+    public void setRestTime(Long restTime) {
+        this.restTime = this.end-this.start;
     }
 }
