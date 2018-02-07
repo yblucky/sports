@@ -24,7 +24,6 @@ import com.xlf.server.app.AppTimeBettingService;
 import com.xlf.server.app.AppTimeIntervalService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +58,7 @@ public class TimeBettingController {
 
 
     @GetMapping("/timeInfo")
-//    @SystemControllerLog(description = "时时彩投注信息")
+    @SystemControllerLog(description = "时时彩投注信息")
     public RespBody timeInfo(HttpServletRequest request) throws Exception {
         RespBody respBody = new RespBody ();
         try {
@@ -76,14 +75,10 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
                 return respBody;
             }
-            String yesterdayRacingIssuNo = commonService.findParameter ("yesterdayRacingIssuNo");
-            if (StringUtils.isEmpty (yesterdayRacingIssuNo)) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), "获取昨日北京赛车最后期数失败，须检查参数配置");
-                return respBody;
-            }
+            String currentDate = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYYMMDD);
             //本期期号
-            String historyIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ())) + "";
-            String nextIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (intervalPo.getIssueNo ()) + 1) + "";
+            String historyIssuNo = currentDate + Integer.valueOf (intervalPo.getIssueNo ());
+            String nextIssuNo = currentDate + Integer.valueOf (intervalPo.getIssueNo () + 1);
             //本期投注截止时间
             String endDateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
             Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
