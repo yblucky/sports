@@ -220,7 +220,7 @@ public class RacingBettingController {
             }
             BigDecimal maximumAward = new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ());
             appRacingBettingService.racingBettingService (userPo.getId (), vo, new BigDecimal (totalBettingNo));
-            respBody.add (RespCodeEnum.SUCCESS.getCode (),"投注成功,等待开奖");
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "投注成功,等待开奖");
         } catch (
                 CommException ex)
 
