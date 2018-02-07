@@ -2,22 +2,17 @@ package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
 import com.xlf.common.enums.LotteryTypeEnum;
+import com.xlf.common.enums.RedisKeyEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
-import com.xlf.common.po.AppTimeBettingPo;
-import com.xlf.common.po.AppTimeIntervalPo;
-import com.xlf.common.po.AppUserPo;
-import com.xlf.common.po.SysAgentSettingPo;
+import com.xlf.common.po.*;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.app.BettingInfoVo;
-import com.xlf.common.vo.app.TimeBettingBaseVo;
-import com.xlf.common.vo.app.TimeBettingVo;
-import com.xlf.common.vo.app.UndoBettingVo;
+import com.xlf.common.vo.app.*;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppSysAgentSettingService;
 import com.xlf.server.app.AppTimeBettingService;
@@ -39,7 +34,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/time")
 public class TimeBettingController {
-    public static List<Integer> list = new ArrayList<> ();
+    public static  List<Integer> list=new ArrayList<> ();
     @Resource
     private CommonService commonService;
     @Resource
@@ -160,7 +155,6 @@ public class TimeBettingController {
             //期数前缀：固定前缀+用户id+当天期数
 //            String keyprefix = RedisKeyUtil.getTimeBettingLocationPrefix (userPo.getId (), vo.getSerialNumber (), TimeSeatEnum.ONE);
             //key 每个位置投了哪些数字，set
-
             //key ，每个数字投了多少注
 
             Integer length = vo.getTimeList ().size ();
@@ -264,12 +258,5 @@ public class TimeBettingController {
             LogUtils.error ("撤单失败！", ex);
         }
         return respBody;
-    }
-
-    public static void main(String[] args) {
-        Date d=new Date ();
-        Calendar calendar=Calendar.getInstance ();
-        calendar.setTime (d);
-        System.out.println (calendar.get (Calendar.HOUR_OF_DAY));
     }
 }
