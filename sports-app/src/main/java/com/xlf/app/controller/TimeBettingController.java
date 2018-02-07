@@ -102,9 +102,9 @@ public class TimeBettingController {
             infoVo.setBettingEnd (DateTimeUtil.formatDate (bettingEnd, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             infoVo.setBettingOpen (DateTimeUtil.formatDate (bettingOpen, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             if (System.currentTimeMillis ()>end && System.currentTimeMillis ()<endDate.getTime ()){
-                infoVo.setRestTime (start-System.currentTimeMillis ());
-            }else {
                 infoVo.setRestTime (0L);
+            }else {
+                infoVo.setRestTime (end-System.currentTimeMillis ());
             }
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {
