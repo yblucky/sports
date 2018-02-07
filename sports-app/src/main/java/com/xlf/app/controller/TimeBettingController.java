@@ -77,7 +77,7 @@ public class TimeBettingController {
             }
             String currentDate = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYYMMDD);
             //本期期号
-            String historyIssuNo = currentDate + Integer.valueOf (intervalPo.getIssueNo ());
+            String historyIssuNo = currentDate +"-"+ Integer.valueOf (intervalPo.getIssueNo ());
             String nextIssuNo = currentDate + Integer.valueOf (intervalPo.getIssueNo () + 1);
             //本期投注截止时间
             String endDateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
