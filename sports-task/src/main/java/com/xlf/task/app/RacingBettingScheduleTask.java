@@ -1,15 +1,13 @@
-package com.stb.vpay.task.app;
+package com.xlf.task.app;
 
 
 import com.xlf.common.po.AppRacingLotteryPo;
-import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.app.AppRacingLotteryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 public class RacingBettingScheduleTask extends BaseScheduleTask {
     private static final Logger log = LoggerFactory.getLogger(RacingBettingScheduleTask.class);
@@ -32,9 +30,9 @@ public class RacingBettingScheduleTask extends BaseScheduleTask {
             if (!flag) {
                 //本期北京赛车全部设置为未中奖
                 appRacingBettingService.updateBatchLotteryFlag(lotteryPo.getIssueNo());
-                //修改本期为全部已结算完成
-                appRacingLotteryService.updateFlagById(lotteryPo.getId());
             }
+            //修改本期为全部已结算完成
+            appRacingLotteryService.updateFlagById(lotteryPo.getId());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

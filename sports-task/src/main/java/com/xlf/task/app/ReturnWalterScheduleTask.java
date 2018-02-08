@@ -1,4 +1,4 @@
-package com.stb.vpay.task.app;
+package com.xlf.task.app;
 
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;

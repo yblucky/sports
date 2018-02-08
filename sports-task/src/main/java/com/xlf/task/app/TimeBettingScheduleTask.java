@@ -1,4 +1,4 @@
-package com.stb.vpay.task.app;
+package com.xlf.task.app;
 
 
 import com.xlf.common.po.AppTimeBettingPo;
@@ -34,9 +34,9 @@ public class TimeBettingScheduleTask extends BaseScheduleTask {
             if (!flag) {
                 //本期时时彩全部设置为未中奖
                 appTimeBettingService.updateBatchLotteryFlag(lotteryPo.getIssueNo());
-                //修改本期为全部已结算完成
-                appTimeLotteryService.updateFlagById(lotteryPo.getId());
             }
+            //修改本期为全部已结算完成
+            appTimeLotteryService.updateFlagById(lotteryPo.getId());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

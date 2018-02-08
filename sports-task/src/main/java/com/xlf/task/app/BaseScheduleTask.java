@@ -1,4 +1,4 @@
-package com.stb.vpay.task.app;
+package com.xlf.task.app;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

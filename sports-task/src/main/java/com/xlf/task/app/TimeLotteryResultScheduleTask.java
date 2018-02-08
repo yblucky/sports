@@ -1,4 +1,4 @@
-package com.stb.vpay.task.app;
+package com.xlf.task.app;
 
 import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.exception.CommException;
@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

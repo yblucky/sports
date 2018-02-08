@@ -1,4 +1,4 @@
-package com.stb.vpay.task.app;
+package com.xlf.task.app;
 
 import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.LotteryTypeEnum;
@@ -12,7 +12,6 @@ import com.xlf.server.app.AppRacingLotteryService;
 import com.xlf.server.app.AppTimeIntervalService;
 import com.xlf.server.common.CommonService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

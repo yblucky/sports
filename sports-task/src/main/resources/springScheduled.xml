@@ -10,24 +10,37 @@
        http://www.springframework.org/schema/context 
        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     <task:annotation-driven/>
+    <context:component-scan base-package="com.xlf.task"/>
 
-    <!-- 日k线图每日数据保存 每天晚上凌晨11：59 -->
-    <bean id="CurrencyDatePriceTask" class="com.stb.vpay.task.app.CurrencyDatePriceTask"></bean>
+    <!-- 赛车开奖，早上九点到晚上十二点每13分钟执行一次 -->
+    <bean id="racingBettingScheduleTask" class="com.xlf.task.app.RacingBettingScheduleTask"></bean>
     <task:scheduled-tasks>
-        <task:scheduled ref="CurrencyDatePriceTask" method="doTask" cron="30 59 23 * * ?"></task:scheduled>
+        <task:scheduled ref="racingBettingScheduleTask" method="doTask" cron="0 0/13 9-0 * * ?"></task:scheduled>
     </task:scheduled-tasks>
-    <!-- 日k线图每小时数据保存 每天每小时执行一次 -->
-    <bean id="CurrencyHourPriceTask" class="com.stb.vpay.task.app.CurrencyHourPriceTask"></bean>
-
+    <!--  时时彩开奖，早上十点到凌晨两点每7分钟执行一次 -->
+    <bean id="timeBettingScheduleTask" class="com.xlf.task.app.TimeBettingScheduleTask"></bean>
     <task:scheduled-tasks>
-        <task:scheduled ref="CurrencyHourPriceTask" method="doTask" cron="0 0 0/1 * * ?"></task:scheduled>
-    </task:scheduled-tasks>
-
-    <!-- 日k线图每小时数据保存 每天每分钟执行一次 -->
-    <bean id="CurrencyMinutePriceTask" class="com.stb.vpay.task.app.CurrencyMinutePriceTask"></bean>
-    <task:scheduled-tasks>
-        <task:scheduled ref="CurrencyMinutePriceTask" method="doTask" cron="0 0/5 * * * ?"></task:scheduled>
+        <task:scheduled ref="timeBettingScheduleTask" method="doTask" cron="0 0/7 10-2 * * ?"></task:scheduled>
     </task:scheduled-tasks>
 
-    <context:component-scan base-package="com.stb.vpay.task"/>
+    <!-- 获取网上结果赛车开奖，早上九点到晚上十二点每3分钟执行一次 -->
+    <bean id="racingLotteryResultScheduleTask" class="com.xlf.task.app.RacingLotteryResultScheduleTask"></bean>
+    <task:scheduled-tasks>
+        <task:scheduled ref="racingLotteryResultScheduleTask" method="doTask" cron="0 0/3 9-0 * * ?"></task:scheduled>
+    </task:scheduled-tasks>
+
+    <!-- 获取网上结果时时彩开奖，早上十点到凌晨两点每3分钟执行一次 -->
+    <bean id="timeLotteryResultScheduleTask" class="com.xlf.task.app.TimeLotteryResultScheduleTask"></bean>
+    <task:scheduled-tasks>
+        <task:scheduled ref="timeLotteryResultScheduleTask" method="doTask" cron="0 0/3 10-2 * * ?"></task:scheduled>
+    </task:scheduled-tasks>
+
+
+    <!-- 每日返回，每天凌晨三点执行一次 -->
+    <bean id="returnWalterScheduleTask" class="com.xlf.task.app.ReturnWalterScheduleTask"></bean>
+    <task:scheduled-tasks>
+        <task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="* * 3 * * ?"></task:scheduled>
+    </task:scheduled-tasks>
+
+
 </beans>
