@@ -16,6 +16,7 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.pc.HomeUser;
 import com.xlf.common.vo.pc.StatisticsVo;
+import com.xlf.common.vo.pc.WebStatisticsVo;
 
 /**
  * 用户业务层接口
@@ -81,7 +82,7 @@ public interface WebUserService {
 	 * @return
 	 */
 	
-	public HomeUser homeSUM();
+	public WebStatisticsVo homeSUM();
 	
 	/**
 	 * 
@@ -90,7 +91,7 @@ public interface WebUserService {
 	 */
 	
 	
-	public  Integer SUMCount(AppUserPo po);
+	public  Integer SUMCount();
 	
 	
 	public  Integer updateActiveNoCount(Integer activeNo,String id);

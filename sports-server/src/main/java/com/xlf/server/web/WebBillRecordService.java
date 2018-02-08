@@ -6,6 +6,7 @@ import java.util.List;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.pc.WebBillRecordVo;
+import com.xlf.common.vo.pc.WebStatisticsVo;
 
 
 public interface WebBillRecordService {
@@ -19,7 +20,8 @@ public interface WebBillRecordService {
 	
 	public void add(AppBillRecordPo appBillRecordPo) throws Exception;
 	
-	public  BigDecimal SUMCount(WebBillRecordVo vo);
-	
+	public  List<WebStatisticsVo> SUMCount();
 
+
+    List<WebStatisticsVo> todayDataSum();
 }

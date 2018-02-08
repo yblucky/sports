@@ -4,6 +4,7 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.vo.app.UserInfoVo;
 import com.xlf.common.vo.pc.HomeUser;
 import com.xlf.common.vo.pc.StatisticsVo;
+import com.xlf.common.vo.pc.WebStatisticsVo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -198,9 +199,10 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     public AppUserPo findUid(@Param("uid") String uid);
 
 
-    public HomeUser homeSUM();
+    public WebStatisticsVo homeSUM();
 
-    public Integer SUMCount(@Param("model") AppUserPo po);
+    @Select("select ifnull(count(1),0) from app_user where datediff(now(),createTime)=0")
+    public Integer SUMCount();
 
 
     @Update("update app_user set activeNo=activeNo+#{activeNo} where id = #{id}")

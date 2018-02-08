@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.xlf.common.vo.pc.WebStatisticsVo;
 import org.springframework.stereotype.Service;
 
 import com.xlf.common.enums.RedisKeyEnum;
@@ -141,15 +142,15 @@ public class WebUserServiceImpl implements WebUserService {
 	}
 
 	@Override
-	public HomeUser homeSUM() {
+	public WebStatisticsVo homeSUM() {
 		// TODO Auto-generated method stub
 		return appUserMapper.homeSUM();
 	}
 
 	@Override
-	public Integer SUMCount(AppUserPo po) {
+	public Integer SUMCount() {
 		// TODO Auto-generated method stub
-		return appUserMapper.SUMCount(po);
+		return appUserMapper.SUMCount();
 	}
 
 	@Override

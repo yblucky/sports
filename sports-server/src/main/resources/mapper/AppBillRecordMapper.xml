@@ -59,6 +59,7 @@
 		SELECT bill.*,user.mobile,user.imgPath,user.nickName from app_bill_record bill left join app_user user on bill.userId=user.id
 		<where>
 			<if test="model.userId != null and model.userId != ''"> AND bill.userId=#{model.userId}</if>
+			<if test="model.currencyType != null and model.currencyType != ''"> AND bill.currencyType=#{model.currencyType}</if>
 			<if test="model.busnessType != null and model.busnessType != ''"> AND bill.busnessType=#{model.busnessType}</if>
 		</where>
 		order by bill.createTime desc
@@ -82,16 +83,6 @@
         order by bill.createTime desc
     </select>
 
-
-	<select id="SUMCount" resultType ="BigDecimal">
-		select ifnull(SUM(balance),0) from  app_bill_record
-		<where>
-       	 1 = 1
-		<if test="model.busnessType != null and model.busnessType != ''">AND busnessType=#{model.busnessType}</if>
-		<if test="model.startTime != null">AND createTime&gt;=#{model.startTime}</if>
-		</where>
-	</select>
-
 	<insert id="batchSaveKickBackAmoutRecord">
 		INSERT INTO tb1_emplyee(id,userId,busnessType,createTime,businessNumber,balance,beforeBalance,afterBalance,extend,remark)
 		VALUES
@@ -110,10 +101,12 @@
 			   LEFT JOIN app_bill_record b on a.id = b.userid
 				<where>
 					1 = 1
+					<if test="model.userid != null and model.userid != ''">AND a.parentId=#{model.userid}</if>
+					<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
 					<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 					<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
 				</where>
-			  GROUP BY a.id
+			  GROUP BY a.parentId
 			) as t on a.id=t.parentId
 		INNER JOIN
 			(select sum(case b.busnessType when 1 then b.balance else 0 end) as bus1,
@@ -123,8 +116,8 @@
 			<where>
 				a.roleType='20'
 				<if test="model.userid != null and model.userid != ''">AND a.id=#{model.userid}</if>
-				<if test="model.uid != null and model.uid != ''">AND a.uid=#{model.uid}</if>
 				<if test="model.mobile != null and model.mobile != ''">AND a.mobile=#{model.mobile}</if>
+				<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
 				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
 			</where>

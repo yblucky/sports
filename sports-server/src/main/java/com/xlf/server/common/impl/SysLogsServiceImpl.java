@@ -2,17 +2,20 @@ package com.xlf.server.common.impl;
 
 
 import com.xlf.common.po.SysLogsPo;
+import com.xlf.common.resp.Paging;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.MyBeanUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysLogsVo;
 import com.xlf.server.common.SysLogsService;
 import com.xlf.server.mapper.SysLogsMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日志信息业务层实现
@@ -49,4 +52,15 @@ public class SysLogsServiceImpl implements SysLogsService {
 		}
 	}
 
+	@Override
+	public List<SysLogsPo> findAll(Paging paging) {
+		//创建分页插件对象
+		RowBounds rowBounds = new RowBounds(paging.getPageNumber(),paging.getPageSize());
+		return mapper.findAll(rowBounds);
+	}
+
+	@Override
+	public long findCount() {
+		return mapper.findCount();
+	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.xlf.common.vo.pc.WebStatisticsVo;
 import com.xlf.server.mapper.AppBillRecordMapper;
 import com.xlf.server.web.WebBillRecordService;
 import org.springframework.stereotype.Service;
@@ -68,9 +69,13 @@ public class WebBillRecordServiceImpl implements WebBillRecordService {
 	}
 
 	@Override
-	public BigDecimal SUMCount(WebBillRecordVo vo) {
+	public List<WebStatisticsVo> SUMCount() {
 		// TODO Auto-generated method stub
-		return appBillRecordMapper.SUMCount(vo);
+		return appBillRecordMapper.SUMCount();
 	}
 
+	@Override
+	public List<WebStatisticsVo> todayDataSum() {
+		return appBillRecordMapper.selectSumByBusnessType();
+	}
 }

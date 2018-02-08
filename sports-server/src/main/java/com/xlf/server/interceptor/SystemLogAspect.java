@@ -96,9 +96,11 @@ public class SystemLogAspect {
             if (StringUtils.isEmpty (logVo.getUsername ())) {
                 logVo.setUsername ("");
             }
+            //保存到数据库
+            logService.save (logVo);
             //先缓存到redis中
 //			redisService.rpush(SerializeUtil.serialize(RedisKeyEnum.SYSLOG_FLAG.getKey()), SerializeUtil.serialize(logVo));
-            redisService.rpush (RedisKeyEnum.SYSLOG_FLAG.getKey ().getBytes (), SerializeUtil.serialize (logVo));
+            /*redisService.rpush (RedisKeyEnum.SYSLOG_FLAG.getKey ().getBytes (), SerializeUtil.serialize (logVo));
             //日志线程是否正在运行
             String isRun = redisService.getString (RedisKeyEnum.SYSLOG_FLAG.getKey () + "_isRun");
             if (!StringUtils.isEmpty (isRun)) {
@@ -111,7 +113,7 @@ public class SystemLogAspect {
                     redisService.putString (RedisKeyEnum.SYSLOG_FLAG.getKey () + "_isRun", "true", 3600000);
                     doSaveLog ();
                 }
-            });
+            });*/
         } catch (Exception ex) {
             LogUtils.error ("写入日志出错", ex);
         }
@@ -125,7 +127,7 @@ public class SystemLogAspect {
             byte[] bytes = redisService.lpop (SerializeUtil.serialize (key));
             if (bytes == null) {
                 //线程已跑完，关闭正在跑的线程提示
-                redisService.del (RedisKeyEnum.SYSLOG_FLAG.getKey () + "_isRun");
+//                redisService.del (RedisKeyEnum.SYSLOG_FLAG.getKey () + "_isRun");
                 return;
             }
             SysLogsVo logVo = (SysLogsVo) SerializeUtil.unserialize (bytes);
@@ -136,9 +138,10 @@ public class SystemLogAspect {
                 doSaveLog ();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             //不抛出异常
             //线程已跑完，关闭正在跑的线程提示
-            redisService.del (RedisKeyEnum.SYSLOG_FLAG.getKey () + "_isRun");
+//            redisService.del (RedisKeyEnum.SYSLOG_FLAG.getKey () + "_isRun");
         }
     }
 

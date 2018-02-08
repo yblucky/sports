@@ -29,7 +29,7 @@ public interface AppRacingBettingService {
 
     public Integer updateBatchLotteryFlag(String issueNo);
 
-    LotteryVo findAll(LotteryVo vo, Paging paging);
+    List<LotteryVo> findAll(LotteryVo vo, Paging paging);
 
 
     Integer recordListTotal(String id, String businessNumber);
