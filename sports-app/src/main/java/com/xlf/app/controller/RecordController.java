@@ -52,16 +52,20 @@ public class RecordController {
     /**
      * 用户流水记录
      */
-    @GetMapping(value = "/record")
-    public RespBody findUserRecord(HttpServletRequest request, Paging paging, Integer currencyType) {
+    @GetMapping(value = "/list")
+    public RespBody findUserRecord(HttpServletRequest request,String busnessType, Paging paging) {
         RespBody respBody = new RespBody ();
         try {
             //根据用户id获取用户信息
             List<AppBillRecordVo> list = null;
             //检验用户是否登录
             AppUserPo appUserPo = commonService.checkToken ();
-            String[] busnessTypes = request.getParameterValues ("busnessType");
-            if (ArrayUtils.isEmpty (busnessTypes) || currencyType == null) {
+            if (StringUtils.isEmpty (busnessType)) {
+                paging.setTotalCount (0);
+                respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数不合法");
+            }
+            String[] busnessTypes = busnessType.split(",");
+            if (ArrayUtils.isEmpty (busnessTypes)) {
                 paging.setTotalCount (0);
                 respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数不合法");
             }
@@ -70,17 +74,17 @@ public class RecordController {
                 busnessTypeList.add (Integer.valueOf (b));
             }
             //获取总记录数量
-            int total = billRecordService.billRecordListTotal (appUserPo.getId (), busnessTypeList, currencyType);
+            int total = billRecordService.billRecordListTotal (appUserPo.getId (), busnessTypeList);
             if (total > 0) {
                 list = billRecordService.findBillRecordList (appUserPo.getId (), busnessTypeList, paging);
             }
             //返回前端总记录
             paging.setTotalCount (total);
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.GET_RECORD_SUCCESS, "获取用户记录成功"), paging, list);
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户记录成功", paging, list);
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
-            respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.GET_RECORD_FAILE, "获取用户记录失败"));
+            respBody.add (RespCodeEnum.ERROR.getCode (),"获取用户记录失败");
             LogUtils.error ("获取用户记录失败！", ex);
         }
         return respBody;

@@ -96,14 +96,14 @@
     <!--修改用户累计投注金额-->
     <update id="updateBettingAmoutById">
         update <include refid="table_name"/>
-        set assets = IFNULL(bettingAmout,0) + #{bettingAmout}
+        set bettingAmout = IFNULL(bettingAmout,0) + #{bettingAmout}
         where id=#{id}
     </update>
 
     <!--修改用户当天盈亏：每日凌晨清零-->
     <update id="updateCurrentProfitById">
         update <include refid="table_name"/>
-        set assets = IFNULL(currentProfit,0) + #{currentProfit}
+        set currentProfit = IFNULL(currentProfit,0) + #{currentProfit}
         where id=#{id}
     </update>
 
@@ -111,7 +111,7 @@
     <!--修改用户累计中奖金额-->
     <update id="updateWiningAmoutById">
         update <include refid="table_name"/>
-        set assets = IFNULL(winingAmout,0) + #{winingAmout}
+        set winingAmout = IFNULL(winingAmout,0) + #{winingAmout}
         where id=#{id}
     </update>
 
@@ -119,7 +119,7 @@
     <!--修改用户历史累计返水衡量值-->
     <update id="updateKickBackAmountById">
         update <include refid="table_name"/>
-        set assets = IFNULL(kickBackAmount,0) + #{kickBackAmount}
+        set kickBackAmount = IFNULL(kickBackAmount,0) + #{kickBackAmount}
         where id=#{id}
     </update>
 

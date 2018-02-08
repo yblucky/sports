@@ -34,8 +34,8 @@ public interface AppTimeBettingMapper extends BaseMapper<AppTimeBettingPo> {
 
     Integer updateBatchLotteryFlag(@Param("issueNo") String issueNo);
 
-    @Select("SELECT COUNT(id) FROM `app_time_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
-    Integer recordListTotal(@Param("userId") String userId, @Param("id") String businessNumber);
+    @Select("SELECT COUNT(*) FROM `app_time_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
+    Integer recordListTotal(@Param("userId") String userId, @Param("businessNumber") String businessNumber);
 
     @Select("SELECT * FROM `app_time_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
     List<AppTimeBettingPo> findRecordList(@Param("userId") String userId, @Param("businessNumber") String businessNumber, RowBounds rowBounds);

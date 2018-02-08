@@ -17,6 +17,7 @@ import com.xlf.server.mapper.AppTimeLotteryMapper;
 import com.xlf.server.web.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 /**
  * 时时彩开奖务类
  */
+@Service
 public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     private static final Logger log = LoggerFactory.getLogger(AppTimeLotteryServiceImpl.class);
     @Resource

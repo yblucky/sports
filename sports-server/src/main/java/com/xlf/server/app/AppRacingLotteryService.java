@@ -21,7 +21,7 @@ public interface AppRacingLotteryService {
 
     public RacingLotteryVo getLatestRacingLottery();
 
-    public AppTimeLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo);
+    public AppRacingLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo);
 
     Integer save(AppRacingLotteryPo po);
 }

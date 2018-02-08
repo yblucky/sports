@@ -219,10 +219,10 @@ public final class DateTimeUtil {
 
     public static void createRacingInterval() {
         String id;
-        int issuNo;
+        int issueNo;
         String time;
         int type;
-        String str="INSERT INTO app_time_interval(id,issuNo,time,type) VALUES({id},{issuNo},{time},20)";
+        String str="INSERT INTO app_time_interval(id,issueNo,time,type) VALUES({id},{issueNo},{time},20)";
         int minute=5;
         Map<Integer,String > map=new HashMap<>();
         Calendar c = Calendar.getInstance();
@@ -240,7 +240,7 @@ public final class DateTimeUtil {
 
         for (Map.Entry m:map.entrySet()){
             System.out.println(m.getValue());
-            String s=str.replace("{id}", "'"+ ToolUtils.getUUID()+"'").replace("{issuNo}", m.getKey().toString()).replace("{time}", "'"+(String)m.getValue()+"'");
+            String s=str.replace("{id}", "'"+ ToolUtils.getUUID()+"'").replace("{issueNo}", m.getKey().toString()).replace("{time}", "'"+(String)m.getValue()+"'");
            stringBuffer.append(s).append(";");
         }
         System.out.println("8888888888888888888888888");
@@ -254,10 +254,10 @@ public final class DateTimeUtil {
 
     public static void createTimeInterval() {
         String id;
-        int issuNo;
+        int issueNo;
         String time;
         int type;
-        String str="INSERT INTO app_time_interval(id,issuNo,time,type) VALUES({id},{issuNo},{time},10)";
+        String str="INSERT INTO app_time_interval(id,issueNo,time,type) VALUES({id},{issueNo},{time},10)";
         int minute=5;
         Map<Integer,String > map=new HashMap<>();
         Calendar c = Calendar.getInstance();
@@ -287,7 +287,7 @@ public final class DateTimeUtil {
 
         for (Map.Entry m:map.entrySet()){
             System.out.println(m.getValue());
-            String s=str.replace("{id}", "'"+ ToolUtils.getUUID()+"'").replace("{issuNo}", m.getKey().toString()).replace("{time}", "'"+(String)m.getValue()+"'");
+            String s=str.replace("{id}", "'"+ ToolUtils.getUUID()+"'").replace("{issueNo}", m.getKey().toString()).replace("{time}", "'"+(String)m.getValue()+"'");
            stringBuffer.append(s).append(";");
         }
         System.out.println("8888888888888888888888888");
@@ -297,7 +297,7 @@ public final class DateTimeUtil {
     }
 
     public static Long getLongTimeByDatrStr(String  time) {
-        String dateStr= DateTimeUtil.formatDate (new Date (),DateTimeUtil.PATTERN_YYYYMMDD)+time;
+        String dateStr= DateTimeUtil.formatDate (new Date (),DateTimeUtil.PATTERN_YYYY_MM_DD)+" "+time;
         Date date  = DateTimeUtil.parseDateFromStr (dateStr,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
         return date.getTime ();
     }

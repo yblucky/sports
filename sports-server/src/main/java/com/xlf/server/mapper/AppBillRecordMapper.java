@@ -36,10 +36,9 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
     /**
      * 查询流水
      * @param busnessTypeList
-     * @param currencyType
      * @return
      */
-    Integer billRecordListTotal(@Param("userId") String userId,@Param("list") List<Integer> busnessTypeList, @Param("currencyType") Integer currencyType);
+    Integer billRecordListTotal(@Param("userId") String userId,@Param("list") List<Integer> busnessTypeList);
 
 
 
