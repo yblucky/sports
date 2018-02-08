@@ -70,6 +70,28 @@ public class LotteryVo {
 	 * 状态
 	 * */
 	private String state;
+	/**
+	 * 业务单号
+	 * */
+	private String businessNumber;
+	/**
+	 * '开始时间'
+	 */
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date startTime;
+	/**
+	 * '结束时间'
+	 */
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date endTime;
+
+	public String getBusinessNumber() {
+		return businessNumber;
+	}
+
+	public void setBusinessNumber(String businessNumber) {
+		this.businessNumber = businessNumber;
+	}
 
 	public String getId() {
 		return id;
@@ -181,5 +203,21 @@ public class LotteryVo {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 }

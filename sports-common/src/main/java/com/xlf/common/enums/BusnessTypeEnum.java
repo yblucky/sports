@@ -54,4 +54,15 @@ public enum BusnessTypeEnum {
         }
         return String.valueOf (code);
     }
+    public static String getEgName(Integer code) {
+        if (code == null) {
+            return "";
+        }
+        for (BusnessTypeEnum enums : BusnessTypeEnum.values ()) {
+            if (enums.getCode ().equals (code)) {
+                return enums.getEgName ();
+            }
+        }
+        return String.valueOf (code);
+    }
 }

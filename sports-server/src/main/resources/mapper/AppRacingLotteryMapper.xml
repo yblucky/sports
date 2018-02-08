@@ -29,25 +29,6 @@
         </foreach>
     </insert>
     
-    
-    <select id="findAll" resultType="com.xlf.common.vo.pc.AppPerformanceRecordVo">
-       	SELECT p.*,u.uid,u.mobile from app_performance_record p left join app_user u on p.userId=u.id
-       	<where>
-       	 1 = 1
-		<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
-		<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
-		<if test="model.orderId != null and model.orderId != ''">AND p.orderId=#{model.orderId}</if>
-		<if test="model.type != null and model.type != ''">AND p.type=#{model.type}</if>
-		<if test="model.id != null and model.id != ''">AND p.id=#{model.id}</if>
-		<if test="model.startTime != null">AND p.createTime&gt;=#{model.startTime}</if>
-		<if test="model.endTime != null">AND p.createTime&lt;#{model.endTime}</if>
-		
-		
-		</where>
-		ORDER BY p.createTime DESC
-		limit #{startRow}, #{pageSize};
-    </select>
-    
     <select id="findCount" resultType="int">
     	SELECT count(1) from app_performance_record p  left join app_user u on p.userId=u.id
     	<where>

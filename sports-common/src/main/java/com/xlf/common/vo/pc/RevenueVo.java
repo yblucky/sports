@@ -9,11 +9,11 @@ public class RevenueVo {
     /**
      * 代理编号
      * */
-    private Integer uid;
+    private String id;
     /**
      * 代理昵称
      * */
-    private String nickName;
+    private String userName;
     /**
      *手机号
      * */
@@ -39,20 +39,20 @@ public class RevenueVo {
      * */
     private int agentProfit;
 
-    public Integer getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getMobile() {

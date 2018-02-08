@@ -160,19 +160,12 @@
     </select>
     
     
-    <select id="homeSUM" resultType="com.xlf.common.vo.pc.HomeUser">
-    	select ifnull(SUM(epBalance),0) as epBalance,ifnull(SUM(birdScore),0) as birdScore,ifnull(SUM(assets),0) as assets,ifnull(count(1),0) as userCount from app_user
+    <select id="homeSUM" resultType="com.xlf.common.vo.pc.WebStatisticsVo">
+    	select ifnull(SUM(balance),0) as balance,ifnull(SUM(bettingAmout),0) as bettingAmout,ifnull(SUM(winingAmout),0) as winingAmout,ifnull(SUM(currentProfit),0) as currentProfit,ifnull(count(1),0) as userCount
+    	  from app_user
     </select>
     
-    
-    <select id="SUMCount" resultType ="int">
-		select ifnull(count(1),0) from  app_user 
-		<where>
-       	 1 = 1
-		<if test="model.state != null and model.state !=''">and state= #{model.state}</if>
-		<if test="model.createTime != null">AND createTime&gt;=#{model.createTime}</if>
-		</where>
-	</select>
+
 
     <!--批量清理用户返水衡量值-->
     <update id="batchUpdateKickBackAmout">
