@@ -24,7 +24,7 @@
         select count(id) from
         <include refid="table_name"/>
         <where>
-            issuNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}
             <if test="seat==1">AND lotteryOne=#{digital}</if>
             <if test="seat==2">AND lotteryTwo=#{digital}</if>
             <if test="seat==3">AND lotteryThree=#{digital}</if>
@@ -45,7 +45,7 @@
         from
         <include refid="table_name"/>
         <where>
-            issuNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}
             <if test="seat==1">AND lotteryOne=#{digital}</if>
             <if test="seat==2">AND lotteryTwo=#{digital}</if>
             <if test="seat==3">AND lotteryThree=#{digital}</if>

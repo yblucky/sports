@@ -207,7 +207,7 @@ public final class DateTimeUtil {
         }
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.MINUTE,interval*(1+calendar.get(Calendar.MINUTE)/interval));
+        calendar.set(Calendar.MINUTE,interval*(calendar.get(Calendar.MINUTE)/interval));
         Date date=calendar.getTime();
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         return  format.format(date);
@@ -303,8 +303,10 @@ public final class DateTimeUtil {
     }
 
     public static void main(String[] args) {
+        System.out.println (DateTimeUtil.parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM, 5));
+        System.out.println (DateTimeUtil.parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM, 10));
 //        createTimeInterval();
-        createTimeInterval();
+//        createTimeInterval();
 //        parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5);
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5));
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,-10));
