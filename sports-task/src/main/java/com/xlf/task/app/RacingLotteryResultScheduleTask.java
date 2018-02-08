@@ -82,10 +82,5 @@ public class RacingLotteryResultScheduleTask extends BaseScheduleTask {
     }
 
 
-    public RacingLotteryVo getLatestRacingLottery() {
-        String RACING_URL = "https://www.cp9833.com/getLotteryBase.do";
-        String json = HttpUtils.sendGet(RACING_URL, "gameCode=bjpk10");
-        RacingLotteryVo vo = ToolUtils.toObject(json, RacingLotteryVo.class);
-        return vo;
-    }
+
 }

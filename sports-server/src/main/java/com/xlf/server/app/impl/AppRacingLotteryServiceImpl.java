@@ -6,6 +6,8 @@ import com.xlf.common.enums.RacingSeatEnum;
 import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.*;
 import com.xlf.common.resp.Paging;
+import com.xlf.common.util.HttpUtils;
+import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.common.vo.task.RacingLotteryVo;
 import com.xlf.server.app.*;
@@ -123,7 +125,10 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
 
     @Override
     public RacingLotteryVo getLatestRacingLottery() {
-        return appRacingLotteryService.getLatestRacingLottery();
+            String RACING_URL = "https://www.cp9833.com/getLotteryBase.do";
+            String json = HttpUtils.sendGet(RACING_URL, "gameCode=bjpk10");
+            RacingLotteryVo vo = ToolUtils.toObject(json, RacingLotteryVo.class);
+            return vo;
     }
 
     @Override
