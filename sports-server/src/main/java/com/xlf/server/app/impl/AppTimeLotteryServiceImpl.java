@@ -163,7 +163,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         while (matcher.find()) {
             list.add(matcher.group().replace("\"",""));
         }
-        po.setCreateTime(DateTimeUtil.parseDateFromStr(list.get(3), DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM));
+        po.setCreateTime(DateTimeUtil.parseDateFromStr(list.get(2), DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM));
         po.setIssueNo(list.get(0));
         po.setFlag(LotteryFlagEnum.NO.getCode());
         String lottery = list.get(1);

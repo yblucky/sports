@@ -6,6 +6,7 @@ import com.xlf.common.enums.RacingSeatEnum;
 import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.po.*;
 import com.xlf.common.resp.Paging;
+import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.HttpUtils;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.ToolUtils;
@@ -192,6 +193,8 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
         result=result.replaceAll ("null","\"\"");
         System.out.println ("00000000000000");
         System.out.println (result);
+        System.out.println ("\n"+"33333333333333333333333333333");
+        System.out.println (DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, 5));
 //        RacingLotteryVo vo = ToolUtils.toObject(result, RacingLotteryVo.class);
 //        System.out.println (ToolUtils.toJson (vo));
     }

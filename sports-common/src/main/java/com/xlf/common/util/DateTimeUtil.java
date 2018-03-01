@@ -207,7 +207,7 @@ public final class DateTimeUtil {
         }
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.MINUTE,interval*(calendar.get(Calendar.MINUTE)/interval));
+        calendar.set(Calendar.MINUTE,interval*(calendar.get(Calendar.MINUTE)/interval)-interval);
         Date date=calendar.getTime();
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         return  format.format(date);

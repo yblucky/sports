@@ -25,7 +25,7 @@ public class TimeLotteryResultScheduleTask extends BaseScheduleTask {
     protected void doSpecificTask() {
         List<AppTimeLotteryPo> list = appTimeLotteryService.lotteryListCurrentDay();
         for (AppTimeLotteryPo po : list) {
-            AppTimeLotteryPo model = appTimeLotteryService.findById(po.getIssueNo());
+            AppTimeLotteryPo model = appTimeLotteryService.findAppTimeLotteryPoByIssuNo (po.getIssueNo());
             if (model != null) {
                 break;
             } else {
@@ -65,7 +65,7 @@ public class TimeLotteryResultScheduleTask extends BaseScheduleTask {
         while (matcher.find()) {
             list.add(matcher.group().replace("\"",""));
         }
-        po.setCreateTime(DateTimeUtil.parseDateFromStr(list.get(3), DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM));
+        po.setCreateTime(DateTimeUtil.parseDateFromStr(list.get(2), DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM));
         po.setIssueNo(list.get(0));
         po.setFlag(LotteryFlagEnum.NO.getCode());
         String lottery = list.get(1);

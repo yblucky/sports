@@ -9,7 +9,7 @@ import java.util.Date;
  *北京赛车投注表Po类
  * Created by Administrator on 2017/8/17.
  */
-@Table(name = "app_racing_betting")
+@Table(name = "app_racing_lottery")
 public class AppRacingLotteryPo implements Serializable {
     @Id
     private String id;
@@ -27,11 +27,6 @@ public class AppRacingLotteryPo implements Serializable {
     private Date createTime;
     private Date lotteryTime;
     private Integer flag;
-    /**
-     * 投注类型
-     * */
-    private Integer betType;
-
     public String getId() {
         return id;
     }
@@ -150,13 +145,5 @@ public class AppRacingLotteryPo implements Serializable {
 
     public void setFlag(Integer flag) {
         this.flag = flag;
-    }
-
-    public Integer getBetType() {
-        return betType;
-    }
-
-    public void setBetType(Integer betType) {
-        this.betType = betType;
     }
 }

@@ -48,7 +48,7 @@ public class RacingLotteryResultScheduleTask extends BaseScheduleTask {
         }
         //组合生成最新一期已开奖的开奖期数，此处做对比，防止获取结果和当期开奖期数不一致，导致错开
         String lastIssuNo = (Integer.valueOf (yesterdayRacingIssuNo) + Integer.valueOf (timeIntervalPo.getIssueNo ())) + "";
-        if (!lastIssuNo.equals (lotteryVo.getIssue ())) {
+        if (!lastIssuNo.equals (lotteryVo.getPreIssue ())) {
             log.error ("获取北京赛车投注结果的期数和本平台不一致，无法正常开奖");
             return;
         }

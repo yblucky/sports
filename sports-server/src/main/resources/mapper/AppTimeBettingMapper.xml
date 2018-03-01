@@ -4,7 +4,7 @@
 
 
     <sql id="fields">
-         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryFlag,winningAmount,multiple,createTime,serialNumber
+         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryFlag,winningAmount,multiple,createTime,serialNumber,betType
     </sql>
 
     <sql id="fields_id">
@@ -22,7 +22,7 @@
     </sql>
 
 
-    <select id="wininggCount">
+    <select id="wininggCount" resultType="java.lang.Integer">
         select count(id) from
         <include refid="table_name"/>
         <where>
