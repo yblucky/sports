@@ -1,9 +1,11 @@
 package com.xlf.server.app;
 
 import com.xlf.common.enums.TimeSeatEnum;
+import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.app.TimeBettingVo;
+import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,5 +37,9 @@ public interface AppTimeBettingService {
 
     AppTimeBettingPo findById(String id);
 
-    Boolean undoTimeBettingService(String userId,String bettingId) throws Exception;
+    Boolean undoTimeBettingService(String userId, String bettingId) throws Exception;
+
+    Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent)throws Exception;
+
+    List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,  Paging paging)throws Exception;
 }

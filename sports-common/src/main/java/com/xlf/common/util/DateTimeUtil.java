@@ -198,7 +198,7 @@ public final class DateTimeUtil {
 
 
     /**
-     * 格式化当前时间,取间隔分钟区间值
+     * 格式化当前时间,取间隔分钟区间值：以开奖时间为准
      */
 
     public static String parseCurrentDateMinuteIntervalToStr( String pattern,Integer interval) {
@@ -207,7 +207,24 @@ public final class DateTimeUtil {
         }
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.MINUTE,interval*(calendar.get(Calendar.MINUTE)/interval)-interval);
+        calendar.set(Calendar.MINUTE,interval*(1+calendar.get(Calendar.MINUTE)/interval));
+        Date date=calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return  format.format(date);
+    }
+
+
+    /**
+     * 格式化当前时间,取间隔分钟区间值：以开始投注时间为准
+     */
+
+    public static String parseCurrentDateMinuteIntervalStartBettingToStr( String pattern,Integer interval) {
+        if (StringUtils.isEmpty(pattern)) {
+            return null;
+        }
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.MINUTE,interval*(calendar.get(Calendar.MINUTE)/interval));
         Date date=calendar.getTime();
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         return  format.format(date);

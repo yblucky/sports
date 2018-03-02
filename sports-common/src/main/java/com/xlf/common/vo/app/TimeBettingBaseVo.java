@@ -7,6 +7,7 @@ public class TimeBettingBaseVo {
     private Integer lotteryThree;
     private Integer lotteryFour;
     private Integer lotteryFive;
+    private String bettingContent;
 
     public Integer getMultiple() {
         return multiple;
@@ -54,5 +55,13 @@ public class TimeBettingBaseVo {
 
     public void setLotteryFive(Integer lotteryFive) {
         this.lotteryFive = lotteryFive;
+    }
+
+    public String getBettingContent() {
+        return bettingContent;
+    }
+
+    public void setBettingContent(String bettingContent) {
+        this.bettingContent = bettingContent;
     }
 }

@@ -15,6 +15,7 @@ public class RacingBettingBaseVo {
     private Integer lotteryEight;
     private Integer lotteryNine;
     private Integer lotteryTen;
+    private String bettingContent;
 
     public Integer getMultiple() {
         return multiple;
@@ -102,5 +103,13 @@ public class RacingBettingBaseVo {
 
     public void setLotteryTen(Integer lotteryTen) {
         this.lotteryTen = lotteryTen;
+    }
+
+    public String getBettingContent() {
+        return bettingContent;
+    }
+
+    public void setBettingContent(String bettingContent) {
+        this.bettingContent = bettingContent;
     }
 }

@@ -278,4 +278,18 @@ public class ToolUtils {
         }
         return  false;
     }
+
+    /**
+     * 验证手机号是否正确
+     * @return true|false
+     */
+    public static boolean regex(String str,String pattern) {
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(str);
+        return m.matches();
+    }
+
+    public static void main(String[] args) {
+        System.out.println (regex ("X2XXX","X\\dXXX"));
+    }
 }

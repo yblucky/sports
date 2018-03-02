@@ -24,4 +24,5 @@ public interface AppRacingLotteryService {
     public AppRacingLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo);
 
     Integer save(AppRacingLotteryPo po);
+
 }

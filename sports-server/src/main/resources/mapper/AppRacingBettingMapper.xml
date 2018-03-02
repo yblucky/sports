@@ -4,7 +4,7 @@
 
 
     <sql id="fields">
-         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotterySix,lotterySeven,lotteryEight,lotteryNine,lotteryTen,lotteryFlag,winningAmount,multiple,createTime,serialNumber,betType
+         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotterySix,lotterySeven,lotteryEight,lotteryNine,lotteryTen,lotteryFlag,winningAmount,multiple,createTime,serialNumber,betType,bettingContent
     </sql>
 
     <sql id="fields_id">
@@ -113,6 +113,24 @@
             <if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
         </where>
         ORDER BY t.createTime DESC
+    </select>
+    <select id="countBettingByUserIdAndIssueNoAndContent" resultType="java.lang.Integer">
+        select count(id) from
+        <include refid="table_name"/>
+        <where>
+            userId=#{userId} AND issueNo=#{issueNo}
+            <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
+        </where>
+    </select>
+
+
+    <select id="findListByUserIdAndIssueNoAndContent" resultType="com.xlf.common.po.AppRacingBettingPo">
+        select  <include refid="fields_id"/> from
+        <include refid="table_name"/>
+        <where>
+            userId=#{userId} AND issueNo=#{issueNo}
+            <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
+        </where>
     </select>
 
 </mapper>

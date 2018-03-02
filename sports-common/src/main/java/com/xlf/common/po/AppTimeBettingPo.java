@@ -27,6 +27,7 @@ public class AppTimeBettingPo implements Serializable {
     private Date createTime;
     private String businessNumber;
     private Integer serialNumber;
+    private String bettingContent;
     /**
      * 投注类型
      * */
@@ -150,5 +151,13 @@ public class AppTimeBettingPo implements Serializable {
 
     public void setBetType(Integer betType) {
         this.betType = betType;
+    }
+
+    public String getBettingContent() {
+        return bettingContent;
+    }
+
+    public void setBettingContent(String bettingContent) {
+        this.bettingContent = bettingContent;
     }
 }

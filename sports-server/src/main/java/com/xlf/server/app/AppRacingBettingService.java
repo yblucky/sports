@@ -5,6 +5,7 @@ import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.app.RacingBettingVo;
 import com.xlf.common.vo.pc.LotteryVo;
+import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -39,4 +40,9 @@ public interface AppRacingBettingService {
     AppRacingBettingPo findById(String id);
 
     Boolean undoRacingBettingService(String userId,String bettingId) throws Exception;
+
+
+    Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent)throws Exception;
+
+    List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Paging paging)throws Exception;
 }

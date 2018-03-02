@@ -4,7 +4,7 @@
 
 
     <sql id="fields">
-         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryFlag,winningAmount,multiple,createTime,serialNumber,betType
+         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryFlag,winningAmount,multiple,createTime,serialNumber,betType,bettingContent
     </sql>
 
     <sql id="fields_id">
@@ -34,6 +34,7 @@
             <if test="seat==5">AND lotteryFive=#{digital}</if>
         </where>
     </select>
+
 
 
     <select id="listWininggByIssuNo">
@@ -66,7 +67,24 @@
         SET lotteryFlag=20,winningAmount=0 WHERE issueNo=#{issueNo} and lotteryFlag=10
     </update>
 
+    <select id="countBettingByUserIdAndIssueNoAndContent" resultType="java.lang.Integer">
+        select count(id) from
+        <include refid="table_name"/>
+        <where>
+            userId=#{userId} AND issueNo=#{issueNo}
+            <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
+        </where>
+    </select>
 
+
+    <select id="findListByUserIdAndIssueNoAndContent" resultType="com.xlf.common.po.AppTimeBettingPo">
+        select  <include refid="fields_id"/> from
+        <include refid="table_name"/>
+        <where>
+            userId=#{userId} AND issueNo=#{issueNo}
+            <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
+        </where>
+    </select>
 </mapper>
 
 

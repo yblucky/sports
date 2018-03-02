@@ -61,10 +61,11 @@ public class RacingLotteryResultScheduleTask extends BaseScheduleTask {
             return;
         } else {
             AppRacingLotteryPo po = new AppRacingLotteryPo ();
+            po.setIssueNo (lotteryVo.getPreIssue ());
             po.setId (ToolUtils.getUUID ());
             po.setLotteryTime (null);
             po.setFlag (LotteryFlagEnum.NO.getCode ());
-            po.setCreateTime (new Date (lotteryVo.getOpenDateTime ()));
+            po.setCreateTime (new Date ());
             po.setLotteryTime (null);
             po.setLotteryOne (lotteryVo.getOpenNum ().get (0));
             po.setLotteryTwo (lotteryVo.getOpenNum ().get (1));

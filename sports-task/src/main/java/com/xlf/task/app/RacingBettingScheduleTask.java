@@ -23,6 +23,8 @@ public class RacingBettingScheduleTask extends BaseScheduleTask {
             AppRacingLotteryPo lotteryPo = appRacingLotteryService.findLast();
             if (lotteryPo == null) {
                 log.info("没有待结算的投注订单");
+                //修改本期为全部已结算完成
+                appRacingLotteryService.updateFlagById(lotteryPo.getId());
                 return;
             }
             Boolean flag = false;

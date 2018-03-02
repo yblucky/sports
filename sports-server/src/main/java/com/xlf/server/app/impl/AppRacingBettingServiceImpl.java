@@ -168,6 +168,30 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     }
 
     @Override
+    public Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent) throws Exception {
+        Integer count = 0;
+        count = appRacingBettingMapper.countBettingByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent);
+        if (count == null) {
+            count = 0;
+        }
+        return count;
+    }
+
+    @Override
+    public List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Paging paging) throws Exception {
+        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId) || StringUtils.isEmpty (bettingContent)) {
+            return Collections.emptyList ();
+        }
+        List<AppRacingBettingPo> list = appRacingBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent, rowBounds);
+        if (list == null) {
+            list = Collections.emptyList ();
+        }
+        return list;
+    }
+
+
+    @Override
     public AppRacingBettingPo findById(String id) {
         if (StringUtils.isEmpty (id)) {
             return null;
@@ -199,4 +223,6 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         appUserService.updateCurrentProfitById (userId, totalPrice);
         return true;
     }
+
+
 }

@@ -190,6 +190,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
                 System.out.println ("关闭输入流出现异常！" + ex);
             }
         }
+        RacingLotteryVo vo = ToolUtils.toObject(result, RacingLotteryVo.class);
         result=result.replaceAll ("null","\"\"");
         System.out.println ("00000000000000");
         System.out.println (result);

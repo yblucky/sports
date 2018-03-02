@@ -30,7 +30,9 @@ public class AppRacingBettingPo {
     private Integer multiple;
     private Date createTime;
     private String businessNumber;
+    private String bettingContent;
     private Integer serialNumber;
+
     /**
      * 投注类型
      */
@@ -194,5 +196,13 @@ public class AppRacingBettingPo {
 
     public void setSerialNumber(Integer serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public String getBettingContent() {
+        return bettingContent;
+    }
+
+    public void setBettingContent(String bettingContent) {
+        this.bettingContent = bettingContent;
     }
 }

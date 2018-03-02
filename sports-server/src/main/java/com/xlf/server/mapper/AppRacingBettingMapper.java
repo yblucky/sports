@@ -42,4 +42,8 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
 
     @Select("SELECT * FROM `app_racing_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
     List<AppRacingBettingPo> findRecordList(@Param("userId") String userId, @Param("businessNumber") String businessNumber, RowBounds rowBounds);
+
+    Integer countBettingByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent);
+
+    List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent, RowBounds rowBounds);
 }

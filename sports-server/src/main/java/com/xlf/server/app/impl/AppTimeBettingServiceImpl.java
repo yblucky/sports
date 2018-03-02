@@ -4,6 +4,7 @@ import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.exception.CommException;
+import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
@@ -164,6 +165,29 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
             return null;
         }
         return appTimeBettingMapper.selectByPrimaryKey (id);
+    }
+
+    @Override
+    public Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent) throws Exception {
+        Integer count = 0;
+        count = appTimeBettingMapper.countBettingByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent);
+        if (count == null) {
+            count = 0;
+        }
+        return count;
+    }
+
+    @Override
+    public List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent, Paging paging) throws Exception {
+        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId) || StringUtils.isEmpty (bettingContent)) {
+            return Collections.emptyList ();
+        }
+        List<AppTimeBettingPo> list = appTimeBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent, rowBounds);
+        if (list == null) {
+            list = Collections.emptyList ();
+        }
+        return list;
     }
 
     @Override

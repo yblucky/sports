@@ -48,7 +48,7 @@
 
     <!--修改为已完成本注全部结算-->
     <update id="updateFlagById">
-        update <include refid="table_name"/> set flag = 20   where id=#{id}
+        update <include refid="table_name"/> set flag = 20, lotteryTime=now()   where id=#{id}
     </update>
     
     
