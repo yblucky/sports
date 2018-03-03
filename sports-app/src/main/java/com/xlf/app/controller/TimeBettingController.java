@@ -431,6 +431,115 @@ public class TimeBettingController {
     }
 
 
+    /**
+     * 二字定投注
+     *
+     * @param request
+     * @param vo
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/twoTimeBetting")
+    @SystemControllerLog(description = "一字定投注")
+    public RespBody twoTimeBetting(HttpServletRequest request, @RequestBody TimeBettingVo vo, Paging paging) throws Exception {
+        RespBody respBody = new RespBody ();
+        try {
+            //验签
+            /*Boolean flag = commonService.checkSign (vo);
+            if (!flag) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
+                return respBody;
+            }*/
+            if (vo.getSerialNumber () == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
+                return respBody;
+            }
+            if (BetTypeEnum.TIME_TWO.getCode ()!=vo.getBetType ()){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "非二字定投注");
+                return respBody;
+            }
+            AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (), 10);
+            Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
+            if (System.currentTimeMillis () > (longDate - 30 * 1000)) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
+                return respBody;
+            }
+            if (CollectionUtils.isEmpty (vo.getTimeList ())) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "下注号码为空");
+                return respBody;
+            }
+            AppUserPo userPo = commonService.checkToken ();
+            SysUserVo sysUserVo = sysUserService.findById (userPo.getParentId ());
+            SysAgentSettingPo agentSettingPo = appSysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
+            if (agentSettingPo == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
+                return respBody;
+            }
+
+            if (userPo.getCurrentProfit ().compareTo (agentSettingPo.getMaxProfitPerDay ()) > 0) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "已达到当日最大盈利额度，今日不可再下注");
+                return respBody;
+            }
+            List<BettingBaseVo> allList = new ArrayList<> ();
+            Integer totalBettingNo = 0;
+            Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), null);
+            for (TimeBettingBaseVo baseVo : vo.getTimeList ()) {
+                if (baseVo.getBettingContent ().replaceAll ("\\d","").length ()!=3){
+                    respBody.add (RespCodeEnum.ERROR.getCode (), "非二字定投注");
+                    return respBody;
+                }
+                if (hasBettingCount > 0) {
+                    Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent ());
+                    if (count > 0) {
+                        paging.setPageSize (30);
+                        paging.setPageNumber (1);
+                        List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent (), paging);
+                        Integer total = 0;
+                        for (AppTimeBettingPo po : timeBettingPos) {
+                            total += baseVo.getMultiple ();
+                            total += po.getMultiple ();
+//                            if (total < agentSettingPo.getMinBetNoPerDigital () || total > agentSettingPo.getMaxBetNoPerDigital ()) {
+//                                respBody.add (RespCodeEnum.ERROR.getCode (), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
+//                                return respBody;
+//                            }
+                            BettingBaseVo bettingBaseVo = new BettingBaseVo ();
+                            bettingBaseVo.setMultiple (po.getMultiple ());
+                            bettingBaseVo.setBettingContent (po.getBettingContent ());
+                            allList.add (bettingBaseVo);
+                        }
+                    }
+                }
+                BettingBaseVo bettingBaseVo = new BettingBaseVo ();
+                bettingBaseVo.setMultiple (baseVo.getMultiple ());
+                bettingBaseVo.setBettingContent (baseVo.getBettingContent ());
+                allList.add (bettingBaseVo);
+                totalBettingNo += baseVo.getMultiple ();
+            }
+            Map<Integer, Set<String>> map = new HashMap<> ();
+
+
+            if (map.size () > agentSettingPo.getMaxBetSeats ()) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "每期最多下注位数为" + agentSettingPo.getMaxBetSeats ());
+                return respBody;
+            }
+            //最大可能中奖金额
+            if (userPo.getBalance ().compareTo (new BigDecimal (totalBettingNo.toString ())) == -1) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "用户余额不足，无法完成下注");
+                return respBody;
+            }
+            BigDecimal maximumAward = new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ());
+            appTimeBettingService.timeBettingService (userPo.getId (), vo, new BigDecimal (totalBettingNo));
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "投注成功,等待开奖");
+        } catch (CommException ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), "投注失败");
+            LogUtils.error ("投注失败！", ex);
+        }
+        return respBody;
+    }
+
+
     @PostMapping("/undobetting")
     @SystemControllerLog(description = "时时彩撤单")
     public RespBody undoBetting(HttpServletRequest request, @RequestBody UndoBettingVo vo) throws Exception {

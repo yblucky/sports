@@ -290,7 +290,7 @@ public class ToolUtils {
     }
 
     public static void main(String[] args) {
-        String a ="X2XXX".replaceAll ("\\d","");
+        String a ="X2X2X".replaceAll ("\\d","");
             System.out.println (a);
         System.out.println (regex ("X2XXX","X\\dXXX"));
     }
