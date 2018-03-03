@@ -1,5 +1,7 @@
 package com.xlf.common.contrants;
 
+import java.util.logging.XMLFormatter;
+
 /**
  * Created by Administrator on 2018/3/2 0002.
  */
@@ -9,4 +11,5 @@ public class Constrants {
     public  static  final String REG_TIME_THREE="XX\\dXX";
     public  static  final String REG_TIME_FOURE="XXX\\dX";
     public  static  final String REG_TIME_FIVE="XXXX\\d";
+
 }
