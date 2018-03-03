@@ -2,6 +2,7 @@ package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
 import com.xlf.common.contrants.Constrants;
+import com.xlf.common.enums.BetTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.LotteryTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
@@ -288,6 +289,10 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
+            if (BetTypeEnum.TIME_ONE.getCode ()!=vo.getBetType ()){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "非一字定投注");
+                return respBody;
+            }
             AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (), 10);
             Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
             if (System.currentTimeMillis () > (longDate - 30 * 1000)) {
@@ -316,6 +321,10 @@ public class TimeBettingController {
             for (TimeBettingBaseVo baseVo : vo.getTimeList ()) {
                 if (baseVo.getMultiple () < agentSettingPo.getMinBetNoPerDigital () || baseVo.getMultiple () > agentSettingPo.getMaxBetNoPerDigital ()) {
                     respBody.add (RespCodeEnum.ERROR.getCode (), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
+                    return respBody;
+                }
+                if (baseVo.getBettingContent ().replaceAll ("\\d","").length ()!=4){
+                    respBody.add (RespCodeEnum.ERROR.getCode (), "非一字定投注");
                     return respBody;
                 }
                 if (hasBettingCount > 0) {

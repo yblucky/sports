@@ -6,10 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimeBettingVo {
+    private Integer betType;
     private String issueNo;
     private Integer serialNumber;
     private String payPwd;
     private List<TimeBettingBaseVo> timeList=new ArrayList<>();
+
+    public Integer getBetType() {
+        return betType;
+    }
+
+    public void setBetType(Integer betType) {
+        this.betType = betType;
+    }
 
     public String getIssueNo() {
         return issueNo;
