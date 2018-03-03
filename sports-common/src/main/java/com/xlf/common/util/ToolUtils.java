@@ -7,9 +7,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -280,13 +278,34 @@ public class ToolUtils {
     }
 
     /**
-     * 验证手机号是否正确
+     * 验证是否符合特定规则
      * @return true|false
      */
     public static boolean regex(String str,String pattern) {
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(str);
         return m.matches();
+    }
+
+    public static Set<String> twoLotterySet(String lottery){
+        String temp=lottery;
+        Set<String> set=new HashSet<> ();
+        for (int i=0;i<lottery.length ()-1;i++){
+            for (int j=1+i;j<lottery.length ();j++){
+                for (int m=0;m<lottery.length ()-1;m++){
+                    if (m!=i && m!=j){
+                        temp=temp.replace(temp.charAt (i),'X');
+                        temp=temp.replace(temp.charAt (j),'X');
+                        set.add (temp);
+                        temp=lottery;
+                    }
+                }
+            }
+        }
+        for (String  s:set){
+            System.out.println (s);
+        }
+        return set;
     }
 
     public static void main(String[] args) {

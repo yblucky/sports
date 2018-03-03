@@ -578,6 +578,32 @@ public class TimeBettingController {
     }
 
     public static void main(String[] args) {
+        String a="12345";
+        String temp=a;
+        Set<String> set=new HashSet<> ();
+        for (int i=0;i<a.length ()-1;i++){
+            for (int j=1+i;j<a.length ();j++){
+                for (int m=0;m<a.length ()-1;m++){
+                    if (m!=i && m!=j){
+                        temp=temp.replace(temp.charAt (i),'X');
+                        temp=temp.replace(temp.charAt (j),'X');
+                        set.add (temp);
+                        temp=a;
+                    }
+                }
+            }
+        }
+        for (String  s:set){
+            System.out.println (s);
+        }
+//        23456
+//        23XXX 2X4XX 2XX5X 2XXX6
+//        X34XX X3X5X 3XXX6
+//                XX45X  XX4X6
+//                        XXX56
+//
+
+
         System.out.println (DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
     }
 }
