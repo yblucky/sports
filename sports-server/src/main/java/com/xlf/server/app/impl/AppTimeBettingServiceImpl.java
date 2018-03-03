@@ -1,5 +1,6 @@
 package com.xlf.server.app.impl;
 
+import com.xlf.common.enums.BetTypeEnum;
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.TimeSeatEnum;
@@ -42,7 +43,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
 
 
     @Override
-    public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer multiple) throws Exception {
+    public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer multiple,Integer betType,String timeBetContent) throws Exception {
         AppTimeBettingPo model = new AppTimeBettingPo ();
         model.setId (ToolUtils.getUUID ());
         model.setIssueNo(issueNo);
@@ -56,6 +57,8 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         model.setLotteryFlag (LotteryFlagEnum.NO.getCode ());
         model.setCreateTime (new Date ());
         model.setWinningAmount (BigDecimal.ZERO);
+        model.setBetType (betType);
+        model.setBettingContent (timeBetContent);
         model.setMultiple (multiple);
         appTimeBettingMapper.insert (model);
     }
@@ -72,7 +75,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appUserService.updateBettingAmoutById (userId, totalPrice);
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_BETTING.getCode (), totalPrice.multiply (new BigDecimal ("-1")), before, after, "用户" + userPo.getMobile () + "时时彩下注", "");
         for (TimeBettingBaseVo base : vo.getTimeList ()) {
-            this.save (businessNumber, vo.getIssueNo (), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getMultiple ());
+            this.save (businessNumber, vo.getIssueNo (), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getMultiple (),vo.getBetType (),base.getBettingContent ());
         }
     }
 
