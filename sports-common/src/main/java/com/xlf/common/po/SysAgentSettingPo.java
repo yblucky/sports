@@ -91,6 +91,26 @@ public class SysAgentSettingPo implements Serializable {
      * */
     private BigDecimal  odds;
 
+    /**
+     * '时时彩二星玩法赔率'
+     * */
+    private BigDecimal  timeDoubleOdds;
+
+    /**
+     * '时时彩二星玩法最多组合位数'
+     * */
+    private Integer  timeDoubleMaxBetSeats;
+
+    /**
+     * '时时彩二星单种位数组合100种情形中最大选30种'
+     * */
+    private Integer  timeDoubleMaxBetKindPerTwoSeats;
+
+    /**
+     * '时时彩二星单注最大下注注数'
+     * */
+    private Integer  timeDoubleMaxBetNoPerKind;
+
     public String getId() {
         return id;
     }
@@ -201,5 +221,38 @@ public class SysAgentSettingPo implements Serializable {
 
     public void setOdds(BigDecimal odds) {
         this.odds = odds;
+    }
+
+    public BigDecimal getTimeDoubleOdds() {
+        return timeDoubleOdds;
+    }
+
+    public void setTimeDoubleOdds(BigDecimal timeDoubleOdds) {
+        this.timeDoubleOdds = timeDoubleOdds;
+    }
+
+
+    public Integer getTimeDoubleMaxBetSeats() {
+        return timeDoubleMaxBetSeats;
+    }
+
+    public void setTimeDoubleMaxBetSeats(Integer timeDoubleMaxBetSeats) {
+        this.timeDoubleMaxBetSeats = timeDoubleMaxBetSeats;
+    }
+
+    public Integer getTimeDoubleMaxBetKindPerTwoSeats() {
+        return timeDoubleMaxBetKindPerTwoSeats;
+    }
+
+    public void setTimeDoubleMaxBetKindPerTwoSeats(Integer timeDoubleMaxBetKindPerTwoSeats) {
+        this.timeDoubleMaxBetKindPerTwoSeats = timeDoubleMaxBetKindPerTwoSeats;
+    }
+
+    public Integer getTimeDoubleMaxBetNoPerKind() {
+        return timeDoubleMaxBetNoPerKind;
+    }
+
+    public void setTimeDoubleMaxBetNoPerKind(Integer timeDoubleMaxBetNoPerKind) {
+        this.timeDoubleMaxBetNoPerKind = timeDoubleMaxBetNoPerKind;
     }
 }

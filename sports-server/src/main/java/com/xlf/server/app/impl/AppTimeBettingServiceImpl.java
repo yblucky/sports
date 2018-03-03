@@ -171,9 +171,9 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
     @Override
-    public Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent) throws Exception {
+    public Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye) throws Exception {
         Integer count = 0;
-        count = appTimeBettingMapper.countBettingByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent);
+        count = appTimeBettingMapper.countBettingByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent,betTpye);
         if (count == null) {
             count = 0;
         }
@@ -181,12 +181,12 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
     @Override
-    public List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent, Paging paging) throws Exception {
+    public List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye, Paging paging) throws Exception {
         RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
         if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId) || StringUtils.isEmpty (bettingContent)) {
             return Collections.emptyList ();
         }
-        List<AppTimeBettingPo> list = appTimeBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent, rowBounds);
+        List<AppTimeBettingPo> list = appTimeBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent,betTpye, rowBounds);
         if (list == null) {
             list = Collections.emptyList ();
         }

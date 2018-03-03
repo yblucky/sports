@@ -4,7 +4,7 @@
 
 
     <sql id="fields">
-        agentName,deposit,maxProfitPerDay,minBetNoPerDigital,maxBetNoPerDigital,returnWaterScale,maxWithdrawPerDay,maxBetSeats,maxBetDigitalNoPerSeat,createTime,updateTime,state
+        agentName,deposit,maxProfitPerDay,minBetNoPerDigital,maxBetNoPerDigital,returnWaterScale,maxWithdrawPerDay,maxBetSeats,maxBetDigitalNoPerSeat,createTime,updateTime,state,odds,timeDoubleOdds,timeDoubleMaxBetSeats,timeDoubleMaxBetKindPerTwoSeats,timeDoubleMaxBetNoPerKind
     </sql>
 
     <sql id="fields_id">

@@ -1,5 +1,6 @@
 package com.xlf.server.app.impl;
 
+import com.xlf.common.enums.BetTypeEnum;
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.TimeSeatEnum;

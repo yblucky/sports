@@ -317,7 +317,7 @@ public class TimeBettingController {
             }
             List<BettingBaseVo> allList = new ArrayList<> ();
             Integer totalBettingNo = 0;
-            Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), null);
+            Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), null,BetTypeEnum.TIME_ONE.getCode ());
             for (TimeBettingBaseVo baseVo : vo.getTimeList ()) {
                 if (baseVo.getMultiple () < agentSettingPo.getMinBetNoPerDigital () || baseVo.getMultiple () > agentSettingPo.getMaxBetNoPerDigital ()) {
                     respBody.add (RespCodeEnum.ERROR.getCode (), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
@@ -328,11 +328,11 @@ public class TimeBettingController {
                     return respBody;
                 }
                 if (hasBettingCount > 0) {
-                    Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent ());
+                    Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent (),BetTypeEnum.TIME_ONE.getCode ());
                     if (count > 0) {
                         paging.setPageSize (30);
                         paging.setPageNumber (1);
-                        List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent (), paging);
+                        List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent (),BetTypeEnum.TIME_ONE.getCode (), paging);
                         Integer total = 0;
                         for (AppTimeBettingPo po : timeBettingPos) {
                             total += baseVo.getMultiple ();
@@ -440,7 +440,7 @@ public class TimeBettingController {
      * @throws Exception
      */
     @PostMapping("/twoTimeBetting")
-    @SystemControllerLog(description = "一字定投注")
+    @SystemControllerLog(description = "二字定投注")
     public RespBody twoTimeBetting(HttpServletRequest request, @RequestBody TimeBettingVo vo, Paging paging) throws Exception {
         RespBody respBody = new RespBody ();
         try {
@@ -482,26 +482,30 @@ public class TimeBettingController {
             }
             List<BettingBaseVo> allList = new ArrayList<> ();
             Integer totalBettingNo = 0;
-            Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), null);
+            Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), null,BetTypeEnum.TIME_TWO.getCode ());
             for (TimeBettingBaseVo baseVo : vo.getTimeList ()) {
                 if (baseVo.getBettingContent ().replaceAll ("\\d","").length ()!=3){
                     respBody.add (RespCodeEnum.ERROR.getCode (), "非二字定投注");
                     return respBody;
                 }
+                if (baseVo.getMultiple () < 1 || baseVo.getMultiple () > agentSettingPo.getTimeDoubleMaxBetNoPerKind ()) {
+                    respBody.add (RespCodeEnum.ERROR.getCode (), "单个数字最小投注范围为【"+"1," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
+                    return respBody;
+                }
                 if (hasBettingCount > 0) {
-                    Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent ());
+                    Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent (),BetTypeEnum.TIME_TWO.getCode ());
                     if (count > 0) {
                         paging.setPageSize (30);
                         paging.setPageNumber (1);
-                        List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent (), paging);
+                        List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent (userPo.getId (), vo.getIssueNo (), baseVo.getBettingContent (),BetTypeEnum.TIME_TWO.getCode (), paging);
                         Integer total = 0;
                         for (AppTimeBettingPo po : timeBettingPos) {
                             total += baseVo.getMultiple ();
                             total += po.getMultiple ();
-//                            if (total < agentSettingPo.getMinBetNoPerDigital () || total > agentSettingPo.getMaxBetNoPerDigital ()) {
-//                                respBody.add (RespCodeEnum.ERROR.getCode (), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
-//                                return respBody;
-//                            }
+                            if (total < agentSettingPo.getMinBetNoPerDigital () || total > agentSettingPo.getMaxBetNoPerDigital ()) {
+                                respBody.add (RespCodeEnum.ERROR.getCode (), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital () + "," + agentSettingPo.getMaxBetNoPerDigital () + "】注");
+                                return respBody;
+                            }
                             BettingBaseVo bettingBaseVo = new BettingBaseVo ();
                             bettingBaseVo.setMultiple (po.getMultiple ());
                             bettingBaseVo.setBettingContent (po.getBettingContent ());

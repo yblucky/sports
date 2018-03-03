@@ -39,7 +39,7 @@ public interface AppTimeBettingService {
 
     Boolean undoTimeBettingService(String userId, String bettingId) throws Exception;
 
-    Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent)throws Exception;
+    Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye)throws Exception;
 
-    List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,  Paging paging)throws Exception;
+    List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye,  Paging paging)throws Exception;
 }

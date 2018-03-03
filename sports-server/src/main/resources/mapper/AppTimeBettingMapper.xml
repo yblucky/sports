@@ -73,6 +73,7 @@
         <where>
             userId=#{userId} AND issueNo=#{issueNo}
             <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
+            <if test="betType!=null">AND betType=#{betType}</if>
         </where>
     </select>
 
@@ -83,6 +84,7 @@
         <where>
             userId=#{userId} AND issueNo=#{issueNo}
             <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
+            <if test="betType!=null">AND betType=#{betType}</if>
         </where>
     </select>
 </mapper>
