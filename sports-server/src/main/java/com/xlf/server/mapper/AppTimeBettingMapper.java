@@ -29,6 +29,11 @@ public interface AppTimeBettingMapper extends BaseMapper<AppTimeBettingPo> {
 
     List<AppTimeBettingPo> listWininggByIssuNo(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag, @Param("digital") Integer digital, @Param("seat") Integer seat, RowBounds rowBounds);
 
+
+    Integer wininggCountAndWingConent(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag, @Param("list") List<String> winingList);
+
+    List<AppTimeBettingPo> listWininggByIssuNoAndWingConent(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag, @Param("list") List<String> winingList, RowBounds rowBounds);
+
     @Update("update  `app_time_betting` set lotteryFlag=20 and  winningAmount=#{winingAmout} where id=#{id}")
     Integer updateLotteryFlagById(@Param("id") String id, @Param("winingAmout") BigDecimal winingAmout);
 

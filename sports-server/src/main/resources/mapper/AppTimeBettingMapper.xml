@@ -52,14 +52,28 @@
         </where>
     </select>
 
-  <!--  <update id="updateBatchLotteryFlagByIds">
-        UPDATE
+
+    <select id="countBettingByUserIdAndIssueNoAndContent" resultType="java.lang.Integer">
+        select count(id) from
         <include refid="table_name"/>
-        SET lotteryFlag=20,winningAmount=0
-        WHERE
-        id IN
-        <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
-    </update>-->
+        <where>
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}  AND bettingContent IN
+            <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
+        </where>
+    </select>
+
+
+
+    <select id="listWininggByIssuNoAndContent">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+        <where>
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}  AND bettingContent IN
+            <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
+        </where>
+    </select>
 
     <update id="updateBatchLotteryFlag">
         UPDATE

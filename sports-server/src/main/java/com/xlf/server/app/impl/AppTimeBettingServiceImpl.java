@@ -128,6 +128,29 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
     @Override
+    public List<AppTimeBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag, Paging paging, List<String> winingList) {
+        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        if (StringUtils.isEmpty (issuNo)) {
+            return Collections.emptyList ();
+        }
+        List<AppTimeBettingPo> list = appTimeBettingMapper.listWininggByIssuNoAndWingConent (issuNo, lotteryFlag,winingList, rowBounds);
+        if (list == null) {
+            list = Collections.emptyList ();
+        }
+        return list;
+    }
+
+    @Override
+    public Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag, List<String> winingList) {
+        Integer count = 0;
+        count = appTimeBettingMapper.wininggCountAndWingConent (issuNo, lotteryFlag, winingList);
+        if (count == null) {
+            count = 0;
+        }
+        return count;
+    }
+
+    @Override
     public Integer updateLotteryFlagById(String id, BigDecimal winingAmout) {
         return appTimeBettingMapper.updateLotteryFlagById (id, winingAmout);
     }
