@@ -288,12 +288,13 @@ public class ToolUtils {
         return m.matches ();
     }
 
-    public static Set<String> twoLotterySet(String lottery) {
+    public static List<String> twoLotteryList(String lottery) {
         String temp = lottery;
         Set<String> set = new HashSet<> ();
+        List<String> list = Collections.emptyList ();
         for (int i = 0; i < lottery.length () - 1; i++) {
             for (int j = 1 + i; j < lottery.length (); j++) {
-                for (int m = 0; m < lottery.length () ; m++) {
+                for (int m = 0; m < lottery.length (); m++) {
                     if (m != i && m != j) {
                         temp = temp.replace (temp.charAt (m), 'X');
                         temp = temp.replace (temp.charAt (m), 'X');
@@ -304,19 +305,36 @@ public class ToolUtils {
             }
         }
         for (String s : set) {
-            System.out.println (s);
+            list.add (s);
         }
-        return set;
+        return list;
+    }
+
+    public static List<String> oneLotteryList(String lottery) {
+        String temp = lottery;
+        List<String> list = new ArrayList<> ();
+        for (int i = 0; i < lottery.length (); i++) {
+            for (int m = 0; m < lottery.length (); m++) {
+                if (m != i) {
+                    temp = temp.replace (temp.charAt (m), 'X');
+                }
+            }
+            list.add (temp);
+            temp = lottery;
+        }
+        return list;
     }
 
     public static void main(String[] args) {
-        String a = "X2X2X".replaceAll ("\\d", "");
-        System.out.println (a);
-        System.out.println (regex ("X21XX", "X\\d\\dXX"));
-        Set<String> set = twoLotterySet ("12345");
-        System.out.println ("000000000000000");
-        for (String s : set) {
-            System.out.println (s);
+//        String a = "X2X2X".replaceAll ("\\d", "");
+//        System.out.println (a);
+//        System.out.println (regex ("X21XX", "X\\d\\dXX"));
+        List<String> list = oneLotteryList ("12345");
+
+//        List<String> list = Collections.emptyList ();
+        for (String ss:list){
+            System.out.println (ss);
         }
+
     }
 }
