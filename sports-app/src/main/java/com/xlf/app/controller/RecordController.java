@@ -48,12 +48,11 @@ public class RecordController {
     @Resource
     private AppRacingBettingService appRacingBettingService;
 
-
     /**
      * 用户流水记录
      */
     @GetMapping(value = "/list")
-    public RespBody findUserRecord(HttpServletRequest request,String busnessType, Paging paging) {
+    public RespBody findUserRecord(HttpServletRequest request,String busnessType, Paging paging,String start,String end) {
         RespBody respBody = new RespBody ();
         try {
             //根据用户id获取用户信息
