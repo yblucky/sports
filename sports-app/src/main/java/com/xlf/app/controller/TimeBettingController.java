@@ -306,7 +306,7 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
-            if (!userPo.getPayPwd ().equals (CryptUtils.hmacSHA1Encrypt (vo.getPayPwd (),userPo.getPayStal ()))){
+            if (!userPo.getPayPwd ().equals (CryptUtils.hmacSHA1Encrypt (vo.getPayPwd (), userPo.getPayStal ()))) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "支付密码错误");
                 return respBody;
             }
@@ -417,17 +417,18 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "用户余额不足，无法完成下注");
                 return respBody;
             }
-            Object lastBettingTotalNoObj=   redisService.getObj (RedisKeyEnum.TIME_BETTIING_ONE.getKey ()+(Integer.valueOf (vo.getIssueNo ())-1)+userPo.getId ());
-            if (lastBettingTotalNoObj!=null){
-                Integer lastBettingTotalNo=(Integer)lastBettingTotalNoObj;
-                totalBettingNo+=lastBettingTotalNo;
+            Object lastBettingTotalNoObj = redisService.getObj (RedisKeyEnum.TIME_BETTIING_ONE.getKey () + (Integer.valueOf (vo.getIssueNo ()) - 1) + userPo.getId ());
+            if (lastBettingTotalNoObj != null) {
+                Integer lastBettingTotalNo = (Integer) lastBettingTotalNoObj;
+                totalBettingNo += lastBettingTotalNo;
             }
-            BigDecimal currentProfitSum=userPo.getCurrentProfit ().add (new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ()));
-            if (currentProfitSum.compareTo (agentSettingPo.getMaxProfitPerDay ())==1){
+            BigDecimal winRate = new BigDecimal (commonService.findParameter ("winRate"));
+            BigDecimal currentProfitSum = userPo.getCurrentProfit ().add (new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ()));
+            if (currentProfitSum.multiply (winRate).compareTo (agentSettingPo.getMaxProfitPerDay ()) == 1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "盈利额度超限,无法完成下注");
                 return respBody;
             }
-            redisService.putObj (RedisKeyEnum.TIME_BETTIING_ONE.getKey ()+vo.getIssueNo ()+userPo.getId (),totalBettingNo,RedisKeyEnum.TIME_BETTIING_ONE.getSeconds ());
+            redisService.putObj (RedisKeyEnum.TIME_BETTIING_ONE.getKey () + vo.getIssueNo () + userPo.getId (), totalBettingNo, RedisKeyEnum.TIME_BETTIING_ONE.getSeconds ());
             BigDecimal maximumAward = new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ());
             appTimeBettingService.timeBettingService (userPo.getId (), vo, new BigDecimal (totalBettingNo));
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "投注成功,等待开奖");
@@ -485,7 +486,7 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
-            if (!userPo.getPayPwd ().equals (CryptUtils.hmacSHA1Encrypt (vo.getPayPwd (),userPo.getPayStal ()))){
+            if (!userPo.getPayPwd ().equals (CryptUtils.hmacSHA1Encrypt (vo.getPayPwd (), userPo.getPayStal ()))) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "支付密码错误");
                 return respBody;
             }
@@ -559,17 +560,18 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "用户余额不足,无法完成下注");
                 return respBody;
             }
-            Object lastBettingTotalNoObj=   redisService.getObj (RedisKeyEnum.TIME_BETTIING_TWO.getKey ()+(Integer.valueOf (vo.getIssueNo ())-1)+userPo.getId ());
-            if (lastBettingTotalNoObj!=null){
-                Integer lastBettingTotalNo=(Integer)lastBettingTotalNoObj;
-                totalBettingNo+=lastBettingTotalNo;
+            Object lastBettingTotalNoObj = redisService.getObj (RedisKeyEnum.TIME_BETTIING_TWO.getKey () + (Integer.valueOf (vo.getIssueNo ()) - 1) + userPo.getId ());
+            if (lastBettingTotalNoObj != null) {
+                Integer lastBettingTotalNo = (Integer) lastBettingTotalNoObj;
+                totalBettingNo += lastBettingTotalNo;
             }
-            BigDecimal currentProfitSum=userPo.getCurrentProfit ().add (new BigDecimal (totalBettingNo).multiply (agentSettingPo.getTimeDoubleOdds ()));
-            if (currentProfitSum.compareTo (agentSettingPo.getMaxProfitPerDay ())==1){
+            BigDecimal winRate = new BigDecimal (commonService.findParameter ("winRate"));
+            BigDecimal currentProfitSum = userPo.getCurrentProfit ().add (new BigDecimal (totalBettingNo).multiply (agentSettingPo.getTimeDoubleOdds ()));
+            if (currentProfitSum.multiply (winRate).compareTo (agentSettingPo.getMaxProfitPerDay ()) == 1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "盈利额度超限,无法完成下注");
                 return respBody;
             }
-            redisService.putObj (RedisKeyEnum.TIME_BETTIING_TWO.getKey ()+vo.getIssueNo ()+userPo.getId (),totalBettingNo,RedisKeyEnum.TIME_BETTIING_TWO.getSeconds ());
+            redisService.putObj (RedisKeyEnum.TIME_BETTIING_TWO.getKey () + vo.getIssueNo () + userPo.getId (), totalBettingNo, RedisKeyEnum.TIME_BETTIING_TWO.getSeconds ());
             BigDecimal maximumAward = new BigDecimal (totalBettingNo).multiply (agentSettingPo.getOdds ());
             appTimeBettingService.timeBettingService (userPo.getId (), vo, new BigDecimal (totalBettingNo));
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "投注成功,等待开奖");
