@@ -43,7 +43,7 @@ public interface AppTimeBettingService {
 
     List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye,  Paging paging)throws Exception;
 
-    public List<AppTimeBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag, Paging paging, List<String> winingList);
+    public List<AppTimeBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag,Integer betType, Paging paging, List<String> winingList);
 
-    Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag,List<String> winingList);
+    Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag,Integer betType,List<String> winingList);
 }

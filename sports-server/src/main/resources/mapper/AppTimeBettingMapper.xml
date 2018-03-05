@@ -53,24 +53,24 @@
     </select>
 
 
-    <select id="countBettingByUserIdAndIssueNoAndContent" resultType="java.lang.Integer">
+    <select id="countBettingByUserIdAndIssueNoAndWingContent" resultType="java.lang.Integer">
         select count(id) from
         <include refid="table_name"/>
         <where>
-            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}  AND bettingContent IN
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag} AND betType=#{betType} AND bettingContent IN
             <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
         </where>
     </select>
 
 
 
-    <select id="listWininggByIssuNoAndContent">
+    <select id="listWininggByIssuNoAndWingContent">
         select
         <include refid="fields_id"/>
         from
         <include refid="table_name"/>
         <where>
-            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag}  AND bettingContent IN
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag} AND betType=#{betType}   AND bettingContent IN
             <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
         </where>
     </select>

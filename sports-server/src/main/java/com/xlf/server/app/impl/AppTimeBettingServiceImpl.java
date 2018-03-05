@@ -128,12 +128,12 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
     @Override
-    public List<AppTimeBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag, Paging paging, List<String> winingList) {
+    public List<AppTimeBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag,Integer betType, Paging paging, List<String> winingList) {
         RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
         if (StringUtils.isEmpty (issuNo)) {
             return Collections.emptyList ();
         }
-        List<AppTimeBettingPo> list = appTimeBettingMapper.listWininggByIssuNoAndWingConent (issuNo, lotteryFlag,winingList, rowBounds);
+        List<AppTimeBettingPo> list = appTimeBettingMapper.listWininggByIssuNoAndWingConent (issuNo, lotteryFlag,betType,winingList, rowBounds);
         if (list == null) {
             list = Collections.emptyList ();
         }
@@ -141,9 +141,9 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
     @Override
-    public Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag, List<String> winingList) {
+    public Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag,Integer betType, List<String> winingList) {
         Integer count = 0;
-        count = appTimeBettingMapper.wininggCountAndWingConent (issuNo, lotteryFlag, winingList);
+        count = appTimeBettingMapper.wininggCountAndWingConent (issuNo, lotteryFlag,betType, winingList);
         if (count == null) {
             count = 0;
         }
