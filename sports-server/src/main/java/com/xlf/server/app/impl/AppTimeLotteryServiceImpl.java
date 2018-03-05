@@ -95,42 +95,22 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     }
 
     @Override
-    public Boolean batchTimeLotteryHandleWayTwoOneService(AppTimeLotteryPo lotteryPo, Boolean flag) throws Exception {
+    public Boolean batchTimeLotteryHandleWayTwoService(AppTimeLotteryPo lotteryPo, Boolean flag, Integer betType) throws Exception {
         String lotteryStr = lotteryPo.getLotteryOne () + lotteryPo.getLotteryTwo () + lotteryPo.getLotteryThree () + lotteryPo.getLotteryFour () + lotteryPo.getLotteryFive () + "";
         List<AppTimeBettingPo> list;
-        List<String> oneList = ToolUtils.oneLotteryList (lotteryStr);
-        Integer winingCount = appTimeBettingService.wininggCountAndWingConent (lotteryPo.getIssueNo (), LotteryFlagEnum.NO.getCode (), BetTypeEnum.TIME_ONE.getCode (), oneList);
-        if (winingCount > 10) {
-            flag = true;
-        }
-        if (winingCount > 0) {
-            list = appTimeBettingService.listWininggByIssuNoAndWingConent (lotteryPo.getIssueNo (), LotteryFlagEnum.NO.getCode (), BetTypeEnum.TIME_ONE.getCode (), new Paging (0, 10), oneList);
-            if (list.size () > 0) {
-                for (AppTimeBettingPo bettingPo : list) {
-                    timeLotteryHandleService (bettingPo);
-                }
-            }
+        List<String> lotterList;
+        if (BetTypeEnum.TIME_ONE.getCode () == betType) {
+            lotterList = ToolUtils.oneLotteryList (lotteryStr);
         } else {
-            flag = false;
+            lotterList = ToolUtils.twoLotteryList (lotteryStr);
         }
-        log.info ("时时彩第" + lotteryPo.getIssueNo () + "期开奖:" + "一字定没有待结算的投注订单");
-        if (flag) {
-            this.batchTimeLotteryHandleService (lotteryPo, flag);
-        }
-        return flag;
-    }
 
-    @Override
-    public Boolean batchTimeLotteryHandleWayTwoTwoService(AppTimeLotteryPo lotteryPo, Boolean flag) throws Exception {
-        String lotteryStr = lotteryPo.getLotteryOne () + lotteryPo.getLotteryTwo () + lotteryPo.getLotteryThree () + lotteryPo.getLotteryFour () + lotteryPo.getLotteryFive () + "";
-        List<AppTimeBettingPo> list;
-        List<String> oneList = ToolUtils.oneLotteryList (lotteryStr);
-        Integer winingCount = appTimeBettingService.wininggCountAndWingConent (lotteryPo.getIssueNo (), LotteryFlagEnum.NO.getCode (), BetTypeEnum.TIME_TWO.getCode (), oneList);
+        Integer winingCount = appTimeBettingService.wininggCountAndWingConent (lotteryPo.getIssueNo (), LotteryFlagEnum.NO.getCode (), betType, lotterList);
         if (winingCount > 10) {
             flag = true;
         }
         if (winingCount > 0) {
-            list = appTimeBettingService.listWininggByIssuNoAndWingConent (lotteryPo.getIssueNo (), LotteryFlagEnum.NO.getCode (), BetTypeEnum.TIME_TWO.getCode (), new Paging (0, 10), oneList);
+            list = appTimeBettingService.listWininggByIssuNoAndWingConent (lotteryPo.getIssueNo (), LotteryFlagEnum.NO.getCode (), betType, new Paging (0, 10), lotterList);
             if (list.size () > 0) {
                 for (AppTimeBettingPo bettingPo : list) {
                     timeLotteryHandleService (bettingPo);
@@ -139,7 +119,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         } else {
             flag = false;
         }
-        log.info ("时时彩第" + lotteryPo.getIssueNo () + "期开奖:" + "二字定没有待结算的投注订单");
+        log.info ("时时彩第" + lotteryPo.getIssueNo () + "期开奖");
         if (flag) {
             this.batchTimeLotteryHandleService (lotteryPo, flag);
         }
@@ -155,9 +135,9 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         SysUserVo sysUserVo = sysUserService.findById (userPo.getId ());
 
         SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
-        BigDecimal odds=sysAgentSettingPo.getOdds ();
-        if (BetTypeEnum.TIME_TWO.getCode ()==bettingPo.getBetType ()){
-            odds=sysAgentSettingPo.getTimeDoubleOdds ();
+        BigDecimal odds = sysAgentSettingPo.getOdds ();
+        if (BetTypeEnum.TIME_TWO.getCode () == bettingPo.getBetType ()) {
+            odds = sysAgentSettingPo.getTimeDoubleOdds ();
         }
         //投注数量
         BigDecimal mutiple = new BigDecimal (bettingPo.getMultiple ());
