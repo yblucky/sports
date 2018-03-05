@@ -50,9 +50,9 @@ public class ReportController {
     private AppRacingBettingService appRacingBettingService;
 
     /**
-     * 用户流水记录
+     * 盈亏报表
      */
-    @GetMapping(value = "/time")
+    @GetMapping(value = "/consume")
     public RespBody findUserRecord(String startTime,String endTime) {
         RespBody respBody = new RespBody ();
         try {
