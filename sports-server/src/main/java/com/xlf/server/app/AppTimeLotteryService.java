@@ -19,7 +19,9 @@ public interface AppTimeLotteryService {
 
     public Boolean batchTimeLotteryHandleService(AppTimeLotteryPo lotteryPo, Boolean flag) throws Exception;
 
-    public Boolean batchTimeLotteryHandleWayTwoService(AppTimeLotteryPo lotteryPo, Boolean flag) throws Exception;
+    public Boolean batchTimeLotteryHandleWayTwoOneService(AppTimeLotteryPo lotteryPo, Boolean flag) throws Exception;
+
+    public Boolean batchTimeLotteryHandleWayTwoTwoService(AppTimeLotteryPo lotteryPo, Boolean flag) throws Exception;
 
     public List<AppTimeLotteryPo> lotteryListCurrentDay();
 
