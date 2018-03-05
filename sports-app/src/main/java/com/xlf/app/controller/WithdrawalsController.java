@@ -52,11 +52,11 @@ public class WithdrawalsController {
         RespBody respBody = new RespBody ();
         try {
             //验签
-            Boolean flag = commonService.checkSign (vo);
+            /*Boolean flag = commonService.checkSign (vo);
             if (!flag) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
-            }
+            }*/
             AppUserPo userPo = commonService.checkToken ();
             BigDecimal withdrawMinAmount = new BigDecimal (commonService.findParameter ("withdrawMinAmount"));
             BigDecimal withdrawMaxAmount = new BigDecimal (commonService.findParameter ("withdrawMaxAmount"));

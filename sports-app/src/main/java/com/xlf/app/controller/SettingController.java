@@ -64,11 +64,11 @@ public class SettingController {
         try {
 
             //验签
-            Boolean flag = commonService.checkSign(vo);
+            /*Boolean flag = commonService.checkSign(vo);
             if (!flag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), languageUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
-            }
+            }*/
 
             AppUserPo user = commonService.checkToken();
             //验证
@@ -121,11 +121,11 @@ public class SettingController {
         RespBody respBody = new RespBody();
         try {
             //验签
-            Boolean flag = commonService.checkSign(vo);
+            /*Boolean flag = commonService.checkSign(vo);
             if (!flag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), languageUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
-            }
+            }*/
 
             AppUserPo user = commonService.checkToken();
             //验证
@@ -377,12 +377,12 @@ public class SettingController {
         try {
             //验签
 
-            Boolean flag = commonService.checkSign(cardVo);
+            /*Boolean flag = commonService.checkSign(cardVo);
             if (!flag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), languageUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
             }
-
+*/
 
             AppUserPo user = commonService.checkToken();
             if (StringUtils.isEmpty(cardVo.getBankCard())) {
@@ -550,11 +550,11 @@ public class SettingController {
             Map<String, String> signMap = new HashMap<>();
             signMap.put("id", vo.getId());
             //验签
-            Boolean flag = commonService.checkSign(vo);
+            /*Boolean flag = commonService.checkSign(vo);
             if (!flag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), languageUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
-            }
+            }*/
 
             AppUserPo user = commonService.checkToken();
 

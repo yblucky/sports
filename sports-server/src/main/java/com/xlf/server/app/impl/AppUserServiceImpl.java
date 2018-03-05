@@ -6,6 +6,7 @@ import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppUserPo;
+import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.ConfUtils;
 import com.xlf.common.util.CryptUtils;
@@ -163,6 +164,20 @@ public class AppUserServiceImpl implements AppUserService {
             appUserMapper.updateById (model, appUserPo.getId ());
             return token;
         }
+    }
+
+    @Override
+    public Boolean LoginOut(String userId) throws Exception {
+
+        String token_key = redisService.getString (userId);
+
+        if (null != userId && !StringUtils.isEmpty (token_key)) {
+            //删除保存token的值
+            redisService.del(userId);
+            //删除token_key值
+            redisService.del(token_key);
+        }
+        return true;
     }
 
     @Override
