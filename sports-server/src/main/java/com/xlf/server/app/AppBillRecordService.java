@@ -54,4 +54,6 @@ public interface AppBillRecordService {
 
 
     List<RevenueVo> revenueList(LotteryVo vo, Paging paging);
+
+    Double report( String userId,  List<Integer> busnessTypeList,  String startTime,   String endTime);
 }

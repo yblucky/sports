@@ -75,6 +75,7 @@
 		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
     </select>
 
+
     <select id="findBillRecordList" resultType="com.xlf.common.vo.app.AppBillRecordVo">
         SELECT bill.*,user.mobile,user.imgPath,user.nickName from app_bill_record bill left join app_user user on bill.userId=user.id
         where userId=#{userId}
@@ -127,6 +128,16 @@
 			</where>
 			  GROUP BY a.id
 			) as t2 on a.id=t2.id
+	</select>
+
+	<select id="report" resultType="java.lang.Double">
+		SELECT SUM(balance) from app_bill_record b left join app_user u on b.userId=u.id where userId=#{userId}
+		and busnessType IN
+		<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
+			#{item}
+		</foreach>
+		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
+		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
 	</select>
 </mapper>
 

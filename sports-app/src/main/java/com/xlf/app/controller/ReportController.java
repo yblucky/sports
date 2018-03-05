@@ -1,5 +1,7 @@
 package com.xlf.app.controller;
 
+import com.xlf.common.enums.BankEnum;
+import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
@@ -25,16 +27,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
- * 用户资产相关
+ * 报表
  */
 @RestController
-@RequestMapping("/record")
-public class RecordController {
+@RequestMapping("/report")
+public class ReportController {
     @Resource
     private CommonService commonService;
     @Resource
@@ -51,35 +52,34 @@ public class RecordController {
     /**
      * 用户流水记录
      */
-    @GetMapping(value = "/list")
-    public RespBody findUserRecord(HttpServletRequest request,String busnessType, Paging paging,String start,String end) {
+    @GetMapping(value = "/time")
+    public RespBody findUserRecord(String startTime,String endTime) {
         RespBody respBody = new RespBody ();
         try {
             //根据用户id获取用户信息
             List<AppBillRecordVo> list = null;
             //检验用户是否登录
             AppUserPo appUserPo = commonService.checkToken ();
-            if (StringUtils.isEmpty (busnessType)) {
-                paging.setTotalCount (0);
-                respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数不合法");
+            List<Integer> busnessTypeListCosts = new ArrayList<> ();
+            List<Integer> busnessTypeListIncome = new ArrayList<> ();
+            List<Integer> busnessTypeListUndo = new ArrayList<> ();
+            busnessTypeListCosts.add (BusnessTypeEnum.TIME_BETTING.getCode ());
+            busnessTypeListCosts.add (BusnessTypeEnum.RACING_BETTING.getCode ());
+            busnessTypeListIncome.add (BusnessTypeEnum.RACING_LOTTERY.getCode ());
+            busnessTypeListIncome.add (BusnessTypeEnum.TIME_LOTTERY.getCode ());
+            busnessTypeListUndo.add (BusnessTypeEnum.TIME_UNDO.getCode ());
+            busnessTypeListUndo.add (BusnessTypeEnum.RACING_UNDO.getCode ());
+            if (StringUtils.isEmpty (startTime) || StringUtils.isEmpty (endTime)) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "时间不能为空");
+                return respBody;
             }
-            String[] busnessTypes = busnessType.split(",");
-            if (ArrayUtils.isEmpty (busnessTypes)) {
-                paging.setTotalCount (0);
-                respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数不合法");
-            }
-            List<Integer> busnessTypeList = new ArrayList<> ();
-            for (String b : busnessTypes) {
-                busnessTypeList.add (Integer.valueOf (b));
-            }
-            //获取总记录数量
-            int total = billRecordService.billRecordListTotal (appUserPo.getId (), busnessTypeList);
-            if (total > 0) {
-                list = billRecordService.findBillRecordList (appUserPo.getId (), busnessTypeList, paging);
-            }
-            //返回前端总记录
-            paging.setTotalCount (total);
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户记录成功", paging, list);
+            Double costs = billRecordService.report (appUserPo.getId (), busnessTypeListCosts,startTime,endTime);
+            Double income = billRecordService.report (appUserPo.getId (), busnessTypeListIncome,startTime,endTime);
+            Double undo = billRecordService.report (appUserPo.getId (), busnessTypeListUndo,startTime,endTime);
+            Map<String,BigDecimal> map=new HashMap<> ();
+            map.put ("costs",new BigDecimal ((costs-undo)).setScale (2,BigDecimal.ROUND_HALF_EVEN));
+            map.put ("income",new BigDecimal (income).subtract (new BigDecimal ((costs-undo))).setScale (2,BigDecimal.ROUND_HALF_EVEN));
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户报表成功", map);
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
@@ -88,7 +88,6 @@ public class RecordController {
         }
         return respBody;
     }
-
 
 
 

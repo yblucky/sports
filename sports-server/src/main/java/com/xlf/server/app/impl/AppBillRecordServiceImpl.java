@@ -116,4 +116,9 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
         RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
         return billRecordMapper.revenueList(vo,rowBounds);
     }
+
+    @Override
+    public Double report(String userId, List<Integer> busnessTypeList, String startTime, String endTime) {
+        return billRecordMapper.report (userId,busnessTypeList,startTime,endTime);
+    }
 }
