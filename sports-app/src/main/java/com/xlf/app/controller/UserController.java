@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户相关
@@ -45,7 +46,7 @@ public class UserController {
     public RespBody register(@RequestBody UserVo userVo) {
         RespBody respBody = new RespBody();
         try {
-            AppUserPo appUserPo = commonService.checkToken();
+            //AppUserPo appUserPo = commonService.checkToken();
 
             if (StringUtils.isEmpty(userVo.getMobile())) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.PHONE_NOT_NULL, "手机号不能为空"));
@@ -70,11 +71,11 @@ public class UserController {
             }
 
 
-            Boolean flag = commonService.checkSign(userVo);
+/*            Boolean flag = commonService.checkSign(userVo);
             if (!flag) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.INVALID_SIGN, "无效签名"));
                 return respBody;
-            }
+            }*/
             //判断当前昵称是否有人使用
             AppUserPo po = userService.findUserByNickName(userVo.getNickName());
             if (po != null) {
@@ -100,7 +101,7 @@ public class UserController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "该代理已有下级会员");
                 return respBody;
             }
-            userVo.setParentId(appUserPo.getId());
+            userVo.setParentId(sysUserVo.getId());
 
             //判断用户是否存在
             AppUserPo Po = userService.findUserByMobile(userVo.getMobile());
@@ -224,6 +225,26 @@ public class UserController {
         }
         return respBody;
     }
+
+    /**
+     * 退出登录
+     * @return 响应对象
+     */
+    @PostMapping("/loginOut")
+    @SystemControllerLog(description="退出登录")
+    public RespBody loginOut(HttpServletRequest request) {
+        RespBody respBody = new RespBody();
+        try {
+            AppUserPo appUserPo = commonService.checkToken();
+            userService.LoginOut(appUserPo.getId());
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户登出成功");
+        } catch (Exception e) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "用户登出失败");
+            LogUtils.error("用户登录出败！",e);
+        }
+        return respBody;
+    }
+
 
     public static void main(String[] args) {
         String loginPwd = CryptUtils.hmacSHA1Encrypt("123456", "123456");

@@ -72,6 +72,12 @@ public interface AppUserService {
      */
     public String login(AppUserPo appUserPo) throws Exception;
 
+    /**
+     * 用户登出
+     * @return
+     * @throws Exception
+     */
+    public Boolean LoginOut(String token) throws Exception;
 
     /**
      * 删除用户

@@ -1,5 +1,6 @@
 package com.xlf.app.controller;
 
+import com.xlf.common.enums.OddsEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppUserPo;
@@ -10,6 +11,7 @@ import com.xlf.common.util.LogUtils;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.common.KaptchaService;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -172,6 +174,27 @@ public class CommonController {
                 return respBody;
             }
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取参数成功", commonService.findParameter(paraName));
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "获取参数失败");
+            LogUtils.error("获取参数失败！", ex);
+        }
+        return respBody;
+    }
+
+    /**
+     * 根据参数名获取参数值
+     *
+     * @return 响应对象
+     */
+    @GetMapping("/loadOdds")
+    public RespBody loadTimeLotteryOdds() {
+        // 创建返回对象
+        RespBody respBody = new RespBody();
+        try {
+            Map<String,String> resultMap = new HashMap<>();
+            resultMap.put("timelotteryodds_1",commonService.findParameter(OddsEnum.TIMELOTTERYODDS_1.getEgName()));
+            resultMap.put("timelotteryodds_2",commonService.findParameter(OddsEnum.TIMELOTTERYODDS_2.getEgName()));
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取参数成功",resultMap);
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "获取参数失败");
             LogUtils.error("获取参数失败！", ex);
