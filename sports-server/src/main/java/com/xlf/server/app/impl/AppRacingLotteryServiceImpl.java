@@ -13,12 +13,16 @@ import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.common.vo.task.RacingLotteryVo;
 import com.xlf.server.app.*;
+import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppRacingLotteryMapper;
 import com.xlf.server.mapper.AppTimeLotteryMapper;
 import com.xlf.server.web.SysUserService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.BufferedReader;
@@ -26,6 +30,8 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +55,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
     @Resource
     private AppRacingBettingService appRacingBettingService;
     @Resource
-    private AppRacingLotteryService appRacingLotteryService;
+    private CommonService commonService;
     @Resource
     private AppUserService appUserService;
     @Resource
@@ -88,7 +94,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
             } else {
                 flag = false;
             }
-            log.info("时时彩第" + lotteryPo.getIssueNo() + "期开奖:" + seat.getName() + " 没有待结算的投注订单");
+            log.info("PK10第" + lotteryPo.getIssueNo() + "期开奖:" + seat.getName() + " 没有待结算的投注订单");
         }
         if (flag) {
             this.batchRacingLotteryHandleService(lotteryPo, flag);
@@ -200,4 +206,44 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
 //        System.out.println (ToolUtils.toJson (vo));
     }
 
+    @Override
+    public List<AppRacingLotteryPo> lotteryListCurrentDayByPayUrl() {
+        String PK10_URL = commonService.findParameter ("pk10LotteryUrl");
+        if (StringUtils.isEmpty (PK10_URL)) {
+            log.error ("获取PK10第三方付费接口url配置错误");
+            return null;
+        }
+        String json = HttpUtils.sendGet (PK10_URL, "");
+        if (StringUtils.isEmpty (json)){
+            log.error ("获取PK10第三方付费接口未返回开奖结果");
+            return null;
+        }
+        JSONObject jsonResult=JSONObject.fromObject (json);
+        if (!"cqssc".equals (jsonResult.get ("code"))){
+            log.error ("获取PK10第三方付费接口获取彩种错误");
+            return null;
+        }
+        List<AppRacingLotteryPo> listPo = new ArrayList<> ();
+        JSONArray jsonArray=jsonResult.getJSONArray ("data");
+        for (int i=0;i<jsonArray.size ();i++){
+            AppRacingLotteryPo model=new AppRacingLotteryPo();
+            JSONObject rowJson= jsonArray.getJSONObject (i);
+            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp")));
+            model.setIssueNo (rowJson.getString ("expect"));
+            String opencode=rowJson.getString ("opencode");
+            String[] array=opencode.split (",");
+            model.setLotteryOne (Integer.valueOf (array[0]));
+            model.setLotteryTwo (Integer.valueOf (array[1]));
+            model.setLotteryThree (Integer.valueOf (array[2]));
+            model.setLotteryFour (Integer.valueOf (array[3]));
+            model.setLotteryFive (Integer.valueOf (array[4]));
+            model.setLotterySix (Integer.valueOf (array[5]));
+            model.setLotterySeven (Integer.valueOf (array[6]));
+            model.setLotteryEight (Integer.valueOf (array[7]));
+            model.setLotteryNine (Integer.valueOf (array[8]));
+            model.setLotteryTen (Integer.valueOf (array[9]));
+            listPo.add (model);
+        }
+        return listPo;
+    }
 }

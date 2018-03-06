@@ -24,6 +24,8 @@ public interface AppTimeLotteryService {
 
     public List<AppTimeLotteryPo> lotteryListCurrentDay();
 
+    public List<AppTimeLotteryPo> lotteryListCurrentDayByPayUrl();
+
     public AppTimeLotteryPo findAppTimeLotteryPoByIssuNo(String issuNo);
 
     Integer save(AppTimeLotteryPo po);

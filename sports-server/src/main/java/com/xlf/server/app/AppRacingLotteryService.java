@@ -2,8 +2,9 @@ package com.xlf.server.app;
 
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppRacingLotteryPo;
-import com.xlf.common.po.AppTimeLotteryPo;
 import com.xlf.common.vo.task.RacingLotteryVo;
+
+import java.util.List;
 
 /**
  * 时时彩投注业务类
@@ -20,6 +21,8 @@ public interface AppRacingLotteryService {
     public Boolean batchRacingLotteryHandleService(AppRacingLotteryPo lotteryPo, Boolean flag) throws Exception;
 
     public RacingLotteryVo getLatestRacingLottery();
+
+    public List<AppRacingLotteryPo> lotteryListCurrentDayByPayUrl();
 
     public AppRacingLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo);
 

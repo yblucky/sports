@@ -15,12 +15,16 @@ import com.xlf.common.util.HttpUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.*;
+import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppTimeLotteryMapper;
 import com.xlf.server.web.SysUserService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -30,6 +34,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static javax.swing.UIManager.get;
+
 /**
  * 时时彩开奖务类
  */
@@ -38,6 +44,9 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     private static final Logger log = LoggerFactory.getLogger (AppTimeLotteryServiceImpl.class);
     @Resource
     private AppTimeLotteryMapper appTimeLotteryMapper;
+
+    @Resource
+    private CommonService commonService;
 
 
     @Resource
@@ -191,6 +200,42 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             System.out.println ("row.replace:" + row);
             AppTimeLotteryPo rowAppTimeLotteryPo = getAppTimeLotteryPo (row);
             listPo.add (rowAppTimeLotteryPo);
+        }
+        return listPo;
+    }
+
+    @Override
+    public List<AppTimeLotteryPo> lotteryListCurrentDayByPayUrl() {
+        String TIME_URL = commonService.findParameter ("timeLotteryUrl");
+        if (StringUtils.isEmpty (TIME_URL)) {
+            log.error ("获取时时彩第三方付费接口url配置错误");
+            return null;
+        }
+        String json = HttpUtils.sendGet (TIME_URL, TIME_URL);
+        if (StringUtils.isEmpty (json)){
+            log.error ("获取时时彩第三方付费接口未返回开奖结果");
+            return null;
+        }
+        JSONObject jsonResult=JSONObject.fromObject (json);
+        if (!"cqssc".equals (jsonResult.get ("code"))){
+            log.error ("获取时时彩第三方付费接口获取彩种错误");
+            return null;
+        }
+        List<AppTimeLotteryPo> listPo = new ArrayList<> ();
+        JSONArray jsonArray=jsonResult.getJSONArray ("data");
+        for (int i=0;i<jsonArray.size ();i++){
+            AppTimeLotteryPo model=new AppTimeLotteryPo();
+            JSONObject rowJson= jsonArray.getJSONObject (i);
+            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp")));
+            model.setIssueNo (rowJson.getString ("expect"));
+            String opencode=rowJson.getString ("opencode");
+            String[] array=opencode.split (",");
+            model.setLotteryOne (Integer.valueOf (array[0]));
+            model.setLotteryTwo (Integer.valueOf (array[1]));
+            model.setLotteryThree (Integer.valueOf (array[2]));
+            model.setLotteryFour (Integer.valueOf (array[3]));
+            model.setLotteryFive (Integer.valueOf (array[4]));
+            listPo.add (model);
         }
         return listPo;
     }
