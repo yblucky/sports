@@ -8,12 +8,14 @@
 package com.xlf.web.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
+import com.xlf.common.enums.DateTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.enums.WithDrawEnum;
 import com.xlf.common.po.AppWithDrawPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
+import com.xlf.common.util.DateUtils;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.AppBankCardVo;
 import com.xlf.common.vo.pc.AppWithDrawVo;
@@ -28,6 +30,8 @@ import com.xlf.server.web.WebWithDrawService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -72,6 +76,38 @@ public class FinanceController {
 		RespBody respBody = new RespBody();
 		try {
 			SysUserVo userVo =commonService.checkWebToken();
+			//时间差
+			if(DateTypeEnum.YESTERDAY.getCode().equals(vo.getDateType())){
+				vo.setStartDiff(-1);
+				vo.setEndDiff(-1);
+			}else if(DateTypeEnum.LASTWEEK.getCode().equals(vo.getDateType())){
+				int weeks = DateUtils.getWeekOfDate(new Date());
+				vo.setStartDiff((weeks+7)*-1);
+				vo.setEndDiff(-1*weeks);
+			}else if(DateTypeEnum.THISWEEK.getCode().equals(vo.getDateType())){
+				int weeks = DateUtils.getWeekOfDate(new Date());
+				vo.setStartDiff(weeks*-1);
+				vo.setEndDiff(7);
+			}else if(DateTypeEnum.LASTMONTH.getCode().equals(vo.getDateType())){
+				//取得系统当前时间
+				Calendar cal = Calendar.getInstance();
+				//取得系统当前时间所在月第一天时间对象
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				//日期减一,取得上月最后一天时间对象
+				cal.add(Calendar.DAY_OF_MONTH, -1);
+				//输出上月最后一天日期
+				int lastDay = cal.get(Calendar.DAY_OF_MONTH);
+				int today = new Date().getDate();
+				vo.setStartDiff((lastDay+today)*-1);
+				vo.setEndDiff(today*-1);
+			}else if(DateTypeEnum.THISMONTH.getCode().equals(vo.getDateType())){
+				int today = new Date().getDate();
+				vo.setStartDiff(today*-1);
+				vo.setEndDiff(0);
+			}else{
+				vo.setStartDiff(0);
+				vo.setEndDiff(0);
+			}
 			//代理登录只能查看自己的营收记录
 			if(userVo.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()){
 				vo.setUserId(userVo.getId());
