@@ -71,6 +71,7 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
         model.setAmount(amount);
         model.setUserId(userId);
         model.setBankCardId(bankId);
+        model.setBeforeBalance(before);
         this.save(model);
         billRecordService.saveBillRecord(ToolUtils.getUUID(),userId, BusnessTypeEnum.WITHDRAWALS.getCode(),am,before,after,"用户提现",userPo.getNickName());
         return true;

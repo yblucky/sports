@@ -74,7 +74,7 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
      * @param userId
      * @return
      */
-    @Select("SELECT COUNT(id) FROM `app_bill_record`  where currencyType=10 and busnessType=15 and userId=#{userId} and to_days(createTime) = to_days(now())")
+    @Select("SELECT COUNT(id) FROM `app_bill_record` where userId=#{userId} and to_days(createTime) = to_days(now())")
     Integer countCurrentDayWithDraw(@Param("userId") String userId);
 
     /**
