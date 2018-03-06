@@ -15,6 +15,8 @@ import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -621,6 +623,36 @@ public class TimeBettingController {
         }
         return respBody;
     }
+
+    /**
+     * 用户流水记录
+     */
+    @GetMapping(value = "/awardNumberList")
+    public RespBody findUserRecord(HttpServletRequest request,Paging paging) {
+        RespBody respBody = new RespBody ();
+        try {
+            //根据用户id获取用户信息
+            List<AppTimeLotteryVo> list = null;
+            //检验用户是否登录
+            AppUserPo appUserPo = commonService.checkToken ();
+
+            //获取总记录数量
+            int total = appTimeLotteryService.countLotteryInfoTotal();
+            if (total > 0) {
+                list = appTimeLotteryService.loadLotteryInfoList(paging);
+            }
+            //返回前端总记录
+            paging.setTotalCount (total);
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取开奖列表成功", paging, list);
+        } catch (CommException ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (),"获取开奖列表失败");
+            LogUtils.error ("获取开奖列表失败！", ex);
+        }
+        return respBody;
+    }
+
 
     public static void main(String[] args) {
         String a = "12345";

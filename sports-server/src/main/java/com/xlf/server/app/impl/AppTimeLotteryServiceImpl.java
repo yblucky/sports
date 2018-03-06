@@ -13,18 +13,23 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.HttpUtils;
 import com.xlf.common.util.ToolUtils;
+import com.xlf.common.vo.app.AppBillRecordVo;
+import com.xlf.common.vo.app.AppTimeLotteryVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.*;
 import com.xlf.server.mapper.AppTimeLotteryMapper;
 import com.xlf.server.web.SysUserService;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -172,6 +177,36 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     @Override
     public Integer save(AppTimeLotteryPo po) {
         return appTimeLotteryMapper.insert (po);
+    }
+
+    /**
+     * 获取开奖号码列表
+     * @param paging
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<AppTimeLotteryVo> loadLotteryInfoList(Paging paging) throws Exception {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        List<AppTimeLotteryVo> list = appTimeLotteryMapper.loadLotteryInfoList(rowBounds);
+        if (list==null|| CollectionUtils.isEmpty(list)){
+            list= Collections.emptyList();
+        }
+        return list;
+    }
+
+    /**
+     * 统计开奖号码列表数
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Integer countLotteryInfoTotal() throws Exception {
+        Integer count =appTimeLotteryMapper.countLotteryInfoTotal();
+        if (count==null){
+            count=0;
+        }
+        return count;
     }
 
     @Override

@@ -50,6 +50,15 @@
     <update id="updateFlagById">
         update <include refid="table_name"/> set flag = 20, lotteryTime=now()   where id=#{id}
     </update>
+
+    <select id="countLotteryInfoTotal" resultType="Integer">
+        SELECT count(1) from <include refid="table_name"/>
+    </select>
+
+    <select id="loadLotteryInfoList" resultType="com.xlf.common.vo.app.AppTimeLotteryVo">
+        SELECT * FROM <include refid="table_name"/>
+        order by lotteryTime desc
+    </select>
     
     
 </mapper>
