@@ -15,7 +15,6 @@ import com.xlf.common.util.HttpUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.*;
-import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppTimeLotteryMapper;
 import com.xlf.server.web.SysUserService;
 import net.sf.json.JSONArray;
@@ -33,8 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static javax.swing.UIManager.get;
 
 /**
  * 时时彩开奖务类

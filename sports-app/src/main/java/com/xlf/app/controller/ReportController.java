@@ -2,6 +2,7 @@ package com.xlf.app.controller;
 
 import com.xlf.common.enums.BankEnum;
 import com.xlf.common.enums.BusnessTypeEnum;
+import com.xlf.common.enums.ParamTimeEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
@@ -10,6 +11,7 @@ import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
+import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.app.AppBillRecordVo;
@@ -53,7 +55,7 @@ public class ReportController {
      * 盈亏报表
      */
     @GetMapping(value = "/consume")
-    public RespBody findUserRecord(String startTime,String endTime) {
+    public RespBody findUserRecord(Integer paramTime) {
         RespBody respBody = new RespBody ();
         try {
             //根据用户id获取用户信息
@@ -69,14 +71,45 @@ public class ReportController {
             busnessTypeListIncome.add (BusnessTypeEnum.TIME_LOTTERY.getCode ());
             busnessTypeListUndo.add (BusnessTypeEnum.TIME_UNDO.getCode ());
             busnessTypeListUndo.add (BusnessTypeEnum.RACING_UNDO.getCode ());
-            if (StringUtils.isEmpty (startTime) || StringUtils.isEmpty (endTime)) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "时间不能为空");
+            if (paramTime == null || paramTime == 0) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数有误");
                 return respBody;
             }
+
+            Map<String,String> dateMap = null;
+            if(ParamTimeEnum.CURRENTDAY.getCode().intValue() == paramTime){
+                dateMap = DateTimeUtil.getCurrentDayTime();
+            }else if(ParamTimeEnum.LASTWEEK.getCode().intValue() == paramTime){
+                dateMap = DateTimeUtil.getLastWeekTime();
+            }else if(ParamTimeEnum.CURRENTWEEK.getCode().intValue() == paramTime){
+                dateMap = DateTimeUtil.getCurrentWeekTime();
+            }else if(ParamTimeEnum.LASTMONTH.getCode().intValue() == paramTime){
+                dateMap = DateTimeUtil.getLastMonthTime();
+            }else if(ParamTimeEnum.CURRENTMONTH.getCode().intValue() == paramTime){
+                dateMap = DateTimeUtil.getCurrentMonthTime();
+            }
+
+            if(dateMap == null){
+                respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数有误");
+                return respBody;
+            }
+
+            String startTime = dateMap.get("startTime");
+            String endTime = dateMap.get("endTime");
+
             Double costs = billRecordService.report (appUserPo.getId (), busnessTypeListCosts,startTime,endTime);
             Double income = billRecordService.report (appUserPo.getId (), busnessTypeListIncome,startTime,endTime);
             Double undo = billRecordService.report (appUserPo.getId (), busnessTypeListUndo,startTime,endTime);
             Map<String,BigDecimal> map=new HashMap<> ();
+            if(costs == null){
+                costs = 0d;
+            }
+            if(income == null){
+                income = 0d;
+            }
+            if(undo == null){
+                undo = 0d;
+            }
             map.put ("costs",new BigDecimal ((costs-undo)).setScale (2,BigDecimal.ROUND_HALF_EVEN));
             map.put ("income",new BigDecimal (income).subtract (new BigDecimal ((costs-undo))).setScale (2,BigDecimal.ROUND_HALF_EVEN));
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户报表成功", map);

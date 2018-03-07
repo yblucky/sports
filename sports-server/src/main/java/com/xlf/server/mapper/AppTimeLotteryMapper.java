@@ -2,9 +2,14 @@ package com.xlf.server.mapper;
 
 
 import com.xlf.common.po.AppTimeLotteryPo;
+import com.xlf.common.resp.Paging;
+import com.xlf.common.vo.app.AppTimeLotteryVo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 /**
  * 时时彩开奖
@@ -20,4 +25,10 @@ public interface AppTimeLotteryMapper extends BaseMapper<AppTimeLotteryPo> {
 
     @Select("SELECT * FROM `app_time_lottery` where issueNo=#{issueNo}")
     AppTimeLotteryPo findAppTimeLotteryPoByIssuNo(@Param("issueNo") String issuNo);
+
+    //获取开奖号码列表
+    public List<AppTimeLotteryVo> loadLotteryInfoList(RowBounds rowBounds) throws Exception;
+
+    //获取开奖号码列表
+    public Integer countLotteryInfoTotal() throws Exception;
 }

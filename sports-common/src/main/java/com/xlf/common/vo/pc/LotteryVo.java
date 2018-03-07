@@ -75,6 +75,18 @@ public class LotteryVo {
 	 * */
 	private String businessNumber;
 	/**
+	 * 时间类型 10 今日 20 昨天 30 上周 40 本周 50 上月 60 本月
+	 * */
+	private String dateType;
+	/**
+	 * 时间相差天数
+	 * */
+	private int startDiff;
+	/**
+	 * 时间相差天数
+	 * */
+	private int endDiff;
+	/**
 	 * '开始时间'
 	 */
 	@DateTimeFormat(pattern="yyyy-MM-dd")
@@ -219,5 +231,29 @@ public class LotteryVo {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getDateType() {
+		return dateType;
+	}
+
+	public void setDateType(String dateType) {
+		this.dateType = dateType;
+	}
+
+	public int getStartDiff() {
+		return startDiff;
+	}
+
+	public void setStartDiff(int startDiff) {
+		this.startDiff = startDiff;
+	}
+
+	public int getEndDiff() {
+		return endDiff;
+	}
+
+	public void setEndDiff(int endDiff) {
+		this.endDiff = endDiff;
 	}
 }

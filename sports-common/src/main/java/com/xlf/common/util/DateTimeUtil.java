@@ -319,14 +319,123 @@ public final class DateTimeUtil {
         return date.getTime ();
     }
 
+    //获取上周的开始时间和结束时间
+    public static Map<String,String> getLastWeekTime() {
+        Calendar calendar1 = Calendar.getInstance();
+        Calendar calendar2 = Calendar.getInstance();
+        int dayOfWeek = calendar1.get(Calendar.DAY_OF_WEEK) - 1;
+        int offset1 = 1 - dayOfWeek;
+        int offset2 = 7 - dayOfWeek;
+        calendar1.add(Calendar.DATE, offset1 - 7);
+        calendar2.add(Calendar.DATE, offset2 - 7);
+        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
+        // System.out.println(sdf.format(calendar1.getTime()));// last Monday
+        String lastBeginDate = sdf.format(calendar1.getTime());
+        // System.out.println(sdf.format(calendar2.getTime()));// last Sunday
+        String lastEndDate = sdf.format(calendar2.getTime());
+
+        Map<String,String> dateMap = new HashMap<>();
+        dateMap.put("startTime",lastBeginDate + " 00:00:00");
+        dateMap.put("endTime",lastEndDate + " 23:59:59");
+
+        return  dateMap;
+    }
+
+    //获取上月的开始时间和结束时间
+    public static Map<String,String> getLastMonthTime() {
+        //获取前一个月第一天
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.add(Calendar.MONTH, -1);
+        calendar1.set(Calendar.DAY_OF_MONTH,1);
+        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
+        String firstDay = sdf.format(calendar1.getTime());
+        //获取前一个月最后一天
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(Calendar.DAY_OF_MONTH, 0);
+        String lastDay = sdf.format(calendar2.getTime());
+
+        Map<String,String> dateMap = new HashMap<>();
+        dateMap.put("startTime",firstDay + " 00:00:00");
+        dateMap.put("endTime",lastDay + " 23:59:59");
+
+        return  dateMap;
+    }
+
+    //获取本周第一天和第七天
+    public static Map<String,String> getCurrentWeekTime() {
+        Calendar cal = Calendar.getInstance();
+        //cal.setTime(date);
+        // 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天
+        if (1 == dayWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        // System.out.println("要计算日期为:" + sdf.format(cal.getTime())); // 输出要计算日期
+        // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        // 获得当前日期是一个星期的第几天
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
+        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
+        String imptimeBegin = sdf.format(cal.getTime());
+        // System.out.println("所在周星期一的日期：" + imptimeBegin);
+        cal.add(Calendar.DATE, 6);
+        String imptimeEnd = sdf.format(cal.getTime());
+        // System.out.println("所在周星期日的日期：" + imptimeEnd);
+
+        Map<String,String> dateMap = new HashMap<>();
+        dateMap.put("startTime",imptimeBegin + " 00:00:00");
+        dateMap.put("endTime",imptimeEnd + " 23:59:59");
+
+        return  dateMap;
+    }
+
+    //获取本月第一天和最后一天
+    public static Map<String,String> getCurrentMonthTime() {
+        Calendar cal_1 = Calendar.getInstance();//获取当前日期
+        cal_1.set(Calendar.DAY_OF_MONTH, 1);
+        cal_1.set(Calendar.HOUR_OF_DAY, 0);
+        cal_1.set(Calendar.MINUTE, 0);
+        cal_1.set(Calendar.SECOND, 0);
+        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
+        String currentMonthFirst = sdf.format(cal_1.getTimeInMillis());
+
+        //Calendar ca = Calendar.getInstance();
+        cal_1.set(Calendar.DAY_OF_MONTH, cal_1.getActualMaximum(Calendar.DAY_OF_MONTH));
+        String currentMonthEnd = sdf.format(cal_1.getTime());
+
+        Map<String,String> dateMap = new HashMap<>();
+        dateMap.put("startTime",currentMonthFirst + " 00:00:00");
+        dateMap.put("endTime",currentMonthEnd + " 23:59:59");
+
+        return  dateMap;
+    }
+
+    //获取本天的开始时间和结束时间
+    public static Map<String,String> getCurrentDayTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
+        String day = sdf.format(new Date());
+
+        System.out.println(sdf.format(new Date()) + " 23:59:59");
+        Map<String,String> dateMap = new HashMap<>();
+        dateMap.put("startTime",day + " 00:00:00");
+        dateMap.put("endTime",day + " 23:59:59");
+
+        return  dateMap;
+    }
+
+
     public static void main(String[] args) {
-        System.out.println (DateTimeUtil.parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM, 5));
-        System.out.println (DateTimeUtil.parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM, 10));
+        //System.out.println (DateTimeUtil.parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM, 5));
+        //System.out.println (DateTimeUtil.parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM, 10));
 //        createTimeInterval();
 //        createTimeInterval();
 //        parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5);
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5));
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,-10));
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,10));
+        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
+        System.out.println(sdf.format(new Date()) + " 23:59:59");
     }
 }

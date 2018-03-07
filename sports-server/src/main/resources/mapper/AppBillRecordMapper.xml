@@ -71,8 +71,8 @@
 		<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
             #{item}
         </foreach>
-		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
-		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
+		<!--<if test="startTime != null">AND createTime&gt;=#{startTime}</if>-->
+		<!--<if test="endTime != null">AND createTime&lt;#{endTime}</if>-->
     </select>
 
 
@@ -83,8 +83,8 @@
         <foreach collection="list" open="(" close=")" item="item" separator="," index="index">
             #{item}
         </foreach>
-		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
-		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
+		<!--<if test="startTime != null">AND createTime&gt;=#{startTime}</if>-->
+		<!--<if test="endTime != null">AND createTime&lt;#{endTime}</if>-->
         order by bill.createTime desc
     </select>
 
@@ -131,13 +131,13 @@
 	</select>
 
 	<select id="report" resultType="java.lang.Double">
-		SELECT SUM(balance) from app_bill_record b left join app_user u on b.userId=u.id where userId=#{userId}
+		SELECT SUM(b.balance) from app_bill_record b left join app_user u on b.userId=u.id where userId=#{userId}
 		and busnessType IN
 		<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
 			#{item}
 		</foreach>
-		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
-		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
+		<if test="startTime != null">AND b.createTime&gt;=#{startTime}</if>
+		<if test="endTime != null">AND b.createTime&lt;#{endTime}</if>
 	</select>
 </mapper>
 

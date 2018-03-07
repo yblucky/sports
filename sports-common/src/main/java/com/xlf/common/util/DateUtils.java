@@ -67,4 +67,21 @@ public class DateUtils {
 				+ calendar.get(Calendar.DATE);
 	}
 
+	/**
+	 * 获取当前日期是星期几<br>
+	 *
+	 * @param date
+	 * @return 当前日期是星期几
+	 */
+	public static int getWeekOfDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int w = cal.get(Calendar.DAY_OF_WEEK) ;
+		if (w < 0){
+			w = 0;
+		}
+		return w;
+	}
+
+
 }
