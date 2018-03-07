@@ -16,11 +16,11 @@ import java.util.Date;
 @Table(name = "sys_agent_setting")
 public class SysAgentSettingPo implements Serializable {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 558884552227040L;
+     *
+     */
+    private static final long serialVersionUID = 558884552227040L;
 
-	/**
+    /**
      * 主键编号
      */
     @Id
@@ -28,88 +28,88 @@ public class SysAgentSettingPo implements Serializable {
 
     /**
      * '代理别称'
-     * */
+     */
     private String agentName;
 
     /**
      * '押金'
-     * */
+     */
     private Integer deposit;
 
     /**
      * '会员每天最大盈利额度'
-     * */
+     */
     private BigDecimal maxProfitPerDay;
 
     /**
      * '会员每期每个数字最少下注组数'
-     * */
+     */
     private Integer minBetNoPerDigital;
 
     /**
      * '会员每期每个数字最大下注组数'
-     * */
+     */
     private Integer maxBetNoPerDigital;
 
     /**
      * '代理返水比例'
-     * */
+     */
     private BigDecimal returnWaterScale;
 
     /**
      * '会员每天最大提现额度'
-     * */
-    private Integer maxWithdrawPerDay;
+     */
+    private BigDecimal maxWithdrawPerDay;
 
     /**
      * ''会员每期最多下注位数''
-     * */
+     */
     private Integer maxBetSeats;
 
     /**
      * '会员每期每个位最多下注多少号码'
-     * */
+     */
     private Integer maxBetDigitalNoPerSeat;
 
     /**
      * '创建时间'
-     * */
+     */
     private Date createTime;
 
     /**
      * '修改时间'
-     * */
+     */
     private Date updateTime;
 
     /**
      * '状态'
-     * */
-    private Integer  state;
+     */
+    private Integer state;
 
     /**
      * '赔率'
-     * */
-    private BigDecimal  odds;
+     */
+    private BigDecimal odds;
 
     /**
      * '时时彩二星玩法赔率'
-     * */
-    private BigDecimal  timeDoubleOdds;
+     */
+    private BigDecimal timeDoubleOdds;
 
     /**
      * '时时彩二星玩法最多组合位数'
-     * */
-    private Integer  timeDoubleMaxBetSeats;
+     */
+    private Integer timeDoubleMaxBetSeats;
 
     /**
      * '时时彩二星单种位数组合100种情形中最大选30种'
-     * */
-    private Integer  timeDoubleMaxBetKindPerTwoSeats;
+     */
+    private Integer timeDoubleMaxBetKindPerTwoSeats;
 
     /**
      * '时时彩二星单注最大下注注数'
-     * */
-    private Integer  timeDoubleMaxBetNoPerKind;
+     */
+    private Integer timeDoubleMaxBetNoPerKind;
 
     public String getId() {
         return id;
@@ -165,14 +165,6 @@ public class SysAgentSettingPo implements Serializable {
 
     public void setReturnWaterScale(BigDecimal returnWaterScale) {
         this.returnWaterScale = returnWaterScale;
-    }
-
-    public Integer getMaxWithdrawPerDay() {
-        return maxWithdrawPerDay;
-    }
-
-    public void setMaxWithdrawPerDay(Integer maxWithdrawPerDay) {
-        this.maxWithdrawPerDay = maxWithdrawPerDay;
     }
 
     public Integer getMaxBetSeats() {
@@ -254,5 +246,13 @@ public class SysAgentSettingPo implements Serializable {
 
     public void setTimeDoubleMaxBetNoPerKind(Integer timeDoubleMaxBetNoPerKind) {
         this.timeDoubleMaxBetNoPerKind = timeDoubleMaxBetNoPerKind;
+    }
+
+    public void setMaxWithdrawPerDay(BigDecimal maxWithdrawPerDay) {
+        this.maxWithdrawPerDay = maxWithdrawPerDay;
+    }
+
+    public BigDecimal getMaxWithdrawPerDay() {
+        return maxWithdrawPerDay;
     }
 }

@@ -5,6 +5,7 @@ import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppUserPo;
+import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LanguageUtil;
@@ -12,10 +13,13 @@ import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.BankCardVo;
 import com.xlf.common.vo.app.DrawVo;
+import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppBankCardService;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppWithDrawService;
+import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.common.CommonService;
+import com.xlf.server.web.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +47,9 @@ public class WithdrawalsController {
     @Resource
     private AppBankCardService appBankCardService;
     @Resource
-    private LanguageUtil languageUtil;
+    private SysUserService sysUserService;
+    @Resource
+    private SysAgentSettingService appSysAgentSettingService;
 
 
     @PostMapping("/draw")
@@ -58,15 +64,15 @@ public class WithdrawalsController {
                 return respBody;
             }*/
             AppUserPo userPo = commonService.checkToken ();
-            BigDecimal withdrawMinAmount = new BigDecimal (commonService.findParameter ("withdrawMinAmount"));
-            BigDecimal withdrawMaxAmount = new BigDecimal (commonService.findParameter ("withdrawMaxAmount"));
-            Integer withdrawMaxCount = Integer.valueOf (commonService.findParameter ("withdrawMaxCount"));
+            SysUserVo sysUserVo = sysUserService.findById (userPo.getParentId ());
+            SysAgentSettingPo agentSettingPo = appSysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
+            BigDecimal withdrawMaxAmount = agentSettingPo.getMaxWithdrawPerDay ();
             if (!ToolUtils.is100Mutiple (vo.getAmount ().doubleValue ())) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.AMOUNT_IS_100_MLUTIPLE, "单笔兑换余额必须是100整数倍"));
                 return respBody;
             }
-            if (vo.getAmount () == null || vo.getAmount ().compareTo (withdrawMinAmount) == -1 || vo.getAmount ().compareTo (withdrawMaxAmount) == 1) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.EP_BALANCE_BETWEEN + "[" + withdrawMinAmount + "," + withdrawMaxAmount + "]", "单笔兑换余额必须在[" + withdrawMinAmount + "," + withdrawMaxAmount + "]"));
+            if (vo.getAmount () == null || vo.getAmount ().compareTo (withdrawMaxAmount) == 1) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }
             if (StringUtils.isEmpty (vo.getBankCardId ())) {
@@ -80,11 +86,6 @@ public class WithdrawalsController {
             }
             if (StringUtils.isEmpty (vo.getPayPwd ()) || !userPo.getPayPwd ().equals (CryptUtils.hmacSHA1Encrypt (vo.getPayPwd (), userPo.getPayStal ()))) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.PAYPWD_ERROR, "支付密码错误"));
-                return respBody;
-            }
-            Integer hasExchange = billRecordService.countCurrentDayWithDraw (userPo.getId ());
-            if (withdrawMaxCount != null && hasExchange >= withdrawMaxCount) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.NUMBER_PER_DAY + " " + withdrawMaxCount, "每天最多提现" + withdrawMaxCount + "笔"));
                 return respBody;
             }
             appWithDrawService.epWithDraw (userPo.getId (), vo.getBankCardId (), vo.getAmount ());
