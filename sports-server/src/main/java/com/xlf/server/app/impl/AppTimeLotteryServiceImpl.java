@@ -196,7 +196,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     }
 
     /**
-     * 统计开奖号码列表数
+     * 统计开奖号码列表总数
      * @return
      * @throws Exception
      */
