@@ -86,7 +86,7 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
 
     Integer batchSaveKickBackAmoutRecord(@Param("list") List<AppBillRecordPo> list);
 
-    List<RevenueVo> revenueList(@Param("model") LotteryVo vo, RowBounds rowBounds);
+    List<RevenueVo> revenueList(@Param("model") RevenueVo vo, RowBounds rowBounds);
 
     @Select("select sum(balance) as balance,busnessType from app_bill_record where datediff(now(),createTime)=0 GROUP BY busnessType")
     List<WebStatisticsVo> selectSumByBusnessType();

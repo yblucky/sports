@@ -78,6 +78,10 @@ public class WebBillRecordVo {
      * '扩展'
      */
     private String extend;
+    /**
+     * '父类'
+     */
+    private String parentId;
 
 
     public String getBusnessTypeName() {
@@ -237,5 +241,13 @@ public class WebBillRecordVo {
 
     public void setExtend(String extend) {
         this.extend = extend;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

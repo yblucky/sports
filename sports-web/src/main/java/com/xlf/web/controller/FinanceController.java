@@ -17,10 +17,7 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.DateUtils;
 import com.xlf.common.util.LogUtils;
-import com.xlf.common.vo.pc.AppBankCardVo;
-import com.xlf.common.vo.pc.AppWithDrawVo;
-import com.xlf.common.vo.pc.LotteryVo;
-import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.common.vo.pc.*;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.common.CommonService;
@@ -72,7 +69,7 @@ public class FinanceController {
 	 * @return 响应对象
 	 */
 	@GetMapping("/revenueList")
-	public RespBody revenueList(LotteryVo vo, Paging paging){
+	public RespBody revenueList(RevenueVo vo, Paging paging){
 		RespBody respBody = new RespBody();
 		try {
 			SysUserVo userVo =commonService.checkWebToken();

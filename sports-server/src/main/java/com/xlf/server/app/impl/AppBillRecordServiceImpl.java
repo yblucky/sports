@@ -112,7 +112,7 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
         return billRecordMapper.batchSaveKickBackAmoutRecord(list);
     }
     @Override
-    public List<RevenueVo> revenueList(LotteryVo vo, Paging paging) {
+    public List<RevenueVo> revenueList(RevenueVo vo, Paging paging) {
         RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
         return billRecordMapper.revenueList(vo,rowBounds);
     }
