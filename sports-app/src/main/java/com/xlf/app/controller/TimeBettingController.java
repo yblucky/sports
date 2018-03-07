@@ -138,12 +138,7 @@ public class TimeBettingController {
     public RespBody timeBetting(HttpServletRequest request, @RequestBody TimeBettingVo vo) throws Exception {
         RespBody respBody = new RespBody ();
         try {
-            //验签
-            /*Boolean flag = commonService.checkSign (vo);
-            if (!flag) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
-                return respBody;
-            }*/
+
             if (vo.getSerialNumber () == null) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
