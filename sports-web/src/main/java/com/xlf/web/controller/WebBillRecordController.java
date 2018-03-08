@@ -2,10 +2,13 @@ package com.xlf.web.controller;
 
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.RespCodeEnum;
+import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.LogUtils;
+import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.common.vo.pc.WebBillRecordVo;
+import com.xlf.server.common.CommonService;
 import com.xlf.server.web.WebBillRecordService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +23,19 @@ import java.util.*;
 public class WebBillRecordController {
     @Resource
     private WebBillRecordService appBillRecordService;
+    @Resource
+    private CommonService commonService;
 
     @GetMapping("/findAll")
     public RespBody findAll(WebBillRecordVo vo, Paging paging) {
         RespBody respBody = new RespBody();
         try {
+            //代理登录
+            SysUserVo sysUser = commonService.checkWebToken();
+            //只能查代理下面的会员
+            if(RoleTypeEnum.AGENT.getCode().equals(sysUser.getRoleType())){
+                vo.setParentId(sysUser.getId());
+            }
             int total = appBillRecordService.findCount(vo);
             if(total >0) {
                 //保存返回数据

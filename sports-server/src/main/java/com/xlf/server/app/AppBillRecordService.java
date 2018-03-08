@@ -53,7 +53,7 @@ public interface AppBillRecordService {
     Integer batchSaveKickBackAmoutRecord(List<AppBillRecordPo> list);
 
 
-    List<RevenueVo> revenueList(LotteryVo vo, Paging paging);
+    List<RevenueVo> revenueList(RevenueVo vo, Paging paging);
 
     Double report( String userId,  List<Integer> busnessTypeList,  String startTime,   String endTime);
 }

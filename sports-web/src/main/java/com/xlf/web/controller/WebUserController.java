@@ -58,6 +58,12 @@ public class WebUserController {
     public RespBody userTab(AppUserPo po, Paging paging) {
         RespBody respBody = new RespBody();
         try {
+            //代理登录
+            SysUserVo sysUser = commonService.checkWebToken();
+            //只能查代理下面的会员
+            if(RoleTypeEnum.AGENT.getCode().equals(sysUser.getRoleType())){
+                po.setParentId(sysUser.getId());
+            }
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载列表成功", webAppUserService.getPoList(po, paging));
             paging.setTotalCount(webAppUserService.findPoListCount(po));
             respBody.setPage(paging);
