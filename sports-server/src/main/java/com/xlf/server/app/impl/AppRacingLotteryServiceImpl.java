@@ -219,7 +219,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
             return null;
         }
         JSONObject jsonResult=JSONObject.fromObject (json);
-        if (!"cqssc".equals (jsonResult.get ("code"))){
+        if (!"bjpk10".equals (jsonResult.get ("code"))){
             log.error ("获取PK10第三方付费接口获取彩种错误");
             return null;
         }

@@ -243,7 +243,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             log.error ("获取时时彩第三方付费接口url配置错误");
             return null;
         }
-        String json = HttpUtils.sendGet (TIME_URL, TIME_URL);
+        String json = HttpUtils.sendGet (TIME_URL, "");
         if (StringUtils.isEmpty (json)){
             log.error ("获取时时彩第三方付费接口未返回开奖结果");
             return null;
@@ -296,5 +296,39 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         po.setLotteryFour (Integer.valueOf (lotteryArr[1]));
         po.setLotteryFive (Integer.valueOf (lotteryArr[0]));
         return po;
+    }
+
+    public static void main(String[] args) {
+        String TIME_URL="http://ho.apiplus.net/newly.do?token=t674edc1a32ee6613k&code=cqssc&format=json";
+        String json = HttpUtils.sendGet (TIME_URL, "");
+        if (StringUtils.isEmpty (json)){
+            System.out.println  ("获取时时彩第三方付费接口未返回开奖结果");
+
+        }
+        JSONObject jsonResult=JSONObject.fromObject (json);
+        if (!"cqssc".equals (jsonResult.get ("code"))){
+            System.out.println  ("获取时时彩第三方付费接口获取彩种错误");
+        }
+        List<AppTimeLotteryPo> listPo = new ArrayList<> ();
+        JSONArray jsonArray=jsonResult.getJSONArray ("data");
+        for (int i=0;i<jsonArray.size ();i++){
+            AppTimeLotteryPo model=new AppTimeLotteryPo();
+            JSONObject rowJson= jsonArray.getJSONObject (i);
+            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp")*1000));
+            model.setIssueNo (rowJson.getString ("expect"));
+            String opencode=rowJson.getString ("opencode");
+            String[] array=opencode.split (",");
+            model.setLotteryOne (Integer.valueOf (array[0]));
+            model.setLotteryTwo (Integer.valueOf (array[1]));
+            model.setLotteryThree (Integer.valueOf (array[2]));
+            model.setLotteryFour (Integer.valueOf (array[3]));
+            model.setLotteryFive (Integer.valueOf (array[4]));
+            model.setCreateTime (new Date ());
+            listPo.add (model);
+        }
+       for (AppTimeLotteryPo po:listPo){
+           System.out.println ("*********");
+           System.out.println (ToolUtils.toJson (po));
+       }
     }
 }

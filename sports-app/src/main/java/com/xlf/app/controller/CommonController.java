@@ -1,13 +1,17 @@
 package com.xlf.app.controller;
 
+import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.OddsEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.language.AppMessage;
+import com.xlf.common.po.AppTimeLotteryPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
+import com.xlf.common.util.ToolUtils;
+import com.xlf.server.app.AppTimeLotteryService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.common.KaptchaService;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +46,8 @@ public class CommonController {
     private AppUserService appUserService;
     @Resource
     private LanguageUtil languageUtil;
+    @Resource
+    private AppTimeLotteryService appTimeLotteryService;
 
 
     /**
@@ -217,6 +224,35 @@ public class CommonController {
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "获取时间戳失败");
             LogUtils.error("获取时间戳失败！", ex);
+        }
+        return respBody;
+    }
+    /**
+     * 获取服务器时间戳
+     *
+     * @return 响应对象
+     */
+    @GetMapping("/test")
+    public RespBody test() {
+        // 创建返回对象
+        RespBody respBody = new RespBody();
+        try {
+            AppTimeLotteryPo po=new AppTimeLotteryPo ();
+            po.setLotteryOne (1);
+            po.setLotteryTwo (2);
+            po.setLotteryThree (3);
+            po.setLotteryFour (4);
+            po.setLotteryFive (5);
+            po.setIssueNo (ToolUtils.randomInt (1,1000)+"");
+            po.setCreateTime (new Date ());
+            po.setLotteryTime (new Date ());
+            po.setId(ToolUtils.getUUID());
+            po.setFlag(LotteryFlagEnum.NO.getCode());
+            appTimeLotteryService.save(po);
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "SUCCESS");
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "error");
+            LogUtils.error("error！", ex);
         }
         return respBody;
     }

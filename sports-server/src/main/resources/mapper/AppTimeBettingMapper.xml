@@ -53,7 +53,7 @@
     </select>
 
 
-    <select id="countBettingByUserIdAndIssueNoAndWingContent" resultType="java.lang.Integer">
+    <select id="wininggCountAndWingConent" resultType="java.lang.Integer">
         select count(id) from
         <include refid="table_name"/>
         <where>

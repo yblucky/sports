@@ -1,6 +1,8 @@
 package com.xlf.task.app;
 
+import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.po.AppRacingLotteryPo;
+import com.xlf.common.util.ToolUtils;
 import com.xlf.server.app.AppRacingLotteryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +31,13 @@ public class PayRacingLotteryResultScheduleTask extends BaseScheduleTask {
             if (model != null) {
                 return;
             } else {
+                model.setId (ToolUtils.getUUID ());
+                model.setFlag(LotteryFlagEnum.NO.getCode());
                 appRacingLotteryService.save (model);
             }
         }
     }
+
 
 
 }

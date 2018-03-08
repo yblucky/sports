@@ -1,5 +1,7 @@
 package com.xlf.common.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -25,7 +27,10 @@ public class HttpUtils {
         String result = "";
         BufferedReader in = null;
         try {
-            String urlNameString = url + "?" + param;
+            String urlNameString = url;
+            if (!StringUtils.isEmpty (param)){
+                urlNameString = url + "?" + param;
+            }
             URL realUrl = new URL(urlNameString);
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
