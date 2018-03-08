@@ -43,7 +43,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
 
 
     @Override
-    public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer multiple,Integer betType,String timeBetContent) throws Exception {
+    public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer multiple,Integer betType,String timeBetContent,Integer serialNumber) throws Exception {
         AppTimeBettingPo model = new AppTimeBettingPo ();
         model.setId (ToolUtils.getUUID ());
         model.setIssueNo(issueNo);
@@ -60,6 +60,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         model.setBetType (betType);
         model.setBettingContent (timeBetContent);
         model.setMultiple (multiple);
+        model.setSerialNumber (serialNumber);
         appTimeBettingMapper.insert (model);
     }
 
@@ -75,7 +76,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appUserService.updateBettingAmoutById (userId, totalPrice);
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_BETTING.getCode (), totalPrice.multiply (new BigDecimal ("-1")), before, after, "用户" + userPo.getMobile () + "时时彩下注", "");
         for (TimeBettingBaseVo base : vo.getTimeList ()) {
-            this.save (businessNumber, vo.getIssueNo (), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getMultiple (),vo.getBetType (),base.getBettingContent ());
+            this.save (businessNumber, vo.getIssueNo (), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getMultiple (),vo.getBetType (),base.getBettingContent (),vo.getSerialNumber ());
         }
     }
 

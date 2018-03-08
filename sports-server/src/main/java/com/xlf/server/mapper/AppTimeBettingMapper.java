@@ -46,7 +46,7 @@ public interface AppTimeBettingMapper extends BaseMapper<AppTimeBettingPo> {
     @Select("SELECT * FROM `app_time_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
     List<AppTimeBettingPo> findRecordList(@Param("userId") String userId, @Param("businessNumber") String businessNumber, RowBounds rowBounds);
 
-    Integer countBettingByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param ("betTpye") Integer betTpye);
+    Integer countBettingByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param ("betType") Integer betType);
 
-    List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param ("betTpye") Integer betTpye, RowBounds rowBounds);
+    List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param ("betType") Integer betType, RowBounds rowBounds);
 }

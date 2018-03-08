@@ -7,6 +7,8 @@ import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.HttpUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.server.app.AppTimeLotteryService;
+import net.sf.json.JSON;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -24,13 +26,16 @@ public class PayTimeLotteryResultScheduleTask extends BaseScheduleTask {
     @Override
     protected void doSpecificTask() {
         List<AppTimeLotteryPo> list = appTimeLotteryService.lotteryListCurrentDayByPayUrl ();
+        if (CollectionUtils.isEmpty (list)){
+            return;
+        }
         for (AppTimeLotteryPo po : list) {
+            logger.error (ToolUtils.toJson (po));
             AppTimeLotteryPo model = appTimeLotteryService.findAppTimeLotteryPoByIssuNo (po.getIssueNo());
             if (model != null) {
                 break;
             } else {
                 po.setId(ToolUtils.getUUID());
-                po.setLotteryTime(null);
                 po.setFlag(LotteryFlagEnum.NO.getCode());
                 appTimeLotteryService.save(po);
             }

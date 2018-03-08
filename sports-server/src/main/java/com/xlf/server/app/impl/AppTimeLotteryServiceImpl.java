@@ -258,7 +258,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         for (int i=0;i<jsonArray.size ();i++){
             AppTimeLotteryPo model=new AppTimeLotteryPo();
             JSONObject rowJson= jsonArray.getJSONObject (i);
-            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp")));
+            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp")*1000));
             model.setIssueNo (rowJson.getString ("expect"));
             String opencode=rowJson.getString ("opencode");
             String[] array=opencode.split (",");
