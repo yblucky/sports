@@ -267,6 +267,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             model.setLotteryThree (Integer.valueOf (array[2]));
             model.setLotteryFour (Integer.valueOf (array[3]));
             model.setLotteryFive (Integer.valueOf (array[4]));
+            model.setCreateTime (new Date ());
             listPo.add (model);
         }
         return listPo;

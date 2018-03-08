@@ -64,7 +64,7 @@ public class TimeBettingController {
             Calendar calendar = Calendar.getInstance ();
             calendar.setTime (new Date ());
             Integer hour = calendar.get (Calendar.HOUR_OF_DAY);
-            if (hour >= 2 && hour <= 10) {
+            if (hour >= 2 && hour < 10) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
                 return respBody;
             }
