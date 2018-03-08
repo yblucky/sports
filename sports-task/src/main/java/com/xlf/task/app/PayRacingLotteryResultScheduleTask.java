@@ -27,7 +27,7 @@ public class PayRacingLotteryResultScheduleTask extends BaseScheduleTask {
         }
         for (int i = 0; i < lotteryPos.size (); i++) {
             //将正确的开奖结果写入数据库
-            AppRacingLotteryPo model = appRacingLotteryService.findById (lotteryPos.get (i).getIssueNo ());
+            AppRacingLotteryPo model = appRacingLotteryService.findAppRacingLotteryPoByIssuNo (lotteryPos.get (i).getIssueNo ());
             if (model != null) {
                 return;
             } else {
