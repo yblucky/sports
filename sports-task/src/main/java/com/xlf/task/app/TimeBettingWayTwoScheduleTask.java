@@ -26,8 +26,6 @@ public class TimeBettingWayTwoScheduleTask extends BaseScheduleTask {
             AppTimeLotteryPo lotteryPo = appTimeLotteryService.findLast();
             if (lotteryPo == null) {
                 log.info("没有待结算的投注订单");
-                //修改本期为全部已结算完成
-                appTimeLotteryService.updateFlagById(lotteryPo.getId());
                 return;
             }
             List<AppTimeBettingPo> list = null;

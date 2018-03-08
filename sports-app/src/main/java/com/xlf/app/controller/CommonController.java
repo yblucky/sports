@@ -4,6 +4,7 @@ import com.xlf.common.enums.LotteryFlagEnum;
 import com.xlf.common.enums.OddsEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.language.AppMessage;
+import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppTimeLotteryPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.RespBody;
@@ -11,10 +12,12 @@ import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.ToolUtils;
+import com.xlf.server.app.AppTimeBettingService;
 import com.xlf.server.app.AppTimeLotteryService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.common.KaptchaService;
+import com.xlf.server.mapper.AppTimeLotteryMapper;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +51,11 @@ public class CommonController {
     private LanguageUtil languageUtil;
     @Resource
     private AppTimeLotteryService appTimeLotteryService;
+    @Resource
+    private AppTimeLotteryMapper appTimeLotteryMapper;
+
+    @Resource
+    private AppTimeBettingService appTimeBettingService;
 
 
     /**
@@ -233,23 +241,13 @@ public class CommonController {
      * @return 响应对象
      */
     @GetMapping("/test")
-    public RespBody test() {
+    public RespBody test(String id) {
         // 创建返回对象
         RespBody respBody = new RespBody();
         try {
-            AppTimeLotteryPo po=new AppTimeLotteryPo ();
-            po.setLotteryOne (1);
-            po.setLotteryTwo (2);
-            po.setLotteryThree (3);
-            po.setLotteryFour (4);
-            po.setLotteryFive (5);
-            po.setIssueNo (ToolUtils.randomInt (1,1000)+"");
-            po.setCreateTime (new Date ());
-            po.setLotteryTime (new Date ());
-            po.setId(ToolUtils.getUUID());
-            po.setFlag(LotteryFlagEnum.NO.getCode());
-            appTimeLotteryService.save(po);
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "SUCCESS");
+            AppTimeBettingPo  model = appTimeBettingService.findById (id);
+            Boolean f=appTimeLotteryService.timeLotteryHandleService (model);
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "SUCCESS",f);
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "error");
             LogUtils.error("error！", ex);

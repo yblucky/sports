@@ -13,27 +13,27 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.HttpUtils;
 import com.xlf.common.util.ToolUtils;
-import com.xlf.common.vo.app.AppBillRecordVo;
 import com.xlf.common.vo.app.AppTimeLotteryVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppTimeLotteryMapper;
 import com.xlf.server.web.SysUserService;
-import org.apache.ibatis.session.RowBounds;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,6 +115,10 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         } else {
             lotterList = ToolUtils.twoLotteryList (lotteryStr);
         }
+        if (CollectionUtils.isEmpty (lotterList)) {
+            log.error ("组装开奖lotterList失败," + ToolUtils.toJson (lotterList));
+            return false;
+        }
 
         Integer winingCount = appTimeBettingService.wininggCountAndWingConent (lotteryPo.getIssueNo (), LotteryFlagEnum.NO.getCode (), betType, lotterList);
         if (winingCount > 10) {
@@ -143,7 +147,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     public Boolean timeLotteryHandleService(AppTimeBettingPo bettingPo) throws Exception {
         log.error ("------------------------------------------时时彩订单开始处理中奖流程------------订单号：" + bettingPo.getId () + "------------------------------------------------------------------------------------------------------------------");
         AppUserPo userPo = appUserService.findUserById (bettingPo.getUserId ());
-        SysUserVo sysUserVo = sysUserService.findById (userPo.getId ());
+        SysUserVo sysUserVo = sysUserService.findById (userPo.getParentId ());
 
         SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
         BigDecimal odds = sysAgentSettingPo.getOdds ();
@@ -162,7 +166,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.TIME_LOTTERY.getCode (), award, userPo.getBalance (), after, "时时彩奖金派发", "");
         //更新用户累计中奖金额
         appUserService.updateWiningAmoutById (userPo.getId (), award);
-        //更新用户盈亏返水衡量值
+        //更新用户盈亏返水衡量值(正值才有返水)
         appUserService.updateKickBackAmountById (userPo.getId (), award.multiply (new BigDecimal (-1)));
         //写入盈亏返水衡量值流水(此处酌情写入)
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), award, userPo.getBalance (), after, "下级" + userPo.getMobile () + "【" + userPo.getNickName () + "】" + "中奖返水减少", "");
@@ -187,30 +191,32 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
 
     /**
      * 获取开奖号码列表
+     *
      * @param paging
      * @return
      * @throws Exception
      */
     @Override
     public List<AppTimeLotteryVo> loadLotteryInfoList(Paging paging) throws Exception {
-        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
-        List<AppTimeLotteryVo> list = appTimeLotteryMapper.loadLotteryInfoList(rowBounds);
-        if (list==null|| CollectionUtils.isEmpty(list)){
-            list= Collections.emptyList();
+        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        List<AppTimeLotteryVo> list = appTimeLotteryMapper.loadLotteryInfoList (rowBounds);
+        if (list == null || CollectionUtils.isEmpty (list)) {
+            list = Collections.emptyList ();
         }
         return list;
     }
 
     /**
      * 统计开奖号码列表数
+     *
      * @return
      * @throws Exception
      */
     @Override
     public Integer countLotteryInfoTotal() throws Exception {
-        Integer count =appTimeLotteryMapper.countLotteryInfoTotal();
-        if (count==null){
-            count=0;
+        Integer count = appTimeLotteryMapper.countLotteryInfoTotal ();
+        if (count == null) {
+            count = 0;
         }
         return count;
     }
@@ -244,24 +250,24 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             return null;
         }
         String json = HttpUtils.sendGet (TIME_URL, "");
-        if (StringUtils.isEmpty (json)){
+        if (StringUtils.isEmpty (json)) {
             log.error ("获取时时彩第三方付费接口未返回开奖结果");
             return null;
         }
-        JSONObject jsonResult=JSONObject.fromObject (json);
-        if (!"cqssc".equals (jsonResult.get ("code"))){
+        JSONObject jsonResult = JSONObject.fromObject (json);
+        if (!"cqssc".equals (jsonResult.get ("code"))) {
             log.error ("获取时时彩第三方付费接口获取彩种错误");
             return null;
         }
         List<AppTimeLotteryPo> listPo = new ArrayList<> ();
-        JSONArray jsonArray=jsonResult.getJSONArray ("data");
-        for (int i=0;i<jsonArray.size ();i++){
-            AppTimeLotteryPo model=new AppTimeLotteryPo();
-            JSONObject rowJson= jsonArray.getJSONObject (i);
-            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp")*1000));
+        JSONArray jsonArray = jsonResult.getJSONArray ("data");
+        for (int i = 0; i < jsonArray.size (); i++) {
+            AppTimeLotteryPo model = new AppTimeLotteryPo ();
+            JSONObject rowJson = jsonArray.getJSONObject (i);
+            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp") * 1000));
             model.setIssueNo (rowJson.getString ("expect"));
-            String opencode=rowJson.getString ("opencode");
-            String[] array=opencode.split (",");
+            String opencode = rowJson.getString ("opencode");
+            String[] array = opencode.split (",");
             model.setLotteryOne (Integer.valueOf (array[0]));
             model.setLotteryTwo (Integer.valueOf (array[1]));
             model.setLotteryThree (Integer.valueOf (array[2]));
@@ -299,25 +305,25 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     }
 
     public static void main(String[] args) {
-        String TIME_URL="http://ho.apiplus.net/newly.do?token=t674edc1a32ee6613k&code=cqssc&format=json";
+        String TIME_URL = "http://ho.apiplus.net/newly.do?token=t674edc1a32ee6613k&code=cqssc&format=json";
         String json = HttpUtils.sendGet (TIME_URL, "");
-        if (StringUtils.isEmpty (json)){
-            System.out.println  ("获取时时彩第三方付费接口未返回开奖结果");
+        if (StringUtils.isEmpty (json)) {
+            System.out.println ("获取时时彩第三方付费接口未返回开奖结果");
 
         }
-        JSONObject jsonResult=JSONObject.fromObject (json);
-        if (!"cqssc".equals (jsonResult.get ("code"))){
-            System.out.println  ("获取时时彩第三方付费接口获取彩种错误");
+        JSONObject jsonResult = JSONObject.fromObject (json);
+        if (!"cqssc".equals (jsonResult.get ("code"))) {
+            System.out.println ("获取时时彩第三方付费接口获取彩种错误");
         }
         List<AppTimeLotteryPo> listPo = new ArrayList<> ();
-        JSONArray jsonArray=jsonResult.getJSONArray ("data");
-        for (int i=0;i<jsonArray.size ();i++){
-            AppTimeLotteryPo model=new AppTimeLotteryPo();
-            JSONObject rowJson= jsonArray.getJSONObject (i);
-            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp")*1000));
+        JSONArray jsonArray = jsonResult.getJSONArray ("data");
+        for (int i = 0; i < jsonArray.size (); i++) {
+            AppTimeLotteryPo model = new AppTimeLotteryPo ();
+            JSONObject rowJson = jsonArray.getJSONObject (i);
+            model.setLotteryTime (new Date (rowJson.getLong ("opentimestamp") * 1000));
             model.setIssueNo (rowJson.getString ("expect"));
-            String opencode=rowJson.getString ("opencode");
-            String[] array=opencode.split (",");
+            String opencode = rowJson.getString ("opencode");
+            String[] array = opencode.split (",");
             model.setLotteryOne (Integer.valueOf (array[0]));
             model.setLotteryTwo (Integer.valueOf (array[1]));
             model.setLotteryThree (Integer.valueOf (array[2]));
@@ -326,9 +332,9 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             model.setCreateTime (new Date ());
             listPo.add (model);
         }
-       for (AppTimeLotteryPo po:listPo){
-           System.out.println ("*********");
-           System.out.println (ToolUtils.toJson (po));
-       }
+        for (AppTimeLotteryPo po : listPo) {
+            System.out.println ("*********");
+            System.out.println (ToolUtils.toJson (po));
+        }
     }
 }

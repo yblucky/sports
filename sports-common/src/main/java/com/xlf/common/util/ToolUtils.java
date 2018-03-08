@@ -291,7 +291,7 @@ public class ToolUtils {
     public static List<String> twoLotteryList(String lottery) {
         String temp = lottery;
         Set<String> set = new HashSet<> ();
-        List<String> list = Collections.emptyList ();
+        List<String> list = new ArrayList<> ();
         for (int i = 0; i < lottery.length () - 1; i++) {
             for (int j = 1 + i; j < lottery.length (); j++) {
                 for (int m = 0; m < lottery.length (); m++) {
