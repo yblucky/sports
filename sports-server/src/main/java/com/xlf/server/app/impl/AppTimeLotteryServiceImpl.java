@@ -173,7 +173,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         //更新用户当天累计盈亏
         appUserService.updateCurrentProfitById (userPo.getId (), award);
         //更改投注状态为已开奖
-        appTimeBettingService.updateLotteryFlagById (bettingPo.getId (), award);
+        appTimeBettingService.updateLotteryFlagAndWingAmoutById (bettingPo.getId (),LotteryFlagEnum.YES.getCode (), award);
         log.error ("-------------------------------------------时时彩订单结束处理中奖流程-------------订单号：" + bettingPo.getId () + "----------------------------------------------------------------------------------------------------------------");
         return true;
     }

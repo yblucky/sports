@@ -27,7 +27,7 @@ public interface AppTimeBettingService {
 
     Integer wininggCount(String issuNo, Integer lotteryFlag, Integer digital, TimeSeatEnum seat);
 
-    public Integer updateLotteryFlagById(String id, BigDecimal winingAmout);
+    public Integer updateLotteryFlagAndWingAmoutById(String id, Integer lotteryFlag,BigDecimal winingAmout);
 
     public Integer updateBatchLotteryFlag(String issueNo);
 

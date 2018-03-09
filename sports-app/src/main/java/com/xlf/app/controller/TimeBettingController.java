@@ -650,14 +650,14 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
                 return respBody;
             }
-            Long openDate = DateTimeUtil.getLongTimeByDatrStr (DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + timeIntervalPo.getTime ());
+            Long openDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
             if ((System.currentTimeMillis () + 60 * 1000) >= openDate) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "开奖不足一分钟,无法撤单");
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
             appTimeBettingService.undoTimeBettingService (userPo.getId (), vo.getId ());
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
+            respBody.add (RespCodeEnum.SUCCESS.getCode (),"撤单成功");
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {

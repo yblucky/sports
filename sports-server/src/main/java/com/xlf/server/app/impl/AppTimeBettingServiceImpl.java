@@ -152,8 +152,8 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     }
 
     @Override
-    public Integer updateLotteryFlagById(String id, BigDecimal winingAmout) {
-        return appTimeBettingMapper.updateLotteryFlagById (id, winingAmout);
+    public Integer updateLotteryFlagAndWingAmoutById(String id, Integer lotteryFlag,BigDecimal winingAmout) {
+        return appTimeBettingMapper.updateLotteryFlagAndWingAmoutById  (id,lotteryFlag, winingAmout);
     }
 
 
@@ -234,7 +234,9 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
 
         String businessNumber = bettingPo.getBusinessNumber ();
         appUserService.updateBalanceById (userId, totalPrice);
+        appUserService.updateBlockBalanceById(userId, totalPrice.multiply (new BigDecimal (-1)));
         appUserService.updateBettingAmoutById (userId, totalPrice.multiply (new BigDecimal ("-1")));
+        this.updateLotteryFlagAndWingAmoutById (bettingId,LotteryFlagEnum.UNDO.getCode (),BigDecimal.ZERO);
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_UNDO.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "时时彩下注后撤单", "");
         appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", "");
