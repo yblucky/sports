@@ -34,6 +34,7 @@
             <if test="model.agentLevelId != null and model.agentLevelId != ''">and  agentLevelId=#{model.agentLevelId}</if>
             <if test="model.state != null and model.state != ''">and state=#{model.state}</if>
             <if test="model.roleType != null and model.roleType != ''">and roleType=#{model.roleType}</if>
+            <if test="model.id != null and model.id != ''">and id=#{model.id}</if>
         </where>
     </sql>
 	

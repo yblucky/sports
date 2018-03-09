@@ -3,6 +3,7 @@ package com.xlf.web.controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.common.CommonService;
@@ -79,6 +80,10 @@ public class SysUserController {
 	public RespBody findAll(Paging paging,SysUserVo vo){
 		RespBody respBody = new RespBody();
 		try {
+			SysUserVo userVo = commonService.checkWebToken();
+			if(RoleTypeEnum.AGENT.equals(userVo.getRoleType())){
+				vo.setId(vo.getId());
+			}
 			long total =sysUserService.findCount(vo);
 			if(total >0) {
 				//保存返回数据
