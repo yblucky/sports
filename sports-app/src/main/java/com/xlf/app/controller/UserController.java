@@ -70,6 +70,22 @@ public class UserController {
                 return respBody;
             }
 
+            //判断图片   验证码是否正确
+            if (StringUtils.isEmpty(userVo.getImgKey()) && StringUtils.isEmpty(userVo.getImgKeyValue())) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VERIFY_NOT_NULL_PICTRUE, "图片验证码不能为空"));
+                return respBody;
+            }
+            String pictureCode = redisService.getString(userVo.getImgKey());
+            if (pictureCode == null && StringUtils.isEmpty(pictureCode)) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VERIFY_INVALID_PICTRUE, "图片验证码已失效"));
+                return respBody;
+            }
+            if (!userVo.getImgKeyValue().equals(pictureCode)) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VARIFY_FAIL_PICTRUE, "图片验证码输入错误"));
+                return respBody;
+            }
+
+
 
 /*            Boolean flag = commonService.checkSign(userVo);
             if (!flag) {
@@ -144,7 +160,10 @@ public class UserController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.LOGINPWD_NOT_NULL, "登录密码不能为空"));
                 return respBody;
             }
-            //判断图片   验证码是否正确
+
+
+
+           //判断图片   验证码是否正确
             if (StringUtils.isEmpty(userVo.getImgKey()) && StringUtils.isEmpty(userVo.getImgKeyValue())) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VERIFY_NOT_NULL_PICTRUE, "图片验证码不能为空"));
                 return respBody;
@@ -158,6 +177,10 @@ public class UserController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), msgUtil.getMsg(AppMessage.VARIFY_FAIL_PICTRUE, "图片验证码输入错误"));
                 return respBody;
             }
+
+
+
+
 
             //验签
 /*            Boolean signFlag = commonService.checkSign(userVo);
