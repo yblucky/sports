@@ -691,7 +691,7 @@ public class TimeBettingController {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), "获取开奖列表失败");
-            LogUtils.error ("获取开奖列表失败！", ex);
+            LogUtils.error ("获取开奖列  表失败！", ex);
         }
         return respBody;
     }
