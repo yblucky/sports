@@ -39,8 +39,6 @@ public class TimeBettingController {
     @Resource
     private SysUserService sysUserService;
     @Resource
-    private LanguageUtil languageUtil;
-    @Resource
     private AppSysAgentSettingService appSysAgentSettingService;
     @Resource
     private AppTimeBettingService appTimeBettingService;
@@ -48,8 +46,6 @@ public class TimeBettingController {
     private AppTimeIntervalService appTimeIntervalService;
     @Resource
     private RedisService redisService;
-    @Resource
-    private KeyService keyService;
     @Resource
     private AppTimeLotteryService appTimeLotteryService;
 
@@ -118,14 +114,14 @@ public class TimeBettingController {
             }
             if (timeLotteryPo == null) {
                 timeLotteryPo = new AppTimeLotteryPo ();
-                timeLotteryPo.setId ("1234567890");
-                timeLotteryPo.setIssueNo ("20180207110");
+                timeLotteryPo.setId ("");
+                timeLotteryPo.setIssueNo ("系统维护");
                 timeLotteryPo.setFlag (LotteryFlagEnum.NO.getCode ());
-                timeLotteryPo.setLotteryOne (3);
-                timeLotteryPo.setLotteryTwo (5);
-                timeLotteryPo.setLotteryThree (2);
-                timeLotteryPo.setLotteryFour (3);
-                timeLotteryPo.setLotteryFive (1);
+                timeLotteryPo.setLotteryOne (10);
+                timeLotteryPo.setLotteryTwo (10);
+                timeLotteryPo.setLotteryThree (10);
+                timeLotteryPo.setLotteryFour (10);
+                timeLotteryPo.setLotteryFive (10);
                 timeLotteryPo.setLotteryTime (new Date ());
             }
             infoVo.setAppTimeLotteryPo (timeLotteryPo);
