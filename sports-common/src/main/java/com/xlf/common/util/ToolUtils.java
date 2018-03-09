@@ -325,6 +325,46 @@ public class ToolUtils {
         return list;
     }
 
+    public static List<String> quickChoose(Integer type, Map<Integer, String> map) {
+        List<String> list = new ArrayList<> ();
+        if (type == 1) {
+            for (Map.Entry entry : map.entrySet ()) {
+                Integer location = (Integer) entry.getKey ();
+                String v = (String) entry.getValue ();
+                for (int i = 0; i < v.length (); i++) {
+                    String[] xtemp = {"X", "X", "X", "X", "X"};
+                    xtemp[location] = v.charAt (i) + "";
+                    list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
+                }
+            }
+        }
+        if (type == 2) {
+            List<Integer> indexList = new ArrayList<> ();
+            for (Map.Entry entry : map.entrySet ()) {
+                Integer location = (Integer) entry.getKey ();
+                indexList.add (location);
+            }
+            Collections.sort (indexList);
+            for (int i = 0; i < indexList.size () - 1; i++) {
+                int twoLocationX = i;
+                int twoLocationY = i+1;
+                String a = map.get (indexList.get (i));
+                String b = map.get (indexList.get (i + 1));
+                for (int m = 0; m < a.length (); m++) {
+                    for (int n = 0; n < b.length (); n++) {
+                        String[] xtemp = {"X", "X", "X", "X", "X"};
+                        xtemp[twoLocationX] = a.charAt (m) + "";
+                        xtemp[twoLocationY] = b.charAt (n) + "";
+                        System.out.println (org.apache.commons.lang3.StringUtils.join (xtemp));
+                        list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+
     public static void main(String[] args) {
 //        String a = "X2X2X".replaceAll ("\\d", "");
 //        System.out.println (a);

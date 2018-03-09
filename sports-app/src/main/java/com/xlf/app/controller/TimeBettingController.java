@@ -583,6 +583,53 @@ public class TimeBettingController {
     }
 
 
+
+
+
+    /**
+     * 快选
+     *
+     * @param request
+     * @param vo
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/quickChoose")
+    @SystemControllerLog(description = "快选")
+    public RespBody quickChoose(HttpServletRequest request, @RequestBody TimeQuickChooseVo vo) throws Exception {
+        RespBody respBody = new RespBody ();
+        try {
+            //验签
+            /*Boolean flag = commonService.checkSign (vo);
+            if (!flag) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), languageUtil.getMsg (AppMessage.INVALID_SIGN, "无效签名"));
+                return respBody;
+            }*/
+            if (vo.getMultiple () == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "快选下注数量有误");
+                return respBody;
+            }
+            if (vo.getBetType () == null) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "快选类型有误");
+                return respBody;
+            }
+            if (vo.getMap ().size () == 0) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "快选下注组合有误");
+                return respBody;
+            }
+            List<String> list=ToolUtils.quickChoose (vo.getBetType (),vo.getMap ());
+
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "生成快选组合成功",list);
+        } catch (CommException ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), "生成有误");
+            LogUtils.error ("生成有误！", ex);
+        }
+        return respBody;
+    }
+
+
     @PostMapping("/undobetting")
     @SystemControllerLog(description = "时时彩撤单")
     public RespBody undoBetting(HttpServletRequest request, @RequestBody UndoBettingVo vo) throws Exception {
