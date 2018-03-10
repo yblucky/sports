@@ -16,6 +16,7 @@ import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -72,18 +73,36 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
                 return respBody;
             }
+            String isOpen=commonService.findParameter ("isOpen");
+            if ("off".equals(isOpen)){
+                respBody.add (RespCodeEnum.TIME_STOP.getCode (), "时时彩暂停投注");
+                return respBody;
+            }
             String currentDate = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYYMMDD);
             //本期期号
             String cur = (intervalPo.getIssueNo ()) < 100 ? "0" + (intervalPo.getIssueNo ()) : (intervalPo.getIssueNo ()) + "";
             String nex = (intervalPo.getIssueNo ()) < 100 ? "0" + (intervalPo.getIssueNo () + 1) : (intervalPo.getIssueNo () + 1) + "";
             String historyIssuNo = currentDate + cur;
             String nextIssuNo = currentDate + nex;
+
+
+            String endBefore=commonService.findParameter ("endBefore");
+            String openStart=commonService.findParameter ("openStart");
+            String lotteryOpen=commonService.findParameter ("lotteryOpen");
+            if (StringUtils.isEmpty (endBefore) || StringUtils.isEmpty (openStart)|| StringUtils.isEmpty (lotteryOpen)){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "时时彩系统参数错误");
+                return respBody;
+            }
+            Integer endBeforeInt=Integer.valueOf (endBefore);
+            Integer openStartInt=Integer.valueOf (openStart);
+            Integer lotteryOpenInt=Integer.valueOf (lotteryOpen);
+
             //本期投注截止时间
             String endDateStr = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
             Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
-            Long end = endDate.getTime () - 30 * 1000;
-            Long start = endDate.getTime () - inteval * 60 * 1000 + 30 * 1000;
-            Long open = endDate.getTime () + 3 * 60 * 1000;
+            Long end = endDate.getTime () - endBeforeInt * 1000;
+            Long start = endDate.getTime () - inteval * 60 * 1000 + openStartInt * 1000;
+            Long open = endDate.getTime () + lotteryOpenInt* 60 * 1000;
             Date bettingEnd = new Date (end);
             Date bettingStart = new Date (start);
             Date bettingOpen = new Date (open);
@@ -144,9 +163,16 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "下注参数有误");
                 return respBody;
             }
+
+            String endBefore=commonService.findParameter ("endBefore");
+            if (StringUtils.isEmpty (endBefore)){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "时时彩系统投注参数有误");
+                return respBody;
+            }
+            Integer endBeforeInt=Integer.valueOf (endBefore);
             AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (), 10);
             Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
-            if (System.currentTimeMillis () > (longDate - 60 * 1000)) {
+            if (System.currentTimeMillis () > (longDate - endBeforeInt * 1000)) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
@@ -287,9 +313,15 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非一字定投注");
                 return respBody;
             }
+            String endBefore=commonService.findParameter ("endBefore");
+            if (StringUtils.isEmpty (endBefore)){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "时时彩系统投注参数有误");
+                return respBody;
+            }
+            Integer endBeforeInt=Integer.valueOf (endBefore);
             AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (), 10);
             Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
-            if (System.currentTimeMillis () > (longDate - 30 * 1000)) {
+            if (System.currentTimeMillis () > (longDate - endBeforeInt * 1000)) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }
@@ -467,9 +499,15 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非二字定投注");
                 return respBody;
             }
+            String endBefore=commonService.findParameter ("endBefore");
+            if (StringUtils.isEmpty (endBefore)){
+                respBody.add (RespCodeEnum.ERROR.getCode (), "时时彩系统投注参数有误");
+                return respBody;
+            }
+            Integer endBeforeInt=Integer.valueOf (endBefore);
             AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo (vo.getSerialNumber (), 10);
             Long longDate = DateTimeUtil.getLongTimeByDatrStr (timeIntervalPo.getTime ());
-            if (System.currentTimeMillis () > (longDate - 30 * 1000)) {
+            if (System.currentTimeMillis () > (longDate - endBeforeInt * 1000)) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "本期投注已截止");
                 return respBody;
             }

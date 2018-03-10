@@ -7,6 +7,7 @@ package com.xlf.common.enums;
  * @date 2016年11月25日
  */
 public enum RespCodeEnum {
+	TIME_STOP("1111","时时彩暂停投注"),
 	SUCCESS("0000","成功"),
 	NOLOGIN("5000","沒有登录"),
 	ERROR("9999","错误");

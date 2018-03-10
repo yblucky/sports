@@ -76,6 +76,9 @@ public class SettingServiceImpl implements SettingService {
         }
         //新增银行卡
         if (action) {
+            if(model.getDefaultState ()==null){
+                model.setDefaultState (BankEnum.DISABLE.getCode ());
+            }
             model.setId(ToolUtils.getUUID());
             model.setState(YNEnum.YES.getCode());
             //调用dao保存数据
