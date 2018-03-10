@@ -122,9 +122,9 @@ public class AppUserServiceImpl implements AppUserService {
         appUserPo.setId (ToolUtils.getUUID ());
         appUserPo.setCreateTime (new Date ());
         appUserPo.setState (StateEnum.NORMAL.getCode ());
-        appUserPo.setBalance (BigDecimal.ONE);
-        appUserPo.setBettingAmout (BigDecimal.ONE);
-        appUserPo.setBlockedBalance (BigDecimal.ONE);
+        appUserPo.setBalance (BigDecimal.ZERO);
+        appUserPo.setBettingAmout (BigDecimal.ZERO);
+        appUserPo.setBlockedBalance (BigDecimal.ZERO);
         appUserPo.setCurrentProfit (BigDecimal.ZERO);
         appUserPo.setKickBackAmount (BigDecimal.ZERO);
         appUserPo.setWiningAmout (BigDecimal.ZERO);

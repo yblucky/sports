@@ -137,7 +137,7 @@ public class UserController {
                 }
 
             } else {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.PHONE_HAS_USE, "该手机号已被注册"));
+                respBody.add (RespCodeEnum.ERROR.getCode (), "该手机号已被注册");
             }
 
         } catch (CommException ex) {
@@ -158,27 +158,27 @@ public class UserController {
         try {
 
             if (StringUtils.isEmpty (userVo.getMobile ())) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.LOGINNAME_NOT_NULL, "登录名不能为空"));
+                respBody.add (RespCodeEnum.ERROR.getCode (), "登录名不能为空");
                 return respBody;
             }
             if (StringUtils.isEmpty (userVo.getLoginPwd ())) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.LOGINPWD_NOT_NULL, "登录密码不能为空"));
+                respBody.add (RespCodeEnum.ERROR.getCode (),"登录密码不能为空");
                 return respBody;
             }
 
 
             //判断图片   验证码是否正确
             if (StringUtils.isEmpty (userVo.getImgKey ()) && StringUtils.isEmpty (userVo.getImgKeyValue ())) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.VERIFY_NOT_NULL_PICTRUE, "图片验证码不能为空"));
+                respBody.add (RespCodeEnum.ERROR.getCode (), "图片验证码不能为空");
                 return respBody;
             }
             String pictureCode = redisService.getString (userVo.getImgKey ());
             if (pictureCode == null && StringUtils.isEmpty (pictureCode)) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.VERIFY_INVALID_PICTRUE, "图片验证码已失效"));
+                respBody.add (RespCodeEnum.ERROR.getCode (), "图片验证码已失效");
                 return respBody;
             }
             if (!userVo.getImgKeyValue ().equals (pictureCode)) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.VARIFY_FAIL_PICTRUE, "图片验证码输入错误"));
+                respBody.add (RespCodeEnum.ERROR.getCode (), "图片验证码输入错误");
                 return respBody;
             }
 
