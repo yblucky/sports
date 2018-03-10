@@ -102,7 +102,7 @@ public class TimeBettingController {
             Date endDate = DateTimeUtil.parseDateFromStr (endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
             Long end = endDate.getTime () - endBeforeInt * 1000;
             Long start = endDate.getTime () - inteval * 60 * 1000 + openStartInt * 1000;
-            Long open = endDate.getTime () + lotteryOpenInt* 60 * 1000;
+            Long open = endDate.getTime () + lotteryOpenInt * 1000;
             Date bettingEnd = new Date (end);
             Date bettingStart = new Date (start);
             Date bettingOpen = new Date (open);
