@@ -1,9 +1,6 @@
 package com.xlf.server.app.impl;
 
-import com.xlf.common.enums.BetTypeEnum;
-import com.xlf.common.enums.BusnessTypeEnum;
-import com.xlf.common.enums.LotteryFlagEnum;
-import com.xlf.common.enums.TimeSeatEnum;
+import com.xlf.common.enums.*;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeBettingPo;
@@ -223,6 +220,9 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         AppTimeBettingPo bettingPo = this.findById (bettingId);
         if (!bettingPo.getUserId ().equals (userId)){
             throw new CommException ("只能撤销自己的下注单");
+        }
+        if (!LotteryFlagEnum.NO.equals (bettingPo.getLotteryFlag ())){
+            throw new CommException ("不可撤销");
         }
         BigDecimal totalPrice = new BigDecimal (bettingPo.getMultiple ());
         AppUserPo userPo = appUserService.findUserById (userId);
