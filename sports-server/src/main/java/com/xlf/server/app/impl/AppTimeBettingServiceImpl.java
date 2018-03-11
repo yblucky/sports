@@ -71,7 +71,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         String businessNumber = ToolUtils.getUUID ();
         appUserService.updateBalanceById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appUserService.updateBettingAmoutById (userId, totalPrice);
-        appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_BETTING.getCode (), totalPrice.multiply (new BigDecimal ("-1")), before, after, "用户" + userPo.getMobile () + "时时彩下注", "");
+        appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_BETTING.getCode (), totalPrice.multiply (new BigDecimal ("-1")), before, after, "用户" + userPo.getMobile () + "时时彩下注", vo.getIssueNo ());
         for (TimeBettingBaseVo base : vo.getTimeList ()) {
             this.save (businessNumber, vo.getIssueNo (), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getMultiple (),vo.getBetType (),base.getBettingContent (),vo.getSerialNumber ());
         }
@@ -204,7 +204,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     @Override
     public List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye, Paging paging) throws Exception {
         RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
-        if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId) || StringUtils.isEmpty (bettingContent)) {
+        if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId)) {
             return Collections.emptyList ();
         }
         List<AppTimeBettingPo> list = appTimeBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent,betTpye, rowBounds);
@@ -221,7 +221,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         if (!bettingPo.getUserId ().equals (userId)){
             throw new CommException ("只能撤销自己的下注单");
         }
-        if (!LotteryFlagEnum.NO.equals (bettingPo.getLotteryFlag ())){
+        if (!LotteryFlagEnum.NO.getCode ().equals (bettingPo.getLotteryFlag ())){
             throw new CommException ("不可撤销");
         }
         BigDecimal totalPrice = new BigDecimal (bettingPo.getMultiple ());
@@ -237,10 +237,10 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appUserService.updateBlockBalanceById(userId, totalPrice.multiply (new BigDecimal (-1)));
         appUserService.updateBettingAmoutById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         this.updateLotteryFlagAndWingAmoutById (bettingId,LotteryFlagEnum.UNDO.getCode (),BigDecimal.ZERO);
-        appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_UNDO.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "时时彩下注后撤单", "");
+        appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_UNDO.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "时时彩下注后撤单", bettingPo.getIssueNo ());
         appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
-        appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", "");
-        appUserService.updateCurrentProfitById (userId, totalPrice);
+        appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", bettingPo.getIssueNo ());
         return true;
     }
 }
+

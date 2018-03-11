@@ -2,10 +2,12 @@ package com.xlf.server.app.impl;
 
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.WithDrawEnum;
+import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.AppWithDrawPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
+import com.xlf.common.vo.app.AppBillRecordVo;
 import com.xlf.common.vo.app.DrawRecordVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppUserService;
@@ -61,6 +63,9 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
     public Boolean epWithDraw(String userId, String bankId, BigDecimal amount) throws Exception {
         BigDecimal withdrawFee = new BigDecimal(commonService.findParameter("withdrawFee"));
         AppUserPo userPo = userService.findUserById(userId);
+        if (userPo==null || userPo.getBalance ().compareTo (amount)<=0){
+            throw  new CommException ("用户余额不足，无法提现");
+        }
         appUserMapper.updateBalanceById(userId,amount.multiply(new BigDecimal("-1")));
         appUserMapper.updateBlockBalanceById(userId,amount);
         BigDecimal am=amount.multiply(new BigDecimal("-1")).setScale(4,BigDecimal.ROUND_HALF_EVEN);
@@ -113,6 +118,26 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
             sum=0d;
         }
         return sum;
-
     }
+
+
+    @Override
+    public Integer drawRecordListTotal(String userId) {
+        Integer count= withDrawMapper.drawRecordListTotal (userId);
+        if (count==null){
+            count=0;
+        }
+        return count;
+    }
+
+    @Override
+    public List<AppWithDrawPo> withDrawRecordList(String userId, Paging paging) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        List<AppWithDrawPo> list = withDrawMapper.withDrawRecordList(userId, rowBounds);
+        if (list==null|| CollectionUtils.isEmpty(list)){
+            list= Collections.emptyList();
+        }
+        return list;
+    }
+
 }

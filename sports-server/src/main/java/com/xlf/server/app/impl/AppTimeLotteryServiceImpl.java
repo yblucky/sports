@@ -163,13 +163,13 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         //分发奖金
         appUserService.updateBalanceById (userPo.getId (), award);
         //写入派奖流水
-        appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.TIME_LOTTERY.getCode (), award, userPo.getBalance (), after, "时时彩奖金派发", "");
+        appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.TIME_LOTTERY.getCode (), award, userPo.getBalance (), after, "时时彩奖金派发", bettingPo.getIssueNo ());
         //更新用户累计中奖金额
         appUserService.updateWiningAmoutById (userPo.getId (), award);
         //更新用户盈亏返水衡量值(正值才有返水)
         appUserService.updateKickBackAmountById (userPo.getId (), award.multiply (new BigDecimal (-1)));
         //写入盈亏返水衡量值流水(此处酌情写入)
-        appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), award, userPo.getBalance (), after, "下级" + userPo.getMobile () + "【" + userPo.getNickName () + "】" + "中奖返水减少", "");
+        appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), award, userPo.getBalance (), after, "下级" + userPo.getMobile () + "【" + userPo.getNickName () + "】" + "中奖返水减少", bettingPo.getIssueNo ());
         //更新用户当天累计盈亏
         appUserService.updateCurrentProfitById (userPo.getId (), award);
         //更改投注状态为已开奖

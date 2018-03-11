@@ -5,12 +5,15 @@ import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppUserPo;
+import com.xlf.common.po.AppWithDrawPo;
 import com.xlf.common.po.SysAgentSettingPo;
+import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.ToolUtils;
+import com.xlf.common.vo.app.AppBillRecordVo;
 import com.xlf.common.vo.app.BankCardVo;
 import com.xlf.common.vo.app.DrawVo;
 import com.xlf.common.vo.pc.SysUserVo;
@@ -20,15 +23,15 @@ import com.xlf.server.app.AppWithDrawService;
 import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 提现
@@ -67,17 +70,19 @@ public class WithdrawalsController {
             SysUserVo sysUserVo = sysUserService.findById (userPo.getParentId ());
             SysAgentSettingPo agentSettingPo = appSysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
             BigDecimal withdrawMaxAmount = agentSettingPo.getMaxWithdrawPerDay ();
-            if (!ToolUtils.is100Mutiple (vo.getAmount ().doubleValue ())) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.AMOUNT_IS_100_MLUTIPLE, "单笔兑换余额必须是100整数倍"));
-                return respBody;
-            }
             if (vo.getAmount () == null || vo.getAmount ().compareTo (withdrawMaxAmount) == 1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }
-
+             if (userPo==null || userPo.getBalance ().compareTo (vo.getAmount ())<=0){
+                throw  new CommException ("用户余额不足，无法提现");
+            }
             BigDecimal currencySumDraw= new BigDecimal (appWithDrawService.drawSumCurrentDay (userPo.getId ()));
             if (currencySumDraw.compareTo (withdrawMaxAmount) == 1) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
+                return respBody;
+            }
+            if ((currencySumDraw.add (vo.getAmount ())).compareTo (withdrawMaxAmount) == 1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }
@@ -105,5 +110,35 @@ public class WithdrawalsController {
         return respBody;
     }
 
+
+
+    /**
+     * 用户提现流水
+     */
+    @GetMapping(value = "/list")
+    public RespBody list(HttpServletRequest request, Paging paging) {
+        RespBody respBody = new RespBody ();
+        try {
+            //根据用户id获取用户信息
+            List<AppWithDrawPo> list = null;
+            //检验用户是否登录
+            AppUserPo appUserPo = commonService.checkToken ();
+
+            //获取总记录数量
+            int total = appWithDrawService.drawRecordListTotal (appUserPo.getId ());
+            if (total > 0) {
+                list = appWithDrawService.withDrawRecordList (appUserPo.getId (), paging);
+            }
+            //返回前端总记录
+            paging.setTotalCount (total);
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户记录成功", paging, list);
+        } catch (CommException ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (),"获取用户记录失败");
+            LogUtils.error ("获取用户记录失败！", ex);
+        }
+        return respBody;
+    }
 
 }

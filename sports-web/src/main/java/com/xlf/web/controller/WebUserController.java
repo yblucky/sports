@@ -19,8 +19,10 @@ import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.MyBeanUtils;
 import com.xlf.common.util.ToolUtils;
+import com.xlf.common.vo.app.BankCardVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.common.vo.pc.WebUserVo;
+import com.xlf.server.app.AppBankCardService;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
@@ -53,6 +55,9 @@ public class WebUserController {
     private CommonService commonService;
     @Resource
     private AppBillRecordService appBillRecordService;
+
+    @Resource
+    private AppBankCardService bankCardService;
 
 
     /**
@@ -237,6 +242,7 @@ public class WebUserController {
         return respBody;
     }
 
+
     /**
      * 修改用户姓名
      *
@@ -244,31 +250,39 @@ public class WebUserController {
      */
     @PostMapping("/upUserName")
     public RespBody upUserName(@RequestBody AppUserPo po) {
-        RespBody respBody = new RespBody();
+        RespBody respBody = new RespBody ();
         try {
-            if (StringUtil.isEmpty(po.getName())) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "姓名错误!");
+            if (StringUtil.isEmpty (po.getName ())) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "姓名错误!");
             }
-            AppUserPo find = webAppUserService.findUserById(po.getId());
+            AppUserPo find = webAppUserService.findUserById (po.getId ());
             if (null == find) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "用户错误");
+                respBody.add (RespCodeEnum.ERROR.getCode (), "用户错误");
             }
+            if ((StateEnum.NORMAL.getCode ().equals (find.getState ()) || StateEnum.DISABLE.getCode ().equals (find.getState ()))) {
+                AppUserPo upPo = new AppUserPo ();
+                upPo.setName (po.getName ());
+                int count = webAppUserService.updateById (upPo, po.getId ());
+                if (count > 0) {
+                    BankCardVo bankCardVo = new BankCardVo ();
+                    bankCardVo.setName (po.getName ());
+                    bankCardVo.setUserId (po.getId ());
+                    bankCardService.update (bankCardVo);
+                    respBody.add (RespCodeEnum.SUCCESS.getCode (), "修改成功");
 
-            AppUserPo upPo = new AppUserPo();
-            upPo.setName(po.getName());
-            int count = webAppUserService.updateById(upPo, po.getId());
-            if (count > 0) {
-                respBody.add(RespCodeEnum.SUCCESS.getCode(), "修改成功");
-
+                } else {
+                    respBody.add (RespCodeEnum.ERROR.getCode (), "修改失败");
+                }
             } else {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "修改失败");
+                respBody.add (RespCodeEnum.ERROR.getCode (), "用户状态不正常");
             }
         } catch (Exception ex) {
-            respBody.add(RespCodeEnum.ERROR.getCode(), "修改失败");
-            LogUtils.error("修改用户状态失败", ex);
+            respBody.add (RespCodeEnum.ERROR.getCode (), "修改失败");
+            LogUtils.error ("修改用户状态失败", ex);
         }
         return respBody;
     }
+
 
 }
 

@@ -74,7 +74,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         String businessNumber = ToolUtils.getUUID ();
         appUserService.updateBalanceById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appUserService.updateBettingAmoutById (userId, totalPrice);
-        appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.RACING_BETTING.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "北京赛车下注", "");
+        appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.RACING_BETTING.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "北京赛车下注",  vo.getIssueNo ());
         for (RacingBettingBaseVo base : vo.getRaingList ()) {
             this.save (businessNumber, vo.getIssueNo(), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getLotterySix (), base.getLotterySeven (), base.getLotteryEight (), base.getLotteryNine (), base.getLotteryTen (), base.getMultiple ());
         }
