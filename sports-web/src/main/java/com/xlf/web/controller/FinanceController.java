@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +58,17 @@ public class FinanceController {
 	public RespBody findAll(LotteryVo vo, Paging paging){
 		RespBody respBody = new RespBody();
 		try {
-			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功",appRacingBettingService.findAll(vo,paging));
+			SysUserVo sysUser = commonService.checkWebToken();
+			if(sysUser!= null && RoleTypeEnum.AGENT.getCode().equals(sysUser.getRoleType())){
+				vo.setParentId(sysUser.getId());
+			}
+			int total = appRacingBettingService.findAllCount(vo);
+			List<LotteryVo> list = Collections.emptyList();
+			if(total > 0){
+				list = appRacingBettingService.findAll(vo, paging);
+			}
+			paging.setTotalCount(total);
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功",paging,list);
 		} catch (Exception ex) {
 			respBody.add(RespCodeEnum.ERROR.getCode(), "加载注单失败");
 			LogUtils.error("加载注单失败！",ex);

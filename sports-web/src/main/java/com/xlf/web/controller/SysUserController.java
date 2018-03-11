@@ -81,8 +81,8 @@ public class SysUserController {
 		RespBody respBody = new RespBody();
 		try {
 			SysUserVo userVo = commonService.checkWebToken();
-			if(RoleTypeEnum.AGENT.equals(userVo.getRoleType())){
-				vo.setId(vo.getId());
+			if(RoleTypeEnum.AGENT.getCode().equals(userVo.getRoleType())){
+				vo.setId(userVo.getId());
 			}
 			long total =sysUserService.findCount(vo);
 			if(total >0) {

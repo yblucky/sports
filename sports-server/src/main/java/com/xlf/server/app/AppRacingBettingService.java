@@ -45,4 +45,6 @@ public interface AppRacingBettingService {
     Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent)throws Exception;
 
     List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Paging paging)throws Exception;
+
+    int findAllCount(LotteryVo vo);
 }

@@ -1,5 +1,9 @@
 package com.xlf.common.vo.pc;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 /**
  * 营收列表Vo类
  * Created by Administrator on 2017/8/17.
@@ -10,6 +14,10 @@ public class RevenueVo {
      * 代理编号
      * */
     private String id;
+    /**
+     * 代理等级
+     * */
+    private String agentName;
     /**
      * 代理昵称
      * */
@@ -54,6 +62,16 @@ public class RevenueVo {
      * 时间相差天数
      * */
     private int endDiff;
+    /**
+     * '开始时间'
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date startTime;
+    /**
+     * '结束时间'
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date endTime;
 
     public String getId() {
         return id;
@@ -149,5 +167,29 @@ public class RevenueVo {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getAgentName() {
+        return agentName;
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

@@ -15,17 +15,23 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
+import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LogUtils;
+import com.xlf.common.util.MyBeanUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.common.vo.pc.WebUserVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import com.xlf.server.web.WebUserService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.util.StringUtil;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 用户管理控制器
@@ -61,11 +67,16 @@ public class WebUserController {
             //代理登录
             SysUserVo sysUser = commonService.checkWebToken();
             //只能查代理下面的会员
-            if(RoleTypeEnum.AGENT.getCode().equals(sysUser.getRoleType())){
+            if (RoleTypeEnum.AGENT.getCode().equals(sysUser.getRoleType())) {
                 po.setParentId(sysUser.getId());
             }
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载列表成功", webAppUserService.getPoList(po, paging));
-            paging.setTotalCount(webAppUserService.findPoListCount(po));
+            int total = webAppUserService.findPoListCount(po);
+            List<WebUserVo> list = Collections.emptyList();
+            if (total > 0) {
+                list = webAppUserService.getPoList(po, paging);
+            }
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载列表成功", list);
+            paging.setTotalCount(total);
             respBody.setPage(paging);
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "加载列表失败");
@@ -142,24 +153,27 @@ public class WebUserController {
         RespBody respBody = new RespBody();
         try {
             SysUserVo token = commonService.checkWebToken();
-            if(token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()){
+            if (token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
                 return respBody;
             }
-            AppUserPo find = webAppUserService.findUid(po.getUid()+"");
+            AppUserPo find = webAppUserService.findUid(po.getMobile());
+            if (null == find) {
+                find = webAppUserService.findUserByMobile(po.getMobile());
+            }
             if (null == find) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "找不到用户");
                 return respBody;
             }
-            if(BigDecimal.ZERO.compareTo(po.getBalance()) >= 0){
+           /* if(BigDecimal.ZERO.compareTo(po.getBalance()) >= 0){
                 respBody.add(RespCodeEnum.ERROR.getCode(), "请输入正整数的数额");
                 return respBody;
-            }
-            webAppUserService.updateBalance(find.getId(),po.getBalance());
+            }*/
+            webAppUserService.updateBalance(find.getId(), po.getBalance());
             //流水记录
-            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(),find.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
-            ,po.getBalance(),find.getBalance(),find.getBalance().add(po.getBalance()),"后台充值","");
-            respBody.add(RespCodeEnum.SUCCESS.getCode(),"充值成功");
+            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), find.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
+                    , po.getBalance(), find.getBalance(), find.getBalance().add(po.getBalance()), "后台充值", "");
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "充值成功");
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "充值失败");
             LogUtils.error("充值失败", ex);
@@ -167,6 +181,45 @@ public class WebUserController {
         return respBody;
     }
 
+    /**
+     * 修改登陆密码
+     *
+     * @return 响应对象
+     */
+    @PostMapping("/upPwd")
+    public RespBody upPwd(@RequestBody AppUserPo po) {
+        RespBody respBody = new RespBody();
+        try {
+            SysUserVo token = commonService.checkWebToken();
+            if (token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
+                return respBody;
+            }
+            AppUserPo find = webAppUserService.findUid(po.getMobile());
+            if (null == find) {
+                find = webAppUserService.findUserByMobile(po.getMobile());
+            }
+            if (null == find) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "找不到用户");
+                return respBody;
+            }
+            //验证通过，更改登录密码
+            AppUserPo model = new AppUserPo();
+            //每次更新密码都要刷新盐
+            String salt = ToolUtils.getUUID();
+            //根据新盐加密登录密码
+            String loginPw = CryptUtils.hmacSHA1Encrypt(po.getLoginPwd(), salt);
+            model.setLoginPwd(loginPw);
+            model.setPwdStal(salt);
+            //调用通用的更新方法
+            webAppUserService.updateById(model, find.getId());
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "修改密码成功");
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "修改密码失败");
+            LogUtils.error("修改密码失败", ex);
+        }
+        return respBody;
+    }
 
 
     /**
@@ -184,7 +237,38 @@ public class WebUserController {
         return respBody;
     }
 
+    /**
+     * 修改用户姓名
+     *
+     * @return 响应对象
+     */
+    @PostMapping("/upUserName")
+    public RespBody upUserName(@RequestBody AppUserPo po) {
+        RespBody respBody = new RespBody();
+        try {
+            if (StringUtil.isEmpty(po.getName())) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "姓名错误!");
+            }
+            AppUserPo find = webAppUserService.findUserById(po.getId());
+            if (null == find) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "用户错误");
+            }
 
+            AppUserPo upPo = new AppUserPo();
+            upPo.setName(po.getName());
+            int count = webAppUserService.updateById(upPo, po.getId());
+            if (count > 0) {
+                respBody.add(RespCodeEnum.SUCCESS.getCode(), "修改成功");
+
+            } else {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "修改失败");
+            }
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "修改失败");
+            LogUtils.error("修改用户状态失败", ex);
+        }
+        return respBody;
+    }
 
 }
 

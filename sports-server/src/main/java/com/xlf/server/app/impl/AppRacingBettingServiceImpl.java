@@ -141,7 +141,8 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
 
     @Override
     public List<LotteryVo> findAll(LotteryVo vo, Paging paging) {
-        return appRacingBettingMapper.findAll (vo, paging);
+        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        return appRacingBettingMapper.findAll (vo, rowBounds);
     }
 
     @Override
@@ -190,6 +191,10 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         return list;
     }
 
+    @Override
+    public int findAllCount(LotteryVo vo) {
+        return appRacingBettingMapper.findAllCount(vo);
+    }
 
     @Override
     public AppRacingBettingPo findById(String id) {
