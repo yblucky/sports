@@ -7,6 +7,9 @@ package com.xlf.common.enums;
  * @date 2016年11月27日
  */
 public enum BankEnum {
+
+
+
 	NORMAL("10","默认"),
 	DISABLE("20","非默认");
 	private String code;
