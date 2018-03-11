@@ -34,7 +34,6 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
         billRecordPo.setBalance(amount);
         billRecordPo.setId(ToolUtils.getUUID());
         billRecordPo.setBusnessType(busnessType);
-       
         billRecordPo.setUserId(userId);
         billRecordPo.setCreateTime(new Date());
         billRecordPo.setBeforeBalance(beforeAmout);
