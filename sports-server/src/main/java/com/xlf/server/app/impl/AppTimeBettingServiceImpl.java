@@ -204,7 +204,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     @Override
     public List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye, Paging paging) throws Exception {
         RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
-        if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId) || StringUtils.isEmpty (bettingContent)) {
+        if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId)) {
             return Collections.emptyList ();
         }
         List<AppTimeBettingPo> list = appTimeBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent,betTpye, rowBounds);
@@ -240,7 +240,6 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_UNDO.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "时时彩下注后撤单", bettingPo.getIssueNo ());
         appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", bettingPo.getIssueNo ());
-        appUserService.updateCurrentProfitById (userId, totalPrice);
         return true;
     }
 }
