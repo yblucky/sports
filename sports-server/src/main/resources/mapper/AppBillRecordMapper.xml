@@ -146,7 +146,7 @@
 
 
 	<select id="reportCount" resultType="java.lang.Integer">
-		SELECT COUNT(id) from app_bill_record   where userId=#{userId}
+		SELECT COUNT(id) from app_bill_record b  where userId=#{userId}
 		and busnessType IN
 		<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
 			#{item}

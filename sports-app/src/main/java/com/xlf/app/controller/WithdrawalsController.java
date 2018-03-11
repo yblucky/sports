@@ -67,17 +67,19 @@ public class WithdrawalsController {
             SysUserVo sysUserVo = sysUserService.findById (userPo.getParentId ());
             SysAgentSettingPo agentSettingPo = appSysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
             BigDecimal withdrawMaxAmount = agentSettingPo.getMaxWithdrawPerDay ();
-            if (!ToolUtils.is100Mutiple (vo.getAmount ().doubleValue ())) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.AMOUNT_IS_100_MLUTIPLE, "单笔兑换余额必须是100整数倍"));
-                return respBody;
-            }
             if (vo.getAmount () == null || vo.getAmount ().compareTo (withdrawMaxAmount) == 1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }
-
+             if (userPo==null || userPo.getBalance ().compareTo (vo.getAmount ())<=0){
+                throw  new CommException ("用户余额不足，无法提现");
+            }
             BigDecimal currencySumDraw= new BigDecimal (appWithDrawService.drawSumCurrentDay (userPo.getId ()));
             if (currencySumDraw.compareTo (withdrawMaxAmount) == 1) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
+                return respBody;
+            }
+            if ((currencySumDraw.add (vo.getAmount ())).compareTo (withdrawMaxAmount) == 1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }

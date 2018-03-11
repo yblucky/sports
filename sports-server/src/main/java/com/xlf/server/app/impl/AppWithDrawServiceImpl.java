@@ -2,6 +2,7 @@ package com.xlf.server.app.impl;
 
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.WithDrawEnum;
+import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.AppWithDrawPo;
 import com.xlf.common.resp.Paging;
@@ -61,6 +62,9 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
     public Boolean epWithDraw(String userId, String bankId, BigDecimal amount) throws Exception {
         BigDecimal withdrawFee = new BigDecimal(commonService.findParameter("withdrawFee"));
         AppUserPo userPo = userService.findUserById(userId);
+        if (userPo==null || userPo.getBalance ().compareTo (amount)<=0){
+            throw  new CommException ("用户余额不足，无法提现");
+        }
         appUserMapper.updateBalanceById(userId,amount.multiply(new BigDecimal("-1")));
         appUserMapper.updateBlockBalanceById(userId,amount);
         BigDecimal am=amount.multiply(new BigDecimal("-1")).setScale(4,BigDecimal.ROUND_HALF_EVEN);

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -126,7 +127,7 @@ public class TimeBettingController {
             }
             //查询上期的开奖结果
             String pre = (intervalPo.getIssueNo () - 1) < 100 ? "0" + (intervalPo.getIssueNo () - 1) : (intervalPo.getIssueNo () - 1) + "";
-            String prepre = (intervalPo.getIssueNo () - 1) < 100 ? "0" + (intervalPo.getIssueNo () - 2) : (intervalPo.getIssueNo () - 2) + "";
+            String prepre = (intervalPo.getIssueNo () - 2) < 100 ? "0" + (intervalPo.getIssueNo () - 2) : (intervalPo.getIssueNo () - 2) + "";
             if(Integer.valueOf(pre)<10){
                 pre="0"+pre;
             }else if(Integer.valueOf(prepre)<100){
@@ -741,34 +742,13 @@ public class TimeBettingController {
 
 
     public static void main(String[] args) {
-        String a = "12345";
-        String temp = a;
-        Set<String> set = new HashSet<> ();
-        for (int i = 0; i < a.length () - 1; i++) {
-            for (int j = 1 + i; j < a.length (); j++) {
-                for (int m = 0; m < a.length () - 1; m++) {
-                    if (m != i && m != j) {
-                        temp = temp.replace (temp.charAt (i), 'X');
-                        temp = temp.replace (temp.charAt (j), 'X');
-                        set.add (temp);
-                        temp = a;
-                    }
-                }
-            }
-        }
-        for (String s : set) {
-            System.out.println (s);
-        }
-//        23456
-//        23XXX 2X4XX 2XX5X 2XXX6
-//        X34XX X3X5X 3XXX6
-//                XX45X  XX4X6
-//                        XXX56
-//
+        String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, 10);
 
-
-        System.out.println (DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
-
-        System.out.println (Integer.valueOf ("20180308035"));
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(DateTimeUtil.parseDateFromStr ("2018-03-01 16:00:00",DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+        calendar.set(Calendar.MINUTE,10*(calendar.get(Calendar.MINUTE)/10));
+        Date date1 =calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat(DateTimeUtil.PATTERN_HH_MM);
+        System.out.println (  format.format(date1));
     }
 }
