@@ -125,7 +125,7 @@ public class WithdrawalsController {
             AppUserPo appUserPo = commonService.checkToken ();
 
             //获取总记录数量
-            int total = appWithDrawService.drawRecordTotal (appUserPo.getId ());
+            int total = appWithDrawService.drawRecordListTotal (appUserPo.getId ());
             if (total > 0) {
                 list = appWithDrawService.withDrawRecordList (appUserPo.getId (), paging);
             }
