@@ -7,6 +7,7 @@ import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.AppWithDrawPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.util.ToolUtils;
+import com.xlf.common.vo.app.AppBillRecordVo;
 import com.xlf.common.vo.app.DrawRecordVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppUserService;
@@ -117,6 +118,26 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
             sum=0d;
         }
         return sum;
-
     }
+
+
+    @Override
+    public Integer drawRecordListTotal(String userId) {
+        Integer count= withDrawMapper.drawRecordListTotal (userId);
+        if (count==null){
+            count=0;
+        }
+        return count;
+    }
+
+    @Override
+    public List<AppWithDrawPo> withDrawRecordList(String userId, Paging paging) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        List<AppWithDrawPo> list = withDrawMapper.withDrawRecordList(userId, rowBounds);
+        if (list==null|| CollectionUtils.isEmpty(list)){
+            list= Collections.emptyList();
+        }
+        return list;
+    }
+
 }

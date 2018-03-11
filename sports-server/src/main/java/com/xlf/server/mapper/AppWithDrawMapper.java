@@ -56,4 +56,10 @@ public interface AppWithDrawMapper extends BaseMapper<AppWithDrawPo> {
 
     @Select ("SELECT SUM(amount) FROM `app_withdraw` where date(createTime) = curdate() and state in (10,20) and userId=#{userId}")
     Double drawSumCurrentDay(@Param ("userId") String userId);
+
+    @Select ("SELECT count(id) FROM `app_withdraw`   where   userId=#{userId} ")
+    Integer drawRecordListTotal(@Param ("userId") String userId);
+
+    @Select ("SELECT * FROM `app_withdraw`   where   userId=#{userId}  ORDER BY createTime desc")
+    List<AppWithDrawPo> withDrawRecordList(@Param ("userId") String userId, RowBounds rowBounds);
 }

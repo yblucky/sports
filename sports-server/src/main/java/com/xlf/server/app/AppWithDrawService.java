@@ -26,4 +26,8 @@ public interface AppWithDrawService {
 
     public Double drawSumCurrentDay(String userId);
 
+    public Integer drawRecordListTotal(String userId);
+
+    public List<AppWithDrawPo> withDrawRecordList(String userId, Paging paging);
+
 }
