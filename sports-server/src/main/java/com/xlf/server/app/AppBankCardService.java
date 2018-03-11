@@ -9,4 +9,6 @@ import com.xlf.common.vo.app.BankCardVo;
 public interface AppBankCardService {
 
     public BankCardVo findKey(String id);
+
+    void update(BankCardVo bankCardVo) throws Exception;
 }

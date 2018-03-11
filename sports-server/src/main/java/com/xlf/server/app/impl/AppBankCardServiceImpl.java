@@ -20,4 +20,11 @@ public class AppBankCardServiceImpl implements AppBankCardService {
     public BankCardVo findKey(String id) {
         return appBankCardMapper.findKey(id);
     }
+
+
+    @Override
+    public void update(BankCardVo bankCardVo) throws Exception {
+        // TODO Auto-generated method stub
+        appBankCardMapper.update(bankCardVo);
+    }
 }
