@@ -127,6 +127,11 @@ public class TimeBettingController {
             //查询上期的开奖结果
             String pre = (intervalPo.getIssueNo () - 1) < 100 ? "0" + (intervalPo.getIssueNo () - 1) : (intervalPo.getIssueNo () - 1) + "";
             String prepre = (intervalPo.getIssueNo () - 1) < 100 ? "0" + (intervalPo.getIssueNo () - 2) : (intervalPo.getIssueNo () - 2) + "";
+            if(Integer.valueOf(pre)<10){
+                pre="0"+pre;
+            }else if(Integer.valueOf(prepre)<100){
+                prepre="0"+prepre;
+            }
             AppTimeLotteryPo timeLotteryPo = appTimeLotteryService.findAppTimeLotteryPoByIssuNo (currentDate + pre);
             if (timeLotteryPo == null) {
                 timeLotteryPo = appTimeLotteryService.findAppTimeLotteryPoByIssuNo (currentDate + prepre);

@@ -111,7 +111,7 @@ public class ReportController {
                 undo = 0d;
             }
             map.put ("costs",new BigDecimal ((costs-undo)).setScale (2,BigDecimal.ROUND_HALF_EVEN));
-            map.put ("income",new BigDecimal (income).subtract (new BigDecimal ((costs-undo))).setScale (2,BigDecimal.ROUND_HALF_EVEN));
+            map.put ("income",new BigDecimal (income).add (new BigDecimal ((costs+undo))).setScale (2,BigDecimal.ROUND_HALF_EVEN));
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户报表成功", map);
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());

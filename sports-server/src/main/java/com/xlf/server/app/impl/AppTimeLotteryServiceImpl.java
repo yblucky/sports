@@ -107,7 +107,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
 
     @Override
     public Boolean batchTimeLotteryHandleWayTwoService(AppTimeLotteryPo lotteryPo, Boolean flag, Integer betType) throws Exception {
-        String lotteryStr = lotteryPo.getLotteryOne () + lotteryPo.getLotteryTwo () + lotteryPo.getLotteryThree () + lotteryPo.getLotteryFour () + lotteryPo.getLotteryFive () + "";
+        String lotteryStr = lotteryPo.getLotteryOne ()+""+ lotteryPo.getLotteryTwo () + ""+lotteryPo.getLotteryThree () + ""+lotteryPo.getLotteryFour () +""+ lotteryPo.getLotteryFive () + "";
         List<AppTimeBettingPo> list;
         List<String> lotterList;
         if (BetTypeEnum.TIME_ONE.getCode () == betType) {

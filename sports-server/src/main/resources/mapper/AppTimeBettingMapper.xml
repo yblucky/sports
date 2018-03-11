@@ -37,7 +37,7 @@
 
 
 
-    <select id="listWininggByIssuNo">
+    <select id="listWininggByIssuNo" resultType="com.xlf.common.po.AppTimeBettingPo">
         select
         <include refid="fields_id"/>
         from
@@ -64,7 +64,7 @@
 
 
 
-    <select id="listWininggByIssuNoAndWingContent">
+    <select id="listWininggByIssuNoAndWingConent" resultType="com.xlf.common.po.AppTimeBettingPo">
         select
         <include refid="fields_id"/>
         from

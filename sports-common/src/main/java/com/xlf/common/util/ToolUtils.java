@@ -289,21 +289,17 @@ public class ToolUtils {
     }
 
     public static List<String> twoLotteryList(String lottery) {
-        String temp = lottery;
+
         Set<String> set = new HashSet<> ();
         List<String> list = new ArrayList<> ();
-        for (int i = 0; i < lottery.length () - 1; i++) {
-            for (int j = 1 + i; j < lottery.length (); j++) {
-                for (int m = 0; m < lottery.length (); m++) {
-                    if (m != i && m != j) {
-                        temp = temp.replace (temp.charAt (m), 'X');
-                        temp = temp.replace (temp.charAt (m), 'X');
-                    }
+            for (int m = 0; m < lottery.length (); m++) {
+                for (int n = m+1; n < lottery.length (); n++) {
+                    String[] xtemp = {"X", "X", "X", "X", "X"};
+                    xtemp[m] = lottery.charAt (m) + "";
+                    xtemp[n] = lottery.charAt (n) + "";
+                    list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
                 }
-                set.add (temp);
-                temp = lottery;
             }
-        }
         for (String s : set) {
             list.add (s);
         }
@@ -311,16 +307,11 @@ public class ToolUtils {
     }
 
     public static List<String> oneLotteryList(String lottery) {
-        String temp = lottery;
         List<String> list = new ArrayList<> ();
         for (int i = 0; i < lottery.length (); i++) {
-            for (int m = 0; m < lottery.length (); m++) {
-                if (m != i) {
-                    temp = temp.replace (temp.charAt (m), 'X');
-                }
-            }
-            list.add (temp);
-            temp = lottery;
+            String[] xtemp = {"X", "X", "X", "X", "X"};
+            xtemp[i] = lottery.charAt (i) + "";
+            list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
         }
         return list;
     }
@@ -355,7 +346,6 @@ public class ToolUtils {
                         String[] xtemp = {"X", "X", "X", "X", "X"};
                         xtemp[twoLocationX] = a.charAt (m) + "";
                         xtemp[twoLocationY] = b.charAt (n) + "";
-                        System.out.println (org.apache.commons.lang3.StringUtils.join (xtemp));
                         list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
                     }
                 }
@@ -366,10 +356,9 @@ public class ToolUtils {
 
 
     public static void main(String[] args) {
-//        String a = "X2X2X".replaceAll ("\\d", "");
-//        System.out.println (a);
-//        System.out.println (regex ("X21XX", "X\\d\\dXX"));
-        List<String> list = oneLotteryList ("12345");
+        String s="42092";
+//        List<String> list = oneLotteryList (s);
+        List<String> list = twoLotteryList (s);
 
 //        List<String> list = Collections.emptyList ();
         for (String ss:list){

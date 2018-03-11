@@ -24,7 +24,6 @@ public interface AppTimeLotteryService {
 
     public Boolean batchTimeLotteryHandleWayTwoService(AppTimeLotteryPo lotteryPo, Boolean flag,Integer betType) throws Exception;
 
-
     public List<AppTimeLotteryPo> lotteryListCurrentDay();
 
     public List<AppTimeLotteryPo> lotteryListCurrentDayByPayUrl();
