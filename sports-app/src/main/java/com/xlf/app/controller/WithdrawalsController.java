@@ -75,6 +75,12 @@ public class WithdrawalsController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }
+
+            BigDecimal currencySumDraw= new BigDecimal (appWithDrawService.drawSumCurrentDay (userPo.getId ()));
+            if (currencySumDraw.compareTo (withdrawMaxAmount) == 1) {
+                respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
+                return respBody;
+            }
             if (StringUtils.isEmpty (vo.getBankCardId ())) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.CARD_ID_NOT_NULL, "银行卡信息id不能为空"));
                 return respBody;

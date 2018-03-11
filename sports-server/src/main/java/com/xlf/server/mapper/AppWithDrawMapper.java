@@ -54,4 +54,6 @@ public interface AppWithDrawMapper extends BaseMapper<AppWithDrawPo> {
     public BigDecimal findSUM(@Param("model") AppWithDrawVo vo);
 
 
+    @Select ("SELECT SUM(amount) FROM `app_withdraw` where date(createTime) = curdate() and state=10 and userId=#{userId}")
+    Double drawSumCurrentDay(@Param ("userId") String userId);
 }

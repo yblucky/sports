@@ -24,4 +24,6 @@ public interface AppWithDrawService {
 
     public Integer drawRecordTotal(String userId);
 
+    public Double drawSumCurrentDay(String userId);
+
 }

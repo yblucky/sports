@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.FROM;
+
 /**
  * 提现
  * Created by Administrator on 2018/1/4 0004.
@@ -102,5 +104,15 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
             list= Collections.emptyList();
         }
         return list;
+    }
+
+    @Override
+    public Double drawSumCurrentDay(String userId) {
+        Double sum= withDrawMapper.drawSumCurrentDay (userId);
+        if (sum==null){
+            sum=0d;
+        }
+        return sum;
+
     }
 }

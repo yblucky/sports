@@ -100,4 +100,7 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
     Double report(@Param("userId") String userId, @Param("list") List<Integer> busnessTypeList, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
 
+    Integer reportCount(@Param("userId") String userId, @Param("list") List<Integer> busnessTypeList, @Param("startTime") String startTime, @Param("endTime") String endTime);
+
+
 }

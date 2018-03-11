@@ -121,4 +121,13 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
     public Double report(String userId, List<Integer> busnessTypeList, String startTime, String endTime) {
         return billRecordMapper.report (userId,busnessTypeList,startTime,endTime);
     }
+
+    @Override
+    public Integer reportCount(String userId, List<Integer> busnessTypeList, String startTime, String endTime) {
+        Integer count =billRecordMapper.reportCount (userId,busnessTypeList,startTime,endTime);
+        if (count==null){
+            count=0;
+        }
+        return count;
+    }
 }

@@ -100,6 +100,7 @@ public class ReportController {
             Double costs = billRecordService.report (appUserPo.getId (), busnessTypeListCosts,startTime,endTime);
             Double income = billRecordService.report (appUserPo.getId (), busnessTypeListIncome,startTime,endTime);
             Double undo = billRecordService.report (appUserPo.getId (), busnessTypeListUndo,startTime,endTime);
+            Integer costsCount = billRecordService.reportCount (appUserPo.getId (), busnessTypeListCosts,startTime,endTime);
             Map<String,BigDecimal> map=new HashMap<> ();
             if(costs == null){
                 costs = 0d;
@@ -112,6 +113,7 @@ public class ReportController {
             }
             map.put ("costs",new BigDecimal ((costs-undo)).setScale (2,BigDecimal.ROUND_HALF_EVEN));
             map.put ("income",new BigDecimal (income).add (new BigDecimal ((costs+undo))).setScale (2,BigDecimal.ROUND_HALF_EVEN));
+            map.put ("costsCount",new BigDecimal (costsCount));
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户报表成功", map);
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());

@@ -56,4 +56,6 @@ public interface AppBillRecordService {
     List<RevenueVo> revenueList(RevenueVo vo, Paging paging);
 
     Double report( String userId,  List<Integer> busnessTypeList,  String startTime,   String endTime);
+
+    public Integer reportCount(String userId, List<Integer> busnessTypeList, String startTime, String endTime);
 }
