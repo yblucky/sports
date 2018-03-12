@@ -365,5 +365,12 @@ public class ToolUtils {
             System.out.println (ss);
         }
 
+        String reg="[^0-9]";
+        String s1="12XXX";
+        Pattern pattern=Pattern.compile (reg);
+        Matcher matcher=  pattern.matcher (s1);
+        System.out.println ( matcher.group ());
+
+
     }
 }
