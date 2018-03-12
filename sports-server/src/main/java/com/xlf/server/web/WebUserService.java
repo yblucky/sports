@@ -17,6 +17,7 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.pc.HomeUser;
 import com.xlf.common.vo.pc.StatisticsVo;
 import com.xlf.common.vo.pc.WebStatisticsVo;
+import com.xlf.common.vo.pc.WebUserVo;
 
 /**
  * 用户业务层接口
@@ -59,7 +60,7 @@ public interface WebUserService {
 
     int updateById(AppUserPo userPo, String userId) throws Exception;
     
-    List<AppUserPo> getPoList(AppUserPo userPo,Paging paging);
+    List<WebUserVo> getPoList(AppUserPo userPo, Paging paging);
     
     public Integer findPoListCount(AppUserPo po);
     

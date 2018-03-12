@@ -31,6 +31,14 @@ public class LotteryVo {
 	 * */
 	private String userId;
 	/**
+	 * 用户id
+	 * */
+	private String parentId;
+	/**
+	 * 用户id
+	 * */
+	private String mobile;
+	/**
 	 * 开奖结果
 	 * */
 	private String lotteryResult;
@@ -255,5 +263,21 @@ public class LotteryVo {
 
 	public void setEndDiff(int endDiff) {
 		this.endDiff = endDiff;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 }

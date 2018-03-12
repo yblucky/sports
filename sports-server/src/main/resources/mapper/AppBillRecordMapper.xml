@@ -51,7 +51,7 @@
 		<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 		<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
 		<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
-		<if test="model.parentId != null and model.parentId != ''">AND a.parentId=#{model.parentId}</if>
+		<if test="model.parentId != null and model.parentId != ''">AND u.parentId=#{model.parentId}</if>
 		</where>
     </select>
 
@@ -98,16 +98,17 @@
 
 
 	<select id="revenueList" resultType="com.xlf.common.vo.pc.RevenueVo">
-		select a.*,t.betTotal as betScore,(t.lotteryTotal-t.betTotal) as memberRs,t2.bus1 as agentProfit from sys_user a
-		 INNER JOIN
+		select a.*,t.betTotal as betScore,(t.lotteryTotal-t.betTotal) as memberRs,t2.bus1 as agentProfit,b.agentName
+		  from sys_user a
+		 inner join sys_agent_setting b on a.agentLevelId = b.id
+		 left JOIN
 			(select sum(case b.busnessType when 21 then b.balance when 23 then b.balance when 31 then b.balance when 33 then b.balance else 0 end) as betTotal,
-					 sum(case b.busnessType when 22 then b.balance when 32 then b.balance else 0 end) as lotteryTotal,
+					 sum(case b.busnessType when 22 then b.balance when 32 then b.balance else 0 end) as lotteryTotal,count(1) as betCount,
 					 b.busnessType,b.userId,a.parentId from app_user a
 			   LEFT JOIN app_bill_record b on a.id = b.userid
 				<where>
 					1 = 1 and a.state='10'
-					<if test="model.userid != null and model.userid != ''">AND a.parentId=#{model.userid}</if>
-					<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
+					<if test="model.userId != null and model.userId != ''">AND a.parentId=#{model.userId}</if>
 					<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 					<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
 					<if test="model.startDiff != null">AND datediff(b.createtime,now())>=#{model.startDiff}</if>
@@ -115,16 +116,15 @@
 				</where>
 			  GROUP BY a.parentId
 			) as t on a.id=t.parentId
-		INNER JOIN
+		left JOIN
 			(select sum(case b.busnessType when 51 then b.balance else 0 end) as bus1,
 					 0 as bus2,
 					 b.busnessType,a.id from sys_user a
 			   LEFT JOIN app_bill_record b on a.id = b.userid
 			<where>
 				a.roleType='20'
-				<if test="model.userid != null and model.userid != ''">AND a.id=#{model.userid}</if>
+				<if test="model.userId != null and model.userId != ''">AND a.id=#{model.userId}</if>
 				<if test="model.mobile != null and model.mobile != ''">AND a.mobile=#{model.mobile}</if>
-				<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
 				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
 				<if test="model.startDiff != null">AND datediff(b.createtime,now())>=#{model.startDiff}</if>
@@ -132,6 +132,10 @@
 			</where>
 			  GROUP BY a.id
 			) as t2 on a.id=t2.id
+		<where>
+			a.roleType='20'
+			<if test="model.userId != null and model.userId != ''"> AND a.id=#{model.userId}</if>
+		</where>
 	</select>
 
 	<select id="report" resultType="java.lang.Double">

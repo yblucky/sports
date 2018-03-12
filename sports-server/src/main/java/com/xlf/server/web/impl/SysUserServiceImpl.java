@@ -77,6 +77,7 @@ public class SysUserServiceImpl implements SysUserService {
         userPo.setRoleId(userVo.getRoleId());
         userPo.setRoleName(userVo.getRoleName());
         userPo.setState(userVo.getState());
+        userPo.setAgentLevelId(userVo.getAgentLevelId());
         userMapper.updateByPrimaryKey(userPo);
     }
 

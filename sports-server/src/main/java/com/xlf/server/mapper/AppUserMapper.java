@@ -5,6 +5,7 @@ import com.xlf.common.vo.app.UserInfoVo;
 import com.xlf.common.vo.pc.HomeUser;
 import com.xlf.common.vo.pc.StatisticsVo;
 import com.xlf.common.vo.pc.WebStatisticsVo;
+import com.xlf.common.vo.pc.WebUserVo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -156,7 +157,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
      * @param userPo
      * @return
      */
-    public List<AppUserPo> getPoList(@Param("model") AppUserPo userPo, @Param("startRow") int startRow, @Param("pageSize") int pageSize);
+    public List<WebUserVo> getPoList(@Param("model") AppUserPo userPo, @Param("startRow") int startRow, @Param("pageSize") int pageSize);
 
     /**
      * 查询用户列表总数

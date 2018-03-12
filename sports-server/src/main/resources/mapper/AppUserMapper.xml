@@ -144,18 +144,36 @@
 
 
 
-    <select id="getPoList" resultType="com.xlf.common.po.AppUserPo">
-        <include refid="selector"/>
-        <include refid="condition"/>
+    <select id="getPoList" resultType="com.xlf.common.vo.pc.WebUserVo">
+        select a.id,a.uid,a.mobile,a.name,a.nickName,a.loginPwd,a.pwdStal,a.payPwd,a.payStal,a.parentId,a.balance
+                ,a.blockedBalance,a.bettingAmout,a.currentProfit,a.winingAmout,a.kickBackAmount,a.errorNo,a.state,a.imgPath,a.createTime,a.loginTime
+                ,u.id as agentId,u.userName as agentName,t.agentName as agentLevel
+        from app_user a left join sys_user u on a.parentId = u.id
+        left join sys_agent_setting t on u.agentLevelId=t.id
+        <where>
+            <if test="model.uid != null and model.uid != ''">a.uid=#{model.uid}</if>
+            <if test="model.mobile != null and model.mobile != ''">and a.mobile=#{model.mobile}</if>
+            <if test="model.nickName != null and model.nickName != ''">and  a.nickName=#{model.nickName}</if>
+            <if test="model.name != null and model.name != ''">and  a.name=#{model.name}</if>
+            <if test="model.parentId != null and model.parentId != ''">and a.parentId=#{model.parentId}</if>
+            <if test="model.state != null and model.state != ''">and a.state=#{model.state}</if>
+        </where>
         ORDER BY
-	createTime DESC
-	limit #{startRow}, #{pageSize};
+        a.createTime DESC
+        limit #{startRow}, #{pageSize};
     </select>
     
     
     <select id="findPoListCount" resultType="int">
-        select  count(1) from  app_user
-        <include refid="condition"/>
+        select  count(1) from  app_user a
+        <where>
+            <if test="model.uid != null and model.uid != ''">a.uid=#{model.uid}</if>
+            <if test="model.mobile != null and model.mobile != ''">and a.mobile=#{model.mobile}</if>
+            <if test="model.nickName != null and model.nickName != ''">and  a.nickName=#{model.nickName}</if>
+            <if test="model.name != null and model.name != ''">and  a.name=#{model.name}</if>
+            <if test="model.parentId != null and model.parentId != ''">and a.parentId=#{model.parentId}</if>
+            <if test="model.state != null and model.state != ''">and a.state=#{model.state}</if>
+        </where>
 
     </select>
     

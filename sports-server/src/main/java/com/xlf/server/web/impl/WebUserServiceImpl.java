@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.xlf.common.vo.pc.WebStatisticsVo;
+import com.xlf.common.vo.pc.WebUserVo;
 import org.springframework.stereotype.Service;
 
 import com.xlf.common.enums.RedisKeyEnum;
@@ -108,7 +109,7 @@ public class WebUserServiceImpl implements WebUserService {
 	}
     
 	@Override
-	public List<AppUserPo> getPoList(AppUserPo userPo,Paging paging) {
+	public List<WebUserVo> getPoList(AppUserPo userPo, Paging paging) {
 		int startRow=0;int pageSize=0;
 		if(null!=paging){
 			startRow=(paging.getPageNumber()>0)?(paging.getPageNumber()-1)*paging.getPageSize():0;
