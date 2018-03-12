@@ -75,6 +75,12 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         for (TimeBettingBaseVo base : vo.getTimeList ()) {
             this.save (businessNumber, vo.getIssueNo (), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getMultiple (),vo.getBetType (),base.getBettingContent (),vo.getSerialNumber ());
         }
+        appUserService.updateBettingAmoutById (userId, totalPrice);
+        //盈亏衡量
+        BigDecimal afterKick = userPo.getKickBackAmount ().add (totalPrice).setScale (2, BigDecimal.ROUND_HALF_EVEN);
+
+        appBillRecordService.saveBillRecord (businessNumber, userPo.getId (), BusnessTypeEnum.ADD_KICKBACKAMOUNT_RECORD.getCode (), totalPrice, userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后返水增加", vo.getIssueNo());
+
     }
 
 
