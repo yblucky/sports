@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.xlf.common.enums.RoleTypeEnum;
+import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.common.CommonService;
@@ -26,6 +27,7 @@ import com.xlf.common.vo.pc.UpdatePwVo;
 import com.xlf.server.web.LoginService;
 import com.xlf.server.web.SysUserService;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 
 /**
@@ -289,6 +291,32 @@ public class SysUserController {
 		return respBody;
 	}
 
-
+	/**
+	 * 充值积分
+	 *
+	 * @return 响应对象
+	 */
+	@PostMapping("/recharge")
+	public RespBody recharge(@RequestBody SysUserVo vo) {
+		RespBody respBody = new RespBody();
+		try {
+			SysUserVo token = commonService.checkWebToken();
+			if (token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()) {
+					respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
+					return respBody;
+			}
+			SysUserVo find = sysUserService.findByMobile(vo.getMobile());
+			if (null == find) {
+				respBody.add(RespCodeEnum.ERROR.getCode(), "找不到用户");
+				return respBody;
+			}
+			sysUserService.recharge(find,vo.getBalance());
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "充值成功");
+		} catch (Exception ex) {
+			respBody.add(RespCodeEnum.ERROR.getCode(), "充值失败");
+			LogUtils.error("充值失败", ex);
+		}
+		return respBody;
+	}
 	
 }

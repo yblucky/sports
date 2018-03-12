@@ -91,6 +91,18 @@ public class SysUserVo implements Serializable{
 	 * 累计返水
 	 */
 	private BigDecimal totalReturnWater;
+	/**
+	 * 代理余额
+	 */
+	private BigDecimal balance;
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
+	}
 
 	/**
 	 * @return the salt

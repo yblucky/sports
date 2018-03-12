@@ -159,8 +159,14 @@ public class WebUserController {
         try {
             SysUserVo token = commonService.checkWebToken();
             if (token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
-                return respBody;
+                if(BigDecimal.ZERO.compareTo(po.getBalance()) >= 0){
+                    respBody.add(RespCodeEnum.ERROR.getCode(), "请输入正整数的数额");
+                    return respBody;
+                }
+                if(po.getBalance().compareTo(token.getBalance())>1){
+                    respBody.add(RespCodeEnum.ERROR.getCode(), "代理余额不足，请先充值");
+                    return respBody;
+                }
             }
             AppUserPo find = webAppUserService.findUid(po.getMobile());
             if (null == find) {
@@ -170,14 +176,7 @@ public class WebUserController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "找不到用户");
                 return respBody;
             }
-           /* if(BigDecimal.ZERO.compareTo(po.getBalance()) >= 0){
-                respBody.add(RespCodeEnum.ERROR.getCode(), "请输入正整数的数额");
-                return respBody;
-            }*/
-            webAppUserService.updateBalance(find.getId(), po.getBalance());
-            //流水记录
-            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), find.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
-                    , po.getBalance(), find.getBalance(), find.getBalance().add(po.getBalance()), "后台充值", "");
+            webAppUserService.recharge(find,po.getBalance(),token);
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "充值成功");
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "充值失败");

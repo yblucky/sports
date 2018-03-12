@@ -14,10 +14,7 @@ import java.util.List;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
-import com.xlf.common.vo.pc.HomeUser;
-import com.xlf.common.vo.pc.StatisticsVo;
-import com.xlf.common.vo.pc.WebStatisticsVo;
-import com.xlf.common.vo.pc.WebUserVo;
+import com.xlf.common.vo.pc.*;
 
 /**
  * 用户业务层接口
@@ -99,4 +96,6 @@ public interface WebUserService {
 
 
     int updateBalance(String userId, BigDecimal balance);
+
+    void recharge(AppUserPo userPo, BigDecimal balance, SysUserVo token) throws Exception;
 }
