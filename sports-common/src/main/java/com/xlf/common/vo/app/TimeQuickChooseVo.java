@@ -8,6 +8,7 @@ import java.util.Map;
 public class TimeQuickChooseVo {
     private Integer betType;
     private Integer multiple;
+    private Integer kindType;
     private Map<Integer,String> map=new HashMap<> ();
 
     public Integer getBetType() {
@@ -32,5 +33,13 @@ public class TimeQuickChooseVo {
 
     public void setMap(Map<Integer, String> map) {
         this.map = map;
+    }
+
+    public Integer getKindType() {
+        return kindType;
+    }
+
+    public void setKindType(Integer kindType) {
+        this.kindType = kindType;
     }
 }
