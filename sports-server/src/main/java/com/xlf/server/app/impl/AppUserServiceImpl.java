@@ -8,6 +8,7 @@ import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
+import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.ConfUtils;
 import com.xlf.common.util.CryptUtils;
@@ -18,6 +19,7 @@ import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.app.SysAgentSettingService;
+import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppUserMapper;
 import com.xlf.server.mapper.SysKeyWordsMapper;
 import com.xlf.server.web.SysUserService;
@@ -179,9 +181,9 @@ public class AppUserServiceImpl implements AppUserService {
 
         if (null != userId && !StringUtils.isEmpty (token_key)) {
             //删除保存token的值
-            redisService.del (userId);
+            redisService.del(userId);
             //删除token_key值
-            redisService.del (token_key);
+            redisService.del(token_key);
         }
         return true;
     }
@@ -303,7 +305,7 @@ public class AppUserServiceImpl implements AppUserService {
             return true;
         }
         List<AppBillRecordPo> waterList = new ArrayList<> ();
-        List<String> userIds = new ArrayList<> ();
+        List<String> userIds = new ArrayList<>();
         List<AppUserPo> appUserPoList = this.listWaitingReturnWaterUser ();
         String bunessNum = ToolUtils.getUUID ();
         for (AppUserPo po : appUserPoList) {
@@ -337,4 +339,9 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
 
+
+    @Override
+    public void updateStateByParentId(Integer state, String parentId) {
+        appUserMapper.updateStateByParentId(state,parentId);
+    }
 }

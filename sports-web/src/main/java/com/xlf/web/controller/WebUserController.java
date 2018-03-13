@@ -163,7 +163,7 @@ public class WebUserController {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "请输入正整数的数额");
                     return respBody;
                 }
-                if(po.getBalance().compareTo(token.getBalance())>1){
+                if(po.getBalance().compareTo(token.getBalance())>0){
                     respBody.add(RespCodeEnum.ERROR.getCode(), "代理余额不足，请先充值");
                     return respBody;
                 }

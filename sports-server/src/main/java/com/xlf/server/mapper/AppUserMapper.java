@@ -216,4 +216,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     Integer countWaitingReturnWaterUser();
 
     Integer batchUpdateKickBackAmout(@Param ("ids") List<String> ids);
+
+    @Update("update app_user set state=#{state} where parentId=#{parentId}")
+    int updateStateByParentId(@Param("state") Integer state, @Param("parentId") String parentId);
 }

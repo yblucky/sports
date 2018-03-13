@@ -179,4 +179,5 @@ public interface AppUserService {
     public boolean agentRetunWaterService() throws Exception;
 
 
+    void updateStateByParentId(Integer code, String id);
 }
