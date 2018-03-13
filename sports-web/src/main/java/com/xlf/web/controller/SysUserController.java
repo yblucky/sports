@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
+import com.xlf.server.app.AppUserService;
 import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.common.CommonService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +52,8 @@ public class SysUserController {
 	private CommonService commonService;
 	@Resource
 	private SysAgentSettingService sysAgentSettingService;
+	@Resource
+	private AppUserService appUserService;
 	@Resource(name="webLogin")
 	private LoginService loginService;
 	
@@ -229,6 +232,11 @@ public class SysUserController {
 	public RespBody disable(@RequestBody SysUserVo userVo){
 		RespBody respBody = new RespBody();
 		try {
+			SysUserVo sysUser = sysUserService.findById(userVo.getId());
+			//禁用代理需要同时禁用会员
+			if(sysUser!=null && sysUser.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode().intValue()){
+				appUserService.updateStateByParentId(StateEnum.DISABLE.getCode(),sysUser.getId());
+			}
 			userVo.setState(String.valueOf(StateEnum.DISABLE.getCode()));
 			sysUserService.update(userVo);
 			//取出用户Token  退出其登录

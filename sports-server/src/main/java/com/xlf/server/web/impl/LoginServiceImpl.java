@@ -56,7 +56,7 @@ public class LoginServiceImpl implements LoginService {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "登录用户不存在");
             } else {
                 // 存在用户，判断是否有效
-                if (userVo.getState ().equals (StateEnum.DISABLE.getCode ())) {
+                if (userVo.getState ().equals (StateEnum.DISABLE.getCode ().toString())) {
                     // 无效用户
                     respBody.add (RespCodeEnum.ERROR.getCode (), "登录用户已被禁用，请联系管理员！");
                 } else {
