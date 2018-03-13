@@ -71,4 +71,7 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 
 	@Update("update sys_user  set balance = balance + #{balance}   where id=#{id} and (balance + #{balance}) >= 0")
 	int updateBalance(@Param("id") String id, @Param("balance") BigDecimal balance);
+
+	@Update("update sys_user  set totayReturnWater = 0  ,totalReturnWater=#{totalReturnWater}  where id=#{id}")
+    Integer updateReturnWater(@Param ("totayReturnWater") BigDecimal todayWater,@Param ("totalReturnWater") BigDecimal totalWater);
 }

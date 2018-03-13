@@ -691,13 +691,20 @@ public class TimeBettingController {
             }
             List<String> list = ToolUtils.quickChoose(vo.getBetType(), vo.getKindType(), vo.getMap());
             List<List<String>> lists = new ArrayList<>();
-            for (int i = 0; i < list.size() / 10 + 1; i++) {
+            for (int i = 0; i < list.size (); i++) {
                 List innerliset = null;
-                if (i % 10 == 0) {
-                    innerliset = new ArrayList();
-                    lists.add(innerliset);
+                if (i % 9 == 0) {
+                    innerliset = new ArrayList ();
+                    lists.add (innerliset);
                 }
-                innerliset.add(list.get(i));
+                int index = 0;
+                if (i > 9) {
+                    index = list.size () / 9;
+                    lists.get (index).add (list.get (i));
+                } else {
+                    lists.get (0).add (list.get (i));
+                }
+
             }
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "生成快选组合成功", lists);
         } catch (CommException ex) {

@@ -145,4 +145,10 @@ public class SysUserServiceImpl implements SysUserService {
         appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), find.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
                 , balance, balance, balance.add(find.getBalance()), "后台充值", "");
     }
+
+    @Override
+    public Integer updateReturnWater(BigDecimal todayWater, BigDecimal totalWater) {
+       Integer count =  userMapper.updateReturnWater(todayWater,totalWater);
+        return count;
+    }
 }

@@ -322,10 +322,15 @@ public class ToolUtils {
             for (Map.Entry entry : map.entrySet ()) {
                 Integer location = (Integer) entry.getKey ();
                 String v = (String) entry.getValue ();
+                Set<Character> set=new HashSet<> ();
                 for (int i = 0; i < v.length (); i++) {
                     String[] xtemp = {"X", "X", "X", "X", "X"};
                     xtemp[location] = v.charAt (i) + "";
+                    if (set.contains (v.charAt (i))){
+                        continue;
+                    }
                     list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
+                    set.add(v.charAt(i));
                 }
             }
         }

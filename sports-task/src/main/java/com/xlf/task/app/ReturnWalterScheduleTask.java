@@ -2,6 +2,7 @@ package com.xlf.task.app;
 
 import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.LotteryFlagEnum;
+import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppTimeLotteryPo;
 import com.xlf.common.po.AppUserPo;
@@ -45,14 +46,18 @@ public class ReturnWalterScheduleTask extends BaseScheduleTask {
             for (AppUserPo po : appUserPoList) {
                 SysUserVo sysUserVo = sysUserService.findById (po.getParentId ());
                 SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
-                //获取赔率
+
+                //获取返水比率
                 BigDecimal rate = sysAgentSettingPo.getReturnWaterScale ();
+                BigDecimal returnAmount=po.getKickBackAmount ().multiply (rate).setScale (2, BigDecimal.ROUND_HALF_EVEN);
+                BigDecimal beforTotal=sysUserVo.getTotalReturnWater ();
+                BigDecimal afterTotal=beforTotal.add (returnAmount);
                 AppBillRecordPo billRecordPo = new AppBillRecordPo ();
                 billRecordPo.setId (ToolUtils.getUUID ());
-                billRecordPo.setUserId (po.getId ());
-                billRecordPo.setBeforeBalance (BigDecimal.ONE);
-                billRecordPo.setAfterBalance (BigDecimal.ZERO);
-                billRecordPo.setBalance (po.getKickBackAmount ().multiply (rate).setScale (2, BigDecimal.ROUND_HALF_EVEN));
+                billRecordPo.setUserId (sysUserVo.getId ());
+                billRecordPo.setBeforeBalance (beforTotal);
+                billRecordPo.setAfterBalance (afterTotal);
+                billRecordPo.setBalance (returnAmount);
                 billRecordPo.setBusinessNumber (bunessNum);
                 billRecordPo.setBusnessType (BusnessTypeEnum.RETURN_WATER.getCode ());
                 billRecordPo.setCreateTime (new Date ());
@@ -60,23 +65,15 @@ public class ReturnWalterScheduleTask extends BaseScheduleTask {
                 billRecordPo.setExtend ("");
                 waterList.add (billRecordPo);
                 userIds.add (po.getId ());
+                Integer row=  sysUserService.updateReturnWater (BigDecimal.ZERO,returnAmount);
+                if (row==null || row==0){
+                    throw  new CommException ("更新代理返水错误");
+                }
+
             }
             appUserService.returnWaterService (waterList, userIds);
-
         } catch (Exception e) {
             e.printStackTrace ();
-        }
-        List<AppTimeLotteryPo> list = appTimeLotteryService.lotteryListCurrentDay ();
-        for (AppTimeLotteryPo po : list) {
-            AppTimeLotteryPo model = appTimeLotteryService.findById (po.getIssueNo ());
-            if (model != null) {
-                break;
-            } else {
-                po.setId (ToolUtils.getUUID ());
-                po.setLotteryTime (null);
-                po.setFlag (LotteryFlagEnum.NO.getCode ());
-                appTimeLotteryService.save (po);
-            }
         }
     }
 

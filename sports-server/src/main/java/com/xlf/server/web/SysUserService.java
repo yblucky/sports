@@ -99,6 +99,9 @@ public interface SysUserService {
 	 */
 	public void updatePw(String newPw, String id);
 
+
+	public Integer updateReturnWater(BigDecimal  todayWater,BigDecimal  totalWater);
+
 	SysUserVo getUserByToken(String token) throws Exception;
 
     void recharge(SysUserVo find, BigDecimal balance) throws Exception;
