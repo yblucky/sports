@@ -1,16 +1,13 @@
 package com.xlf.server.web.impl;
 
 import com.xlf.common.enums.BusnessTypeEnum;
-import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.exception.CommException;
-import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.MyBeanUtils;
 import com.xlf.common.util.ToolUtils;
-import com.xlf.common.vo.pc.LoginVo;
 import com.xlf.common.vo.pc.SysRoleVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppBillRecordService;
@@ -47,7 +44,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUserVo SysUserVo(String token) throws Exception {
         SysUserVo userVo = null;
-        Object obj = redisService.getObj(token);
+        Object obj = redisService.getObj (token);
         if (obj != null && obj instanceof SysUserVo) {
             userVo = (SysUserVo) obj;
         }
@@ -56,77 +53,77 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public List<SysUserVo> findAll(Paging paging, SysUserVo vo) {
-        RowBounds rwoBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
-        return userMapper.findAll(rwoBounds, vo);
+        RowBounds rwoBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        return userMapper.findAll (rwoBounds, vo);
     }
 
     @Override
     public long findCount(SysUserVo vo) {
-        return userMapper.findCount(vo);
+        return userMapper.findCount (vo);
     }
 
     @Override
     public void add(SysUserVo userVo) throws Exception {
-        SysUserPo userPo = MyBeanUtils.copyProperties(userVo, SysUserPo.class);
-        String salt = ToolUtils.getUUID();
-        String loginPw = CryptUtils.hmacSHA1Encrypt(userVo.getPassword(), salt);
-        userPo.setPassword(loginPw);
-        userPo.setSalt(salt);
-        userPo.setId(ToolUtils.getUUID());
-        userPo.setCreateTime(new Date());
-        userMapper.insert(userPo);
+        SysUserPo userPo = MyBeanUtils.copyProperties (userVo, SysUserPo.class);
+        String salt = ToolUtils.getUUID ();
+        String loginPw = CryptUtils.hmacSHA1Encrypt (userVo.getPassword (), salt);
+        userPo.setPassword (loginPw);
+        userPo.setSalt (salt);
+        userPo.setId (ToolUtils.getUUID ());
+        userPo.setCreateTime (new Date ());
+        userMapper.insert (userPo);
     }
 
     @Override
     public void update(SysUserVo userVo) throws Exception {
-        SysUserPo userPo = userMapper.selectByPrimaryKey(userVo.getId());
-        userPo.setUserName(userVo.getUserName());
-        userPo.setMobile(userVo.getMobile());
-        userPo.setRoleId(userVo.getRoleId());
-        userPo.setRoleName(userVo.getRoleName());
-        userPo.setState(userVo.getState());
-        userPo.setAgentLevelId(userVo.getAgentLevelId());
-        userMapper.updateByPrimaryKey(userPo);
+        SysUserPo userPo = userMapper.selectByPrimaryKey (userVo.getId ());
+        userPo.setUserName (userVo.getUserName ());
+        userPo.setMobile (userVo.getMobile ());
+        userPo.setRoleId (userVo.getRoleId ());
+        userPo.setRoleName (userVo.getRoleName ());
+        userPo.setState (userVo.getState ());
+        userPo.setAgentLevelId (userVo.getAgentLevelId ());
+        userMapper.updateByPrimaryKey (userPo);
     }
 
 
     @Override
     public void delete(SysUserVo userVo) {
-        userMapper.deleteByPrimaryKey(userVo.getId());
+        userMapper.deleteByPrimaryKey (userVo.getId ());
     }
 
     @Override
     public List<SysRoleVo> findRoles() throws Exception {
-        return MyBeanUtils.copyList(roleMapper.selectAll(), SysRoleVo.class);
+        return MyBeanUtils.copyList (roleMapper.selectAll (), SysRoleVo.class);
     }
 
     @Override
     public SysUserVo findByLoginName(String loginName) {
-        return userMapper.findByloginName(loginName);
+        return userMapper.findByloginName (loginName);
     }
 
     @Override
     public SysUserVo findByMobile(String mobile) {
-        return userMapper.findByMobile(mobile);
+        return userMapper.findByMobile (mobile);
     }
 
     @Override
     public void updatePw(String newPw, String id) {
-        SysUserPo userPo = userMapper.selectByPrimaryKey(id);
-        userPo.setPassword(newPw);
-        userMapper.updateByPrimaryKey(userPo);
+        SysUserPo userPo = userMapper.selectByPrimaryKey (id);
+        userPo.setPassword (newPw);
+        userMapper.updateByPrimaryKey (userPo);
     }
 
     @Override
     public SysUserVo findById(String id) {
-        return userMapper.findById(id);
+        return userMapper.findById (id);
     }
 
 
     @Override
     public SysUserVo getUserByToken(String token) throws Exception {
         SysUserVo user = null;
-        Object obj = redisService.getObj(token);
+        Object obj = redisService.getObj (token);
         if (obj != null && obj instanceof SysUserVo) {
             user = (SysUserVo) obj;
         }
@@ -137,18 +134,24 @@ public class SysUserServiceImpl implements SysUserService {
     @Transactional(rollbackFor = Exception.class)
     public void recharge(SysUserVo find, BigDecimal balance) throws Exception {
 
-        int rows =userMapper.updateBalance(find.getId(), balance);
-        if(rows <=0){
-            throw new CommException("充值失败！！！");
+        int rows = userMapper.updateBalance (find.getId (), balance);
+        if (rows <= 0) {
+            throw new CommException ("充值失败！！！");
         }
         //流水记录
-        appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), find.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
-                , balance, balance, balance.add(find.getBalance()), "后台充值", "");
+        appBillRecordService.saveBillRecord (ToolUtils.getOrderNo (), find.getId (), BusnessTypeEnum.BACK_RECHARGE.getCode ()
+                , balance, balance, balance.add (find.getBalance ()), "后台充值", "");
     }
 
     @Override
     public Integer updateReturnWater(BigDecimal todayWater, BigDecimal totalWater) {
-       Integer count =  userMapper.updateReturnWater(todayWater,totalWater);
+        Integer count = userMapper.updateReturnWater (todayWater, totalWater);
+        return count;
+    }
+
+    @Override
+    public Integer updateClearTotayReturnWater() {
+        Integer count = userMapper.updateClearTotayReturnWater ();
         return count;
     }
 }

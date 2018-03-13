@@ -105,4 +105,6 @@ public interface SysUserService {
 	SysUserVo getUserByToken(String token) throws Exception;
 
     void recharge(SysUserVo find, BigDecimal balance) throws Exception;
+
+	public Integer updateClearTotayReturnWater();
 }

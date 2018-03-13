@@ -35,47 +35,13 @@ public class ReturnWalterScheduleTask extends BaseScheduleTask {
     @Override
     protected void doSpecificTask() {
         try {
-            Integer count = appUserService.countWaitingReturnWaterUser ();
-            if (count == 0) {
-                return;
-            }
-            List<AppBillRecordPo> waterList = new ArrayList<> ();
-            List<String> userIds = new ArrayList<> ();
-            List<AppUserPo> appUserPoList = appUserService.listWaitingReturnWaterUser ();
-            String bunessNum = ToolUtils.getUUID ();
-            for (AppUserPo po : appUserPoList) {
-                SysUserVo sysUserVo = sysUserService.findById (po.getParentId ());
-                SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
-
-                //获取返水比率
-                BigDecimal rate = sysAgentSettingPo.getReturnWaterScale ();
-                BigDecimal returnAmount=po.getKickBackAmount ().multiply (rate).setScale (2, BigDecimal.ROUND_HALF_EVEN);
-                BigDecimal beforTotal=sysUserVo.getTotalReturnWater ();
-                BigDecimal afterTotal=beforTotal.add (returnAmount);
-                AppBillRecordPo billRecordPo = new AppBillRecordPo ();
-                billRecordPo.setId (ToolUtils.getUUID ());
-                billRecordPo.setUserId (sysUserVo.getId ());
-                billRecordPo.setBeforeBalance (beforTotal);
-                billRecordPo.setAfterBalance (afterTotal);
-                billRecordPo.setBalance (returnAmount);
-                billRecordPo.setBusinessNumber (bunessNum);
-                billRecordPo.setBusnessType (BusnessTypeEnum.RETURN_WATER.getCode ());
-                billRecordPo.setCreateTime (new Date ());
-                billRecordPo.setRemark ("代理返水结算,此次返水基数是:" + po.getKickBackAmount () + "，返水比例是:" + sysAgentSettingPo.getReturnWaterScale ());
-                billRecordPo.setExtend ("");
-                waterList.add (billRecordPo);
-                userIds.add (po.getId ());
-                Integer row=  sysUserService.updateReturnWater (BigDecimal.ZERO,returnAmount);
-                if (row==null || row==0){
-                    throw  new CommException ("更新代理返水错误");
-                }
-
-            }
-            appUserService.returnWaterService (waterList, userIds);
+            if (appUserService.agentRetunWaterService ()) return;
         } catch (Exception e) {
             e.printStackTrace ();
         }
     }
+
+
 
 
 }

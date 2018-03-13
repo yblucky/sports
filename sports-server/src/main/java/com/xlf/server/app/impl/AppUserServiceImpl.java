@@ -1,23 +1,26 @@
 package com.xlf.server.app.impl;
 
+import com.xlf.common.enums.BusnessTypeEnum;
 import com.xlf.common.enums.RedisKeyEnum;
 import com.xlf.common.enums.StateEnum;
 import com.xlf.common.exception.CommException;
 import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppUserPo;
-import com.xlf.common.resp.RespBody;
+import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.ConfUtils;
 import com.xlf.common.util.CryptUtils;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.UserVo;
+import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppUserService;
-import com.xlf.server.common.CommonService;
+import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.mapper.AppUserMapper;
 import com.xlf.server.mapper.SysKeyWordsMapper;
+import com.xlf.server.web.SysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -25,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +51,9 @@ public class AppUserServiceImpl implements AppUserService {
     @Resource
     private AppBillRecordService billRecordService;
     @Resource
-    private CommonService commonService;
+    private SysUserService sysUserService;
+    @Resource
+    private SysAgentSettingService sysAgentSettingService;
 
 
     @Override
@@ -173,9 +179,9 @@ public class AppUserServiceImpl implements AppUserService {
 
         if (null != userId && !StringUtils.isEmpty (token_key)) {
             //删除保存token的值
-            redisService.del(userId);
+            redisService.del (userId);
             //删除token_key值
-            redisService.del(token_key);
+            redisService.del (token_key);
         }
         return true;
     }
@@ -286,4 +292,49 @@ public class AppUserServiceImpl implements AppUserService {
         billRecordService.batchSaveKickBackAmoutRecord (waterList);
         return true;
     }
+
+    @Override
+    @Transactional
+    public boolean agentRetunWaterService() throws Exception {
+        //清理用户的返水
+        sysUserService.updateClearTotayReturnWater ();
+        Integer count = this.countWaitingReturnWaterUser ();
+        if (count == 0) {
+            return true;
+        }
+        List<AppBillRecordPo> waterList = new ArrayList<> ();
+        List<String> userIds = new ArrayList<> ();
+        List<AppUserPo> appUserPoList = this.listWaitingReturnWaterUser ();
+        String bunessNum = ToolUtils.getUUID ();
+        for (AppUserPo po : appUserPoList) {
+            SysUserVo sysUserVo = sysUserService.findById (po.getParentId ());
+            SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
+            //获取返水比率
+            BigDecimal rate = sysAgentSettingPo.getReturnWaterScale ();
+            BigDecimal returnAmount = po.getKickBackAmount ().multiply (rate).setScale (2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal beforTotal = sysUserVo.getTotalReturnWater ();
+            BigDecimal afterTotal = beforTotal.add (returnAmount);
+            AppBillRecordPo billRecordPo = new AppBillRecordPo ();
+            billRecordPo.setId (ToolUtils.getUUID ());
+            billRecordPo.setUserId (sysUserVo.getId ());
+            billRecordPo.setBeforeBalance (beforTotal);
+            billRecordPo.setAfterBalance (afterTotal);
+            billRecordPo.setBalance (returnAmount);
+            billRecordPo.setBusinessNumber (bunessNum);
+            billRecordPo.setBusnessType (BusnessTypeEnum.RETURN_WATER.getCode ());
+            billRecordPo.setCreateTime (new Date ());
+            billRecordPo.setRemark ("代理返水结算,此次返水基数是:" + po.getKickBackAmount () + "，返水比例是:" + sysAgentSettingPo.getReturnWaterScale ());
+            billRecordPo.setExtend ("");
+            waterList.add (billRecordPo);
+            userIds.add (po.getId ());
+            Integer row = sysUserService.updateReturnWater (BigDecimal.ZERO, returnAmount);
+            if (row == null || row == 0) {
+                throw new CommException ("更新代理返水错误");
+            }
+        }
+        this.returnWaterService (waterList, userIds);
+        return false;
+    }
+
+
 }

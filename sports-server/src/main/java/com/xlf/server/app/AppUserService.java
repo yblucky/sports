@@ -176,5 +176,7 @@ public interface AppUserService {
 
     public Boolean returnWaterService(List<AppBillRecordPo> waterList, List<String> userIds);
 
+    public boolean agentRetunWaterService() throws Exception;
+
 
 }
