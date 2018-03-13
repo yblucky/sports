@@ -7,8 +7,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.xlf.common.vo.pc.WebStatisticsVo;
-import com.xlf.common.vo.pc.WebUserVo;
+import com.xlf.common.enums.BusnessTypeEnum;
+import com.xlf.common.enums.RoleTypeEnum;
+import com.xlf.common.util.ToolUtils;
+import com.xlf.common.vo.pc.*;
+import com.xlf.server.app.AppBillRecordService;
+import com.xlf.server.mapper.SysUserMapper;
 import org.springframework.stereotype.Service;
 
 import com.xlf.common.enums.RedisKeyEnum;
@@ -18,10 +22,9 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.ConfUtils;
 import com.xlf.common.util.CryptUtils;
-import com.xlf.common.vo.pc.HomeUser;
-import com.xlf.common.vo.pc.StatisticsVo;
 import com.xlf.server.mapper.AppUserMapper;
 import com.xlf.server.web.WebUserService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用户业务层实现类
@@ -35,9 +38,13 @@ public class WebUserServiceImpl implements WebUserService {
     @Resource
     private AppUserMapper appUserMapper;
     @Resource
+    private SysUserMapper sysUserMapper;
+    @Resource
     private RedisService redisService;
     @Resource
     private ConfUtils confUtils;
+    @Resource
+    private AppBillRecordService appBillRecordService;
 
     @Override
     public AppUserPo findUserById(String id) throws Exception {
@@ -163,5 +170,28 @@ public class WebUserServiceImpl implements WebUserService {
     @Override
     public int updateBalance(String userId, BigDecimal balance) {
         return appUserMapper.updateBalanceById(userId,balance);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void recharge(AppUserPo userPo, BigDecimal balance, SysUserVo token) throws Exception {
+
+        int rows =this.updateBalance(userPo.getId(), balance);
+        if(rows <=0){
+            throw new CommException("充值失败！！！");
+        }
+        if(token.getRoleType().intValue()== RoleTypeEnum.AGENT.getCode()){
+            //扣除代理积分
+            rows =sysUserMapper.updateBalance(token.getId(), balance.multiply(new BigDecimal(-1)));
+            if(rows <=0){
+                throw new CommException("充值失败！！！");
+            }
+            //流水记录
+            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), token.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
+                    , balance, balance, token.getBalance().add(balance.multiply(new BigDecimal(-1))), "代理帮会员充值-扣除代理对应余额", "");
+        }
+        //流水记录
+        appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), userPo.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
+                , balance, balance, balance.add(userPo.getBalance()), "后台充值", "");
     }
 }

@@ -316,7 +316,7 @@ public class ToolUtils {
         return list;
     }
 
-    public static List<String> quickChoose(Integer type, Map<Integer, String> map) {
+    public static List<String> quickChoose(Integer type,Integer kindType, Map<Integer, String> map) {
         List<String> list = new ArrayList<> ();
         if (type == 1) {
             for (Map.Entry entry : map.entrySet ()) {
@@ -350,9 +350,26 @@ public class ToolUtils {
                     }
                 }
             }
+            List<String> same=new ArrayList<>();
+            for (String nums:list){
+                for (int i=0;i<nums.length();i++){
+                    if (nums.charAt(0)==nums.charAt(1)){
+                        same.add(nums);
+                    }
+                }
+            }
+            if (kindType==2){
+                //取相同
+                return  same;
+            }
+            if (kindType==3){
+                list.retainAll(same);
+                return list;
+            }
         }
         return list;
     }
+
 
 
     public static void main(String[] args) {
@@ -361,16 +378,14 @@ public class ToolUtils {
         List<String> list = twoLotteryList (s);
 
 //        List<String> list = Collections.emptyList ();
-        for (String ss:list){
-            System.out.println (ss);
+        for (String str:list){
+            System.out.println (str);
+          String nums= str.replaceAll("[^0-9]", "");
+          for (int i=0;i<nums.length();i++){
+              if (nums.charAt(0)==nums.charAt(1)){
+
+              }
+          }
         }
-
-        String reg="[^0-9]";
-        String s1="12XXX";
-        Pattern pattern=Pattern.compile (reg);
-        Matcher matcher=  pattern.matcher (s1);
-        System.out.println ( matcher.group ());
-
-
     }
 }

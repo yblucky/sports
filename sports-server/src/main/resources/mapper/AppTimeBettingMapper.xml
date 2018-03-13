@@ -4,7 +4,7 @@
 
 
     <sql id="fields">
-         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryFlag,winningAmount,multiple,createTime,serialNumber,betType,bettingContent
+         issueNo,userId,lotteryOne,lotteryTwo,lotteryThree,lotteryFour,lotteryFive,lotteryFlag,winningAmount,multiple,createTime,serialNumber,betType,bettingContent,businessNumber
     </sql>
 
     <sql id="fields_id">

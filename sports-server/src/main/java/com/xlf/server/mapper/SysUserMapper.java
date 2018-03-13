@@ -1,9 +1,11 @@
 package com.xlf.server.mapper;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.xlf.common.po.SysUserPo;
@@ -67,4 +69,6 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 	@Select("select count(1) from sys_user where loginName=#{ln}")
 	public int findLoginName(@Param("ln") String loginName);
 
+	@Update("update sys_user  set balance = balance + #{balance}   where id=#{id} and (balance + #{balance}) >= 0")
+	int updateBalance(@Param("id") String id, @Param("balance") BigDecimal balance);
 }

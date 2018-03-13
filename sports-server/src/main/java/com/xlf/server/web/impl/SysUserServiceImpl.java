@@ -1,5 +1,8 @@
 package com.xlf.server.web.impl;
 
+import com.xlf.common.enums.BusnessTypeEnum;
+import com.xlf.common.enums.RoleTypeEnum;
+import com.xlf.common.exception.CommException;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysUserPo;
 import com.xlf.common.resp.Paging;
@@ -10,13 +13,16 @@ import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.pc.LoginVo;
 import com.xlf.common.vo.pc.SysRoleVo;
 import com.xlf.common.vo.pc.SysUserVo;
+import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.mapper.SysRoleMapper;
 import com.xlf.server.mapper.SysUserMapper;
 import com.xlf.server.web.SysUserService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +41,8 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserMapper userMapper;
     @Resource
     private SysRoleMapper roleMapper;
+    @Resource
+    private AppBillRecordService appBillRecordService;
 
     @Override
     public SysUserVo SysUserVo(String token) throws Exception {
@@ -123,5 +131,18 @@ public class SysUserServiceImpl implements SysUserService {
             user = (SysUserVo) obj;
         }
         return user;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void recharge(SysUserVo find, BigDecimal balance) throws Exception {
+
+        int rows =userMapper.updateBalance(find.getId(), balance);
+        if(rows <=0){
+            throw new CommException("充值失败！！！");
+        }
+        //流水记录
+        appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), find.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
+                , balance, balance, balance.add(find.getBalance()), "后台充值", "");
     }
 }

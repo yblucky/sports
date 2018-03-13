@@ -117,11 +117,11 @@ public class UserController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "代理上级不存在");
                 return respBody;
             }
-            AppUserPo parentUser = userService.findUserByParentId (sysUserVo.getId ());
+            /*AppUserPo parentUser = userService.findUserByParentId (sysUserVo.getId ());
             if (parentUser != null) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "该代理已有下级会员");
                 return respBody;
-            }
+            }*/
             userVo.setParentId (sysUserVo.getId ());
 
             //判断用户是否存在

@@ -7,6 +7,7 @@
 */
 package com.xlf.server.web;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.xlf.common.resp.Paging;
@@ -99,4 +100,6 @@ public interface SysUserService {
 	public void updatePw(String newPw, String id);
 
 	SysUserVo getUserByToken(String token) throws Exception;
+
+    void recharge(SysUserVo find, BigDecimal balance) throws Exception;
 }
