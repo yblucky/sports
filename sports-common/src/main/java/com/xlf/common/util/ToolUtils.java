@@ -341,18 +341,16 @@ public class ToolUtils {
                 indexList.add (location);
             }
             Collections.sort (indexList);
-            for (int i = 0; i < indexList.size () - 1; i++) {
-                int twoLocationX = i;
-                int twoLocationY = i + 1;
-                String a = map.get (indexList.get (i));
-                String b = map.get (indexList.get (i + 1));
-                for (int m = 0; m < a.length (); m++) {
-                    for (int n = 0; n < b.length (); n++) {
-                        String[] xtemp = {"X", "X", "X", "X", "X"};
-                        xtemp[twoLocationX] = a.charAt (m) + "";
-                        xtemp[twoLocationY] = b.charAt (n) + "";
-                        list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
-                    }
+            int twoLocationX = indexList.get(0);
+            int twoLocationY =indexList.get(1);
+            String a = map.get (indexList.get (0));
+            String b = map.get (indexList.get (1));
+            for (int m = 0; m < a.length (); m++) {
+                for (int n = 0; n < b.length (); n++) {
+                    String[] xtemp = {"X", "X", "X", "X", "X"};
+                    xtemp[twoLocationX] = a.charAt (m) + "";
+                    xtemp[twoLocationY] = b.charAt (n) + "";
+                    list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
                 }
             }
             List<String> same = new ArrayList<> ();
@@ -360,10 +358,9 @@ public class ToolUtils {
                 Pattern p = Pattern.compile ("[^0-9]");
                 Matcher m = p.matcher (nums);
                 String num = m.replaceAll (" ").trim ();
-                for (int i = 0; i < num.length (); i++) {
-                    if (nums.charAt (0) == nums.charAt (1)) {
-                        same.add (nums);
-                    }
+                num=num.replaceAll(" ","");
+                if (num.charAt (0) == num.charAt (1)) {
+                    same.add (nums);
                 }
             }
             if (kindType == 2) {
@@ -381,13 +378,14 @@ public class ToolUtils {
 
     public static void main(String[] args) {
         Map<Integer, String> map = new HashMap<> ();
-        map.put (1, "1234");
-        map.put (2, "1234");
-        List<String> list = quickChoose (2, 2, map);
+        map.put (1, "12354");
+        map.put (3, "1234");
+        List<String> list = quickChoose (2, 1, map);
         for (String s : list) {
             System.out.println (s);
         }
 
+        System.out.println(list.size());
 
 //        String s="42092";
 //        List<String> list = oneLotteryList (s);
