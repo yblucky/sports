@@ -251,7 +251,7 @@
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
 					<skip>true</skip>
-					<webXml>WebContent\WEB-INF\web.xml</webXml>
+					<!--<webXml>WebContent\WEB-INF\web.xml</webXml>-->
 				</configuration>
 			</plugin>
 		</plugins>
