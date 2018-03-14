@@ -87,6 +87,12 @@ public class TimeBettingController {
             //本期期号
             String cur = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo()) : (intervalPo.getIssueNo()) + "";
             String nex = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo() + 1) : (intervalPo.getIssueNo() + 1) + "";
+            if(Integer.valueOf(cur)<10){
+                cur="0"+cur;
+            }
+            if(Integer.valueOf(nex)<10){
+                cur="0"+cur;
+            }
             String historyIssuNo = currentDate + cur;
             String nextIssuNo = currentDate + nex;
 
