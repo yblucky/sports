@@ -133,7 +133,7 @@ public class TimeBettingController {
             if (System.currentTimeMillis() > end && System.currentTimeMillis() < endDate.getTime()) {
                 infoVo.setRestTime(0L);
             } else {
-                infoVo.setRestTime(end - System.currentTimeMillis());
+                infoVo.setRestTime(endDate.getTime() - System.currentTimeMillis());
             }
             //查询上期的开奖结果
             String pre = (intervalPo.getIssueNo() - 1) < 100 ? "0" + (intervalPo.getIssueNo() - 1) : (intervalPo.getIssueNo() - 1) + "";
