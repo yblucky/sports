@@ -805,21 +805,21 @@ public class TimeBettingController {
         System.out.println (format.format (date1));*/
 
 
-      /*  Map m = new HashMap();
+        Map m = new HashMap();
         m.put(1, "123456");
         m.put(4, "12345");
         List<String> list = ToolUtils.quickChoose(2, 1, m);
         List<List<String>> lists = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             List innerliset = null;
-            if (i % 9 == 0) {
+            if (i % 10 == 0) {
                 innerliset = new ArrayList();
                 lists.add(innerliset);
             }
-            int index = i / 9;
+            int index = i / 10;
             lists.get(index).add(list.get(i));
         }
-        System.out.println(lists.size());*/
+        System.out.println(lists.size());
     }
 }
 
