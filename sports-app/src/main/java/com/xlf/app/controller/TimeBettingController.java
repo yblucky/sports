@@ -626,11 +626,11 @@ public class TimeBettingController {
                             sigleGroupMap.put(regex, 1);
                         }
                         if (twoGroupSet.size() > 0 && twoGroupSet.size() > agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
-                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "号") + "组合超限");
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
                         if (twoGroupSet.size() > 0 && sigleGroupMap.get(regex) > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "种," + regex.replace("\\d", "号") + "组合超限");
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
                     }
