@@ -274,5 +274,25 @@ public class CommonController {
         return respBody;
     }
 
+    /**
+     * 获取公告
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/loadNotice")
+    public RespBody loadNotice(HttpServletRequest request) throws Exception {
+        RespBody respBody = new RespBody ();
+        try {
+
+            String notice = commonService.findParameter("timeNotice");
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩公告成功!", notice);
+        } catch (Exception ex) {
+            respBody.add (RespCodeEnum.ERROR.getCode (), "获取时时彩公告失败!");
+            LogUtils.error ("获取时时彩公告失败！", ex);
+        }
+        return respBody;
+    }
+
 
 }
