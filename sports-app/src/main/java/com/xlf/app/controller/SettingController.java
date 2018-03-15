@@ -12,6 +12,7 @@ import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.*;
 import com.xlf.common.vo.app.BankCardVo;
+import com.xlf.common.vo.app.BettingBaseVo;
 import com.xlf.common.vo.app.UpdateUserVo;
 import com.xlf.common.vo.app.UserVo;
 import com.xlf.server.app.AppUserService;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+
+import static com.xlf.app.controller.TimeBettingController.regexTimeTwoList;
 
 /**
  * 设置模块控制器
@@ -708,5 +711,6 @@ public class SettingController {
         }
         return true;
     }
+
 
 }

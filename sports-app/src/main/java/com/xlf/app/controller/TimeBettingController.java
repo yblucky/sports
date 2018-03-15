@@ -41,8 +41,6 @@ public class TimeBettingController {
     @Resource
     private CommonService commonService;
     @Resource
-    private LanguageUtil msgUtil;
-    @Resource
     private SysUserService sysUserService;
     @Resource
     private AppSysAgentSettingService appSysAgentSettingService;
@@ -133,7 +131,7 @@ public class TimeBettingController {
             if (System.currentTimeMillis() > end && System.currentTimeMillis() < endDate.getTime()) {
                 infoVo.setRestTime(0L);
             } else {
-                infoVo.setRestTime(endDate.getTime() - System.currentTimeMillis());
+                infoVo.setRestTime(end - System.currentTimeMillis());
             }
             //查询上期的开奖结果
             String pre = (intervalPo.getIssueNo() - 1) < 100 ? "0" + (intervalPo.getIssueNo() - 1) : (intervalPo.getIssueNo() - 1) + "";
@@ -616,7 +614,7 @@ public class TimeBettingController {
             }
             Set<String> twoGroupSet = new HashSet<>();
             Map<String, Integer> sigleGroupMap = new HashMap<>();
-            for (BettingBaseVo bettingBaseVo : allList) {
+             for (BettingBaseVo bettingBaseVo : allList) {
                 for (String regex : regexTimeTwoList) {
                     if (ToolUtils.regex(bettingBaseVo.getBettingContent(), regex)) {
                         twoGroupSet.add(regex);
@@ -625,12 +623,12 @@ public class TimeBettingController {
                         } else {
                             sigleGroupMap.put(regex, 1);
                         }
-                        if (twoGroupSet.size() > 0 && twoGroupSet.size() > agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
-                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
+                        if (twoGroupSet.size() > 0 && twoGroupSet.size() > agentSettingPo.getTimeDoubleMaxBetSeats()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
-                        if (twoGroupSet.size() > 0 && sigleGroupMap.get(regex) > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "种," + regex.replace("\\d", "口") + "组合超限");
+                        if (twoGroupSet.size() > 0 && sigleGroupMap.get(regex) > agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
                     }
