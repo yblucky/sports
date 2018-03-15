@@ -33,8 +33,8 @@ public interface AppTimeLotteryService {
     Integer save(AppTimeLotteryPo po);
 
     //获取开奖号码列表
-    public List<AppTimeLotteryVo> loadLotteryInfoList(Paging paging) throws Exception;
+    public List<AppTimeLotteryVo> loadLotteryInfoList(Paging paging,String startTime,String endTime) throws Exception;
 
     //获取开奖号码列表
-    public Integer countLotteryInfoTotal() throws Exception;
+    public Integer countLotteryInfoTotal(String startTime,String endTime) throws Exception;
 }

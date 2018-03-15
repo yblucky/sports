@@ -87,11 +87,11 @@ public class TimeBettingController {
             //本期期号
             String cur = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo()) : (intervalPo.getIssueNo()) + "";
             String nex = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo() + 1) : (intervalPo.getIssueNo() + 1) + "";
-            if(Integer.valueOf(cur)<10){
-                cur="0"+cur;
+            if (Integer.valueOf(cur) < 10) {
+                cur = "0" + cur;
             }
-            if(Integer.valueOf(nex)<10){
-                cur="0"+cur;
+            if (Integer.valueOf(nex) < 10) {
+                cur = "0" + cur;
             }
             String historyIssuNo = currentDate + cur;
             String nextIssuNo = currentDate + nex;
@@ -768,10 +768,10 @@ public class TimeBettingController {
     }
 
     /**
-     * 用户流水记录
+     * 开奖记录
      */
     @GetMapping(value = "/awardNumberList")
-    public RespBody findUserRecord(HttpServletRequest request, Paging paging) {
+    public RespBody findUserRecord(HttpServletRequest request, Paging paging, String startTime, String endTime) {
         RespBody respBody = new RespBody();
         try {
             //根据用户id获取用户信息
@@ -780,9 +780,9 @@ public class TimeBettingController {
             AppUserPo appUserPo = commonService.checkToken();
 
             //获取总记录数量
-            int total = appTimeLotteryService.countLotteryInfoTotal();
+            int total = appTimeLotteryService.countLotteryInfoTotal(startTime, endTime);
             if (total > 0) {
-                list = appTimeLotteryService.loadLotteryInfoList(paging);
+                list = appTimeLotteryService.loadLotteryInfoList(paging, startTime, endTime);
             }
             //返回前端总记录
             paging.setTotalCount(total);
