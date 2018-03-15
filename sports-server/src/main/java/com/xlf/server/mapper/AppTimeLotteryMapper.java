@@ -32,6 +32,9 @@ public interface AppTimeLotteryMapper extends BaseMapper<AppTimeLotteryPo> {
     //获取开奖号码列表
     public Integer countLotteryInfoTotal(@Param("startTime")String startTime,@Param("endTime")String endTime) throws Exception;
 
-    @Select("SELECT * FROM `app_time_lottery` where issueNo=#{issueNo}")
+//    @Select("SELECT * FROM `app_time_lottery` where issueNo=#{issueNo}")
+//    public AppTimeLotteryVo loadAwardNumber(@Param("issueNo") String issueNo) throws Exception;
+
+    @Select("SELECT * FROM `app_time_lottery` order by lotteryTime desc LIMIT 1")
     public AppTimeLotteryVo loadAwardNumber(@Param("issueNo") String issueNo) throws Exception;
 }
