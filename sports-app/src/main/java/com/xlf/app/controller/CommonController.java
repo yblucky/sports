@@ -263,7 +263,7 @@ public class CommonController {
             SysUserVo sysUserVo = sysUserService.findById (userPo.getParentId ());
             SysAgentSettingPo agentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
             if (agentSettingPo == null) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), "获取代理设置好参数有误");
+                respBody.add (RespCodeEnum.ERROR.getCode (), "获取代理设置参数有误");
                 return respBody;
             }
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取投注规则成功!", agentSettingPo);
