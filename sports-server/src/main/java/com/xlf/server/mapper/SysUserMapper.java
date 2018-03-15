@@ -69,7 +69,7 @@ public interface SysUserMapper extends BaseMapper<SysUserPo> {
 	@Select("select count(1) from sys_user where loginName=#{ln}")
 	public int findLoginName(@Param("ln") String loginName);
 
-	@Update("update sys_user  set balance = balance + #{balance}   where id=#{id} and (balance + #{balance}) >= 0")
+	@Update("update sys_user  set balance = ifnull(balance,0) + #{balance}   where id=#{id} and (ifnull(balance,0) + #{balance}) >= 0")
 	int updateBalance(@Param("id") String id, @Param("balance") BigDecimal balance);
 
 	@Update("update sys_user  set totayReturnWater = #{totayReturnWater} ,totalReturnWater=#{totalReturnWater}  where id=#{id}")

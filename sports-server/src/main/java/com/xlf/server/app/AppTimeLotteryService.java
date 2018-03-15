@@ -37,4 +37,6 @@ public interface AppTimeLotteryService {
 
     //获取开奖号码列表
     public Integer countLotteryInfoTotal(String startTime,String endTime) throws Exception;
+
+    public AppTimeLotteryVo loadAwardNumber(String issueNo) throws Exception;
 }

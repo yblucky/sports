@@ -771,7 +771,7 @@ public class TimeBettingController {
      * 开奖记录
      */
     @GetMapping(value = "/awardNumberList")
-    public RespBody findUserRecord(HttpServletRequest request, Paging paging, String startTime, String endTime) {
+    public RespBody awardNumberList(HttpServletRequest request, Paging paging, String startTime, String endTime) {
         RespBody respBody = new RespBody();
         try {
             //根据用户id获取用户信息
@@ -806,6 +806,29 @@ public class TimeBettingController {
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "获取开奖列表失败");
             LogUtils.error("获取开奖列  表失败！", ex);
+        }
+        return respBody;
+    }
+
+    /**
+     * 开奖号码
+     */
+    @GetMapping(value = "/loadAwardNumber")
+    public RespBody loadAwardNumber(HttpServletRequest request,String issueNo) {
+        RespBody respBody = new RespBody();
+        try {
+            //检验用户是否登录
+            AppUserPo appUserPo = commonService.checkToken();
+
+            //根据用户id获取用户信息
+            AppTimeLotteryVo appTimeLotteryVo = appTimeLotteryService.loadAwardNumber(issueNo);
+
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取上期开奖号码成功",appTimeLotteryVo);
+        } catch (CommException ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "获取上期开奖号码成功");
+            LogUtils.error("获取上期开奖号码成功", ex);
         }
         return respBody;
     }

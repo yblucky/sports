@@ -143,7 +143,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
         //流水记录
         appBillRecordService.saveBillRecord (ToolUtils.getOrderNo (), find.getId (), BusnessTypeEnum.BACK_RECHARGE.getCode ()
-                , balance, balance, balance.add (find.getBalance ()), "后台充值", "");
+                , balance, balance, balance.add (find.getBalance()), "后台充值", "");
     }
 
     @Override

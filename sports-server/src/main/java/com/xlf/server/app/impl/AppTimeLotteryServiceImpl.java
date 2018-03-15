@@ -222,6 +222,11 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
     }
 
     @Override
+    public AppTimeLotteryVo loadAwardNumber(String issueNo) throws Exception {
+        return appTimeLotteryMapper.loadAwardNumber(issueNo);
+    }
+
+    @Override
     public List<AppTimeLotteryPo> lotteryListCurrentDay() {
         String TIME_URL = "http://kaijiang.500.com/static/public/ssc/xml/qihaoxml/";
         String currentDate = DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYYMMDD);
