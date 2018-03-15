@@ -785,7 +785,7 @@ public class TimeBettingController {
 
             if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)){
                 startTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
-                endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
+                endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD +" "+"23:59:59");
             }
             Date start=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
             Date end=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
