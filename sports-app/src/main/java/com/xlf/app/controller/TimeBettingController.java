@@ -779,6 +779,20 @@ public class TimeBettingController {
             //检验用户是否登录
             AppUserPo appUserPo = commonService.checkToken();
 
+            if (paging.getPageNumber()>15){
+                paging.setPageNumber(15);
+            }
+
+            if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)){
+                startTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
+                endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
+            }
+            Date start=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
+            Date end=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
+            if (end.getTime()-start.getTime()>7*24*60*60*1000){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "最大允许查询7天区间");
+                return respBody;
+            }
             //获取总记录数量
             int total = appTimeLotteryService.countLotteryInfoTotal(startTime, endTime);
             if (total > 0) {
