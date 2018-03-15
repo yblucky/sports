@@ -100,7 +100,7 @@ public interface SysUserService {
 	public void updatePw(String newPw, String id);
 
 
-	public Integer updateReturnWater(BigDecimal  todayWater,BigDecimal  totalWater);
+	public Integer updateReturnWater(String id,BigDecimal  todayWater,BigDecimal  totalWater);
 
 	SysUserVo getUserByToken(String token) throws Exception;
 

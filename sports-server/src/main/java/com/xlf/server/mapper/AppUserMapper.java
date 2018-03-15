@@ -209,7 +209,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     @Update("update app_user set activeNo=activeNo+#{activeNo} where id = #{id}")
     int updateActiveNoCount(@Param("activeNo") Integer activeNo, @Param("id") String id);
 
-    @Select("SELECT id,kickBackAmount FROM `app_user` WHERE kickBackAmount>0 LIMIT 10")
+    @Select("SELECT id,parentId,kickBackAmount FROM `app_user` WHERE kickBackAmount>0 LIMIT 10")
     List<AppUserPo> listWaitingReturnWaterUser();
 
     @Select("SELECT COUNT(id) FROM `app_user` WHERE kickBackAmount>0")

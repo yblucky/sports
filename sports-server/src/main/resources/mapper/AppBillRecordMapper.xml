@@ -89,7 +89,7 @@
     </select>
 
 	<insert id="batchSaveKickBackAmoutRecord">
-		INSERT INTO tb1_emplyee(id,userId,busnessType,createTime,businessNumber,balance,beforeBalance,afterBalance,extend,remark)
+		INSERT INTO  <include refid="table_name"/>(id,userId,busnessType,createTime,businessNumber,balance,beforeBalance,afterBalance,extend,remark)
 		VALUES
 		<foreach collection="list" item="item" separator=",">
 			(#{item.id},#{item.userId},#{item.busnessType},#{item.createTime},#{item.businessNumber},#{item.balance},#{item.beforeBalance},#{item.afterBalance},#{item.extend},#{item.remark})

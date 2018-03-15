@@ -298,8 +298,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     @Transactional
     public boolean agentRetunWaterService() throws Exception {
-        //清理用户的返水
-        sysUserService.updateClearTotayReturnWater ();
+
         Integer count = this.countWaitingReturnWaterUser ();
         if (count == 0) {
             return true;
@@ -329,7 +328,7 @@ public class AppUserServiceImpl implements AppUserService {
             billRecordPo.setExtend ("");
             waterList.add (billRecordPo);
             userIds.add (po.getId ());
-            Integer row = sysUserService.updateReturnWater (BigDecimal.ZERO, returnAmount);
+            Integer row = sysUserService.updateReturnWater (sysUserVo.getId(),returnAmount, returnAmount);
             if (row == null || row == 0) {
                 throw new CommException ("更新代理返水错误");
             }
