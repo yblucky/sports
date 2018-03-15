@@ -197,9 +197,9 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
      * @throws Exception
      */
     @Override
-    public List<AppTimeLotteryVo> loadLotteryInfoList(Paging paging) throws Exception {
+    public List<AppTimeLotteryVo> loadLotteryInfoList(Paging paging,String startTime,String endTime) throws Exception {
         RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
-        List<AppTimeLotteryVo> list = appTimeLotteryMapper.loadLotteryInfoList (rowBounds);
+        List<AppTimeLotteryVo> list = appTimeLotteryMapper.loadLotteryInfoList (startTime,endTime,rowBounds);
         if (list == null || CollectionUtils.isEmpty (list)) {
             list = Collections.emptyList ();
         }
@@ -213,8 +213,8 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
      * @throws Exception
      */
     @Override
-    public Integer countLotteryInfoTotal() throws Exception {
-        Integer count = appTimeLotteryMapper.countLotteryInfoTotal ();
+    public Integer countLotteryInfoTotal(String startTime,String endTime) throws Exception {
+        Integer count = appTimeLotteryMapper.countLotteryInfoTotal (startTime,endTime);
         if (count == null) {
             count = 0;
         }

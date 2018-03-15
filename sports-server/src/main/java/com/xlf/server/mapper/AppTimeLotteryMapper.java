@@ -27,8 +27,8 @@ public interface AppTimeLotteryMapper extends BaseMapper<AppTimeLotteryPo> {
     AppTimeLotteryPo findAppTimeLotteryPoByIssuNo(@Param("issueNo") String issuNo);
 
     //获取开奖号码列表
-    public List<AppTimeLotteryVo> loadLotteryInfoList(RowBounds rowBounds) throws Exception;
+    public List<AppTimeLotteryVo> loadLotteryInfoList(@Param("startTime")String startTime,@Param("endTime")String endTime,RowBounds rowBounds) throws Exception;
 
     //获取开奖号码列表
-    public Integer countLotteryInfoTotal() throws Exception;
+    public Integer countLotteryInfoTotal(@Param("startTime")String startTime,@Param("endTime")String endTime) throws Exception;
 }
