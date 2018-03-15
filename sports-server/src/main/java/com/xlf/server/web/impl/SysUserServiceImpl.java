@@ -71,6 +71,9 @@ public class SysUserServiceImpl implements SysUserService {
         userPo.setSalt (salt);
         userPo.setId (ToolUtils.getUUID ());
         userPo.setCreateTime (new Date ());
+        userPo.setTotayReturnWater(BigDecimal.ZERO);
+        userPo.setTotalReturnWater(BigDecimal.ZERO);
+        userPo.setBalance(BigDecimal.ZERO);
         userMapper.insert (userPo);
     }
 
