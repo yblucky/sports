@@ -1,4 +1,4 @@
-package com.xlf.common.po;
+package com.xlf.common.vo.app;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -10,13 +10,11 @@ import java.util.Date;
  * 银行卡管理po类
  * Created by Administrator on 2017/8/17.
  */
-@Table(name = "app_withdraw")
-public class AppWithDrawPo implements Serializable {
+public class AppWithDrawVo {
 
     /**
      * 主键编号
      */
-    @Id
     private String id;
     /**
      * '提现人主键编号'
@@ -45,7 +43,7 @@ public class AppWithDrawPo implements Serializable {
     /**
      * 银行卡名称
      */
-    private String bankCardName;
+    private  String bankCardName;
     /**
      * updateTime
      */

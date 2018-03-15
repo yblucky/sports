@@ -99,7 +99,7 @@ public class WithdrawalsController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), msgUtil.getMsg (AppMessage.PAYPWD_ERROR, "支付密码错误"));
                 return respBody;
             }
-            appWithDrawService.epWithDraw (userPo.getId (), vo.getBankCardId (), vo.getAmount ());
+            appWithDrawService.epWithDraw (userPo.getId (), vo.getBankCardId (),bankCardVo.getBankName(),vo.getAmount ());
             respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "提现申请成功，等待审核打款"));
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());

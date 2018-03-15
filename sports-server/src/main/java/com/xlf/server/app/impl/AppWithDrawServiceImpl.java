@@ -60,7 +60,7 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
 
     @Override
     @Transactional
-    public Boolean epWithDraw(String userId, String bankId, BigDecimal amount) throws Exception {
+    public Boolean epWithDraw(String userId, String bankId, String bankCardName,BigDecimal amount) throws Exception {
         BigDecimal withdrawFee = new BigDecimal(commonService.findParameter("withdrawFee"));
         AppUserPo userPo = userService.findUserById(userId);
         if (userPo==null || userPo.getBalance ().compareTo (amount)<=0){
@@ -78,6 +78,7 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
         model.setAmount(amount);
         model.setUserId(userId);
         model.setBankCardId(bankId);
+        model.setBankCardName(bankCardName);
         model.setBeforeBalance(before);
         this.save(model);
         billRecordService.saveBillRecord(ToolUtils.getUUID(),userId, BusnessTypeEnum.WITHDRAWALS.getCode(),am,before,after,"用户提现",userPo.getNickName());

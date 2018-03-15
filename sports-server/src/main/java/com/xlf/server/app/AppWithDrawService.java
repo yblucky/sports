@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public interface AppWithDrawService {
 
-    public  Boolean  epWithDraw(String userId,String  bankId, BigDecimal amount) throws  Exception;
+    public  Boolean  epWithDraw(String userId,String  bankId, String bankCardName,BigDecimal amount) throws  Exception;
 
 
     public Boolean save(AppWithDrawPo model);
