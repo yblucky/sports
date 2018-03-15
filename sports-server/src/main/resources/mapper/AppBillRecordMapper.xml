@@ -98,7 +98,7 @@
 
 
 	<select id="revenueList" resultType="com.xlf.common.vo.pc.RevenueVo">
-		select a.*,t.betTotal as betScore,(t.lotteryTotal-t.betTotal) as memberRs,t2.bus1 as agentProfit,b.agentName
+		select a.*,t.betTotal as betScore,(t.lotteryTotal+t.betTotal) as memberRs,t2.bus1 as agentProfit,b.agentName,t.betCount
 		  from sys_user a
 		 inner join sys_agent_setting b on a.agentLevelId = b.id
 		 left JOIN

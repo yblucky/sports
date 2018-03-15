@@ -87,6 +87,12 @@ public class TimeBettingController {
             //本期期号
             String cur = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo()) : (intervalPo.getIssueNo()) + "";
             String nex = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo() + 1) : (intervalPo.getIssueNo() + 1) + "";
+            if(Integer.valueOf(cur)<10){
+                cur="0"+cur;
+            }
+            if(Integer.valueOf(nex)<10){
+                cur="0"+cur;
+            }
             String historyIssuNo = currentDate + cur;
             String nextIssuNo = currentDate + nex;
 
@@ -127,7 +133,7 @@ public class TimeBettingController {
             if (System.currentTimeMillis() > end && System.currentTimeMillis() < endDate.getTime()) {
                 infoVo.setRestTime(0L);
             } else {
-                infoVo.setRestTime(end - System.currentTimeMillis());
+                infoVo.setRestTime(endDate.getTime() - System.currentTimeMillis());
             }
             //查询上期的开奖结果
             String pre = (intervalPo.getIssueNo() - 1) < 100 ? "0" + (intervalPo.getIssueNo() - 1) : (intervalPo.getIssueNo() - 1) + "";
@@ -620,11 +626,11 @@ public class TimeBettingController {
                             sigleGroupMap.put(regex, 1);
                         }
                         if (twoGroupSet.size() > 0 && twoGroupSet.size() > agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
-                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "号") + "组合超限");
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
                         if (twoGroupSet.size() > 0 && sigleGroupMap.get(regex) > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "种," + regex.replace("\\d", "号") + "组合超限");
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
                     }
