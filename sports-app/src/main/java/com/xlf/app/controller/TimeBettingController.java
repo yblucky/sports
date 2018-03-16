@@ -613,7 +613,7 @@ public class TimeBettingController {
                 thisTotalBettingNo += baseVo.getMultiple();
             }
             Set<String> twoGroupSet = new HashSet<>();
-            Map<String, Integer> sigleGroupMap = new HashMap<>();
+            /*Map<String, Integer> sigleGroupMap = new HashMap<>();
              for (BettingBaseVo bettingBaseVo : allList) {
                 for (String regex : regexTimeTwoList) {
                     if (ToolUtils.regex(bettingBaseVo.getBettingContent(), regex)) {
@@ -633,7 +633,36 @@ public class TimeBettingController {
                         }
                     }
                 }
+            }*/
+
+
+            Map<String, Set<String>> sigleGroupMap = new HashMap<>();
+             for (BettingBaseVo bettingBaseVo : allList) {
+                for (String regex : regexTimeTwoList) {
+                    if (ToolUtils.regex(bettingBaseVo.getBettingContent(), regex)) {
+                        twoGroupSet.add(regex);
+                        if (sigleGroupMap.containsKey(regex)) {
+                            Set set= sigleGroupMap.get(regex);
+                            set.add(bettingBaseVo.getBettingContent());
+                        } else {
+                            Set<String> singleSet=new HashSet<>();
+                            singleSet.add(bettingBaseVo.getBettingContent());
+                            sigleGroupMap.put(regex, singleSet);
+                        }
+                        if (twoGroupSet.size() > 0 && twoGroupSet.size() > agentSettingPo.getTimeDoubleMaxBetSeats()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
+                            return respBody;
+                        }
+                        Integer singleMapSetSize=sigleGroupMap.get(regex).size();
+                        if (twoGroupSet.size() > 0 && singleMapSetSize> agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
+                            return respBody;
+                        }
+                    }
+                }
             }
+
+
             //最大可能中奖金额
             if (userPo.getBalance().compareTo(new BigDecimal(thisTotalBettingNo.toString())) == -1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "用户余额不足,无法完成下注");
