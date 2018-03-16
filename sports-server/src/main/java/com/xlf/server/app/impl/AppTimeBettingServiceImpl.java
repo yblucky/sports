@@ -78,7 +78,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appUserService.updateBettingAmoutById (userId, totalPrice);
         //盈亏衡量
         BigDecimal afterKick = userPo.getKickBackAmount ().add (totalPrice).setScale (2, BigDecimal.ROUND_HALF_EVEN);
-
+        appUserService.updateKickBackAmountById (userId, totalPrice);
         appBillRecordService.saveBillRecord (businessNumber, userPo.getId (), BusnessTypeEnum.ADD_KICKBACKAMOUNT_RECORD.getCode (), totalPrice, userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后返水增加", vo.getIssueNo());
 
     }
