@@ -365,7 +365,7 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "支付密码错误");
                 return respBody;
             }*/
-            if (userPo.getCurrentProfit().compareTo(agentSettingPo.getMaxProfitPerDay()) > 0) {
+            if ((userPo.getTodayWiningAmout().subtract(userPo.getTodayBettingAmout())).compareTo(agentSettingPo.getMaxProfitPerDay()) > 0) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
@@ -488,7 +488,7 @@ public class TimeBettingController {
                 totalBettingNo += lastBettingTotalNo;
             }
             BigDecimal winRate = new BigDecimal(commonService.findParameter("winRate"));
-            BigDecimal currentProfitSum = userPo.getCurrentProfit().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds()));
+            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds()));
             if (currentProfitSum.multiply(winRate).compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
@@ -561,7 +561,7 @@ public class TimeBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "支付密码错误");
                 return respBody;
             }*/
-            if (userPo.getCurrentProfit().compareTo(agentSettingPo.getMaxProfitPerDay()) > 0) {
+            if ((userPo.getTodayWiningAmout().subtract(userPo.getTodayBettingAmout())).compareTo(agentSettingPo.getMaxProfitPerDay()) > 0) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
@@ -575,7 +575,7 @@ public class TimeBettingController {
                     return respBody;
                 }
                 if (baseVo.getMultiple() < 1 || baseVo.getMultiple() > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                    respBody.add(RespCodeEnum.ERROR.getCode(), "相同两个数字单注投注范围为【" + "1," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注" + baseVo.getBettingContent() + "超限制");
+                    respBody.add(RespCodeEnum.ERROR.getCode(), "相同两个数字单注投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-"+ + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注" + baseVo.getBettingContent() + "超限制");
                     return respBody;
                 }
                 if (hasBettingCount > 0) {
@@ -589,7 +589,7 @@ public class TimeBettingController {
                             total += baseVo.getMultiple();
                             total += po.getMultiple();
                             if (total < 1 || total > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                                respBody.add(RespCodeEnum.ERROR.getCode(), "相同两个数字投注范围为【" + "1" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
+                                respBody.add(RespCodeEnum.ERROR.getCode(), "相同两个数字投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
                                 return respBody;
                             }
                             BettingBaseVo bettingBaseVo = new BettingBaseVo();
@@ -676,7 +676,7 @@ public class TimeBettingController {
                 totalBettingNo += lastBettingTotalNo;
             }
             BigDecimal winRate = new BigDecimal(commonService.findParameter("winRate"));
-            BigDecimal currentProfitSum = userPo.getCurrentProfit().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()));
+            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()));
             System.out.println(currentProfitSum.multiply(winRate));
             if (currentProfitSum.multiply(winRate).compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");

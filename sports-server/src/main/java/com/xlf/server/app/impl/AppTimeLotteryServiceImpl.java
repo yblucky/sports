@@ -172,6 +172,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), award.multiply(new BigDecimal("-1")), userPo.getKickBackAmount (), after, "下级" + userPo.getMobile () + "【" + userPo.getNickName () + "】" + "中奖返水减少", bettingPo.getIssueNo ());
         //更新用户当天累计盈亏
         appUserService.updateCurrentProfitById (userPo.getId (), award);
+        appUserService.updateTodayBettingAmoutTodayWiningAmout(userPo.getId(),BigDecimal.ZERO,award);
         //更改投注状态为已开奖
         appTimeBettingService.updateLotteryFlagAndWingAmoutById (bettingPo.getId (),LotteryFlagEnum.YES.getCode (), award);
         log.error ("-------------------------------------------时时彩订单结束处理中奖流程-------------订单号：" + bettingPo.getId () + "----------------------------------------------------------------------------------------------------------------");

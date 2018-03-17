@@ -112,6 +112,16 @@ public class AppUserPo implements Serializable {
      */
     private BigDecimal kickBackAmount;
 
+    /**
+     * '今日累计投注'
+     */
+    private BigDecimal todayBettingAmout;
+
+    /**
+     * '今日累计中奖 '
+     */
+    private BigDecimal todayWiningAmout;
+
 
     public String getId() {
         return id;
@@ -279,5 +289,21 @@ public class AppUserPo implements Serializable {
 
     public void setKickBackAmount(BigDecimal kickBackAmount) {
         this.kickBackAmount = kickBackAmount;
+    }
+
+    public BigDecimal getTodayBettingAmout() {
+        return todayBettingAmout;
+    }
+
+    public void setTodayBettingAmout(BigDecimal todayBettingAmout) {
+        this.todayBettingAmout = todayBettingAmout;
+    }
+
+    public BigDecimal getTodayWiningAmout() {
+        return todayWiningAmout;
+    }
+
+    public void setTodayWiningAmout(BigDecimal todayWiningAmout) {
+        this.todayWiningAmout = todayWiningAmout;
     }
 }

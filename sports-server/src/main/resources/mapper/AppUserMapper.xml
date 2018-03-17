@@ -9,7 +9,7 @@
     </resultMap>
 
     <sql id="fields">
-       uid,mobile,name,nickName,loginPwd,pwdStal,payPwd,payStal,parentId,balance,blockedBalance,bettingAmout,currentProfit,winingAmout,kickBackAmount,errorNo,state,imgPath,createTime,loginTime
+       uid,mobile,name,nickName,loginPwd,pwdStal,payPwd,payStal,parentId,balance,blockedBalance,bettingAmout,currentProfit,winingAmout,kickBackAmount,errorNo,state,imgPath,createTime,loginTime,todayWiningAmout,todayBettingAmout
     </sql>
 
     <sql id="fields_id">

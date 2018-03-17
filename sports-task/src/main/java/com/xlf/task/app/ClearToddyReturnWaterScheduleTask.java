@@ -5,6 +5,7 @@ import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppTimeLotteryPo;
 import com.xlf.server.app.AppTimeBettingService;
 import com.xlf.server.app.AppTimeLotteryService;
+import com.xlf.server.app.AppUserService;
 import com.xlf.server.web.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ public class ClearToddyReturnWaterScheduleTask extends BaseScheduleTask {
     private static final Logger log = LoggerFactory.getLogger(ClearToddyReturnWaterScheduleTask.class);
     @Resource
     private SysUserService sysUserService;
+    @Resource
+    private AppUserService appUserService;
 
 
     @Override
@@ -23,6 +26,7 @@ public class ClearToddyReturnWaterScheduleTask extends BaseScheduleTask {
         try {
             //清理用户的返水
             sysUserService.updateClearTotayReturnWater ();
+            appUserService.updateClearTodayBettingAmoutTodayWiningAmout();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

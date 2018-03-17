@@ -337,10 +337,20 @@ public class AppUserServiceImpl implements AppUserService {
         return false;
     }
 
-
-
     @Override
     public void updateStateByParentId(Integer state, String parentId) {
         appUserMapper.updateStateByParentId(state,parentId);
+    }
+
+
+    @Override
+    public Integer updateClearTodayBettingAmoutTodayWiningAmout() {
+        return appUserMapper.updateClearTodayBettingAmoutTodayWiningAmout();
+    }
+
+
+    @Override
+    public Integer   updateTodayBettingAmoutTodayWiningAmout(String id,BigDecimal  todayBettingAmout,BigDecimal todayWiningAmout){
+        return appUserMapper.updateTodayBettingAmoutTodayWiningAmout(id,todayBettingAmout,todayWiningAmout);
     }
 }

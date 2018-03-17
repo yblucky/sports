@@ -180,4 +180,9 @@ public interface AppUserService {
 
 
     void updateStateByParentId(Integer code, String id);
+
+    Integer updateClearTodayBettingAmoutTodayWiningAmout();
+
+    Integer updateTodayBettingAmoutTodayWiningAmout(String id,BigDecimal  todayBettingAmout,BigDecimal todayWiningAmout);
+
 }
