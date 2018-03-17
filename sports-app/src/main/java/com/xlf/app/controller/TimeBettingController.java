@@ -136,7 +136,9 @@ public class TimeBettingController {
             //查询上期的开奖结果
             String pre = (intervalPo.getIssueNo() - 1) < 100 ? "0" + (intervalPo.getIssueNo() - 1) : (intervalPo.getIssueNo() - 1) + "";
             String prepre = (intervalPo.getIssueNo() - 2) < 100 ? "0" + (intervalPo.getIssueNo() - 2) : (intervalPo.getIssueNo() - 2) + "";
-
+            if (intervalPo.getIssueNo() - 1==0){
+                prepre="120";
+            }
 
             if (Integer.valueOf(pre) < 10) {
                 pre = "0" + pre;
@@ -875,7 +877,7 @@ public class TimeBettingController {
         System.out.println (format.format (date1));*/
 
 
-        Map m = new HashMap();
+       /* Map m = new HashMap();
         m.put(1, "123456");
         m.put(4, "12345");
         List<String> list = ToolUtils.quickChoose(2, 1, m);
@@ -889,7 +891,12 @@ public class TimeBettingController {
             int index = i / 10;
             lists.get(index).add(list.get(i));
         }
-        System.out.println(lists.size());
+        System.out.println(lists.size());*/
+
+       Integer a=10;
+       if (a-1==9){
+           System.out.println(0000);
+       }
     }
 }
 
