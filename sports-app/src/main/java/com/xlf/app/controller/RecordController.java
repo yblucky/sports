@@ -8,6 +8,7 @@ import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
+import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.app.AppBillRecordVo;
@@ -27,6 +28,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,7 +54,7 @@ public class RecordController {
      * 用户流水记录
      */
     @GetMapping(value = "/list")
-    public RespBody findUserRecord(HttpServletRequest request,String busnessType, Paging paging,String start,String end) {
+    public RespBody findUserRecord(HttpServletRequest request,String busnessType, Paging paging, String startTime, String endTime) {
         RespBody respBody = new RespBody ();
         try {
             //根据用户id获取用户信息
@@ -68,14 +70,24 @@ public class RecordController {
                 paging.setTotalCount (0);
                 respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数不合法");
             }
+            if (org.springframework.util.StringUtils.isEmpty(startTime) || org.springframework.util.StringUtils.isEmpty(endTime)){
+                startTime= DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
+                endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD +" "+"23:59:59");
+            }
+            Date start=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
+            Date end=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
+            if (end.getTime()-start.getTime()>7*24*60*60*1000){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "最大允许查询7天区间");
+                return respBody;
+            }
             List<Integer> busnessTypeList = new ArrayList<> ();
             for (String b : busnessTypes) {
                 busnessTypeList.add (Integer.valueOf (b));
             }
             //获取总记录数量
-            int total = billRecordService.billRecordListTotal (appUserPo.getId (), busnessTypeList);
+            int total = billRecordService.billRecordListTotal (appUserPo.getId (), busnessTypeList,startTime,endTime);
             if (total > 0) {
-                list = billRecordService.findBillRecordList (appUserPo.getId (), busnessTypeList, paging);
+                list = billRecordService.findBillRecordList (appUserPo.getId (), busnessTypeList, paging,startTime,endTime);
             }
             //返回前端总记录
             paging.setTotalCount (total);

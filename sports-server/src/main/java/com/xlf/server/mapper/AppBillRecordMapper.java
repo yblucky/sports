@@ -28,11 +28,10 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
      * 查询流水
      *
      * @param busnessTypeList
-     * @param currencyType
      * @param rowBounds
      * @return
      */
-    List<AppBillRecordVo> findBillRecordList(@Param("userId") String userId, @Param("list") List<Integer> busnessTypeList, RowBounds rowBounds);
+    List<AppBillRecordVo> findBillRecordList(@Param("userId") String userId, @Param("list") List<Integer> busnessTypeList, @Param("startTime")String startTime,@Param("endTime")String endTime,RowBounds rowBounds);
 
     /**
      * 查询流水
@@ -40,7 +39,7 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
      * @param busnessTypeList
      * @return
      */
-    Integer billRecordListTotal(@Param("userId") String userId, @Param("list") List<Integer> busnessTypeList);
+    Integer billRecordListTotal(@Param("userId") String userId, @Param("list") List<Integer> busnessTypeList,@Param("startTime")String startTime,@Param("endTime")String endTime);
 
 
     List<AppBillRecordVo> findBillRecord(@Param("model") AppBillRecordPo po, RowBounds rowBounds);
@@ -77,10 +76,7 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
     @Select("SELECT COUNT(id) FROM `app_bill_record` where userId=#{userId} and to_days(createTime) = to_days(now())")
     Integer countCurrentDayWithDraw(@Param("userId") String userId);
 
-    /**
-     * @param vo
-     * @return
-     */
+
     @Select("select sum(balance) as balance,busnessType from app_bill_record GROUP BY busnessType")
     List<WebStatisticsVo> SUMCount();
 

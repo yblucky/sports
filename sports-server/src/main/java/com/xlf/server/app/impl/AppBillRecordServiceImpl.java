@@ -79,8 +79,8 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
      * 查看用户交易流水记录总数
      */
     @Override
-    public Integer billRecordListTotal(String userId, List busnessTypeList) {
-        Integer count =billRecordMapper.billRecordListTotal(userId,busnessTypeList);
+    public Integer billRecordListTotal(String userId, List busnessTypeList, String startTime, String endTime) {
+        Integer count =billRecordMapper.billRecordListTotal(userId,busnessTypeList,startTime,endTime);
         if (count==null){
             count=0;
         }
@@ -92,9 +92,9 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
      * 查看用户交易流水记录
      */
     @Override
-    public List<AppBillRecordVo> findBillRecordList(String userId, List busnessTypeList, Paging paging) {
+    public List<AppBillRecordVo> findBillRecordList(String userId, List busnessTypeList, Paging paging, String startTime, String endTime) {
         RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
-        List<AppBillRecordVo> list = billRecordMapper.findBillRecordList(userId,busnessTypeList, rowBounds);
+        List<AppBillRecordVo> list = billRecordMapper.findBillRecordList(userId,busnessTypeList,startTime,endTime, rowBounds);
         if (list==null|| CollectionUtils.isEmpty(list)){
             list= Collections.emptyList();
         }

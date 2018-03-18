@@ -86,8 +86,8 @@
 		<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
             #{item}
         </foreach>
-		<!--<if test="startTime != null">AND createTime&gt;=#{startTime}</if>-->
-		<!--<if test="endTime != null">AND createTime&lt;#{endTime}</if>-->
+		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
+		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
     </select>
 
 
@@ -98,8 +98,8 @@
         <foreach collection="list" open="(" close=")" item="item" separator="," index="index">
             #{item}
         </foreach>
-		<!--<if test="startTime != null">AND createTime&gt;=#{startTime}</if>-->
-		<!--<if test="endTime != null">AND createTime&lt;#{endTime}</if>-->
+		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
+		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
         order by bill.createTime desc
     </select>
 

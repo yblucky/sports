@@ -43,12 +43,12 @@ public interface AppBillRecordService {
      * @param userId
      * @return
      */
-    Integer billRecordListTotal(String userId, List<Integer> busnessTypeList);
+    Integer billRecordListTotal(String userId, List<Integer> busnessTypeList, String startTime, String endTime);
 
     /**
      * 根据货币类型查找用户流水记录
      */
-    List<AppBillRecordVo> findBillRecordList(String userId, List<Integer> busnessTypeList, Paging paging);
+    List<AppBillRecordVo> findBillRecordList(String userId, List<Integer> busnessTypeList, Paging paging, String startTime, String endTime);
 
     Integer batchSaveKickBackAmoutRecord(List<AppBillRecordPo> list);
 
