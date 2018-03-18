@@ -25,7 +25,7 @@ public class ClearToddyReturnWaterScheduleTask extends BaseScheduleTask {
     protected void doSpecificTask() {
         try {
             //清理用户的返水
-            sysUserService.updateClearTotayReturnWater ();
+           sysUserService.updateClearTotayReturnWater ();
             appUserService.updateClearTodayBettingAmoutTodayWiningAmout();
         } catch (Exception e) {
             e.printStackTrace();

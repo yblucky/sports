@@ -220,7 +220,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     @Update("update app_user set state=#{state} where parentId=#{parentId}")
     int updateStateByParentId(@Param("state") Integer state, @Param("parentId") String parentId);
 
-    @Update("update sys_user  set todayBettingAmout =0,todayWiningAmout=0")
+    @Update("update app_user  set todayBettingAmout =0,todayWiningAmout=0")
     Integer updateClearTodayBettingAmoutTodayWiningAmout();
 
     @Update("update app_user  set todayBettingAmout =todayBettingAmout+#{todayBettingAmout},todayWiningAmout=todayWiningAmout+#{todayWiningAmout} where id=#{id}")

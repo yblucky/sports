@@ -574,8 +574,8 @@ public class TimeBettingController {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "非二字定投注");
                     return respBody;
                 }
-                if (baseVo.getMultiple() < 1 || baseVo.getMultiple() > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                    respBody.add(RespCodeEnum.ERROR.getCode(), "相同两个数字单注投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-"+ + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注" + baseVo.getBettingContent() + "超限制");
+                if (baseVo.getMultiple() < agentSettingPo.getMinBetNoPerDigital()  || baseVo.getMultiple() > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
+                    respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字单注投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-"+ + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注" + baseVo.getBettingContent() + "超限制");
                     return respBody;
                 }
                 if (hasBettingCount > 0) {
@@ -588,8 +588,8 @@ public class TimeBettingController {
                         for (AppTimeBettingPo po : timeBettingPos) {
                             total += baseVo.getMultiple();
                             total += po.getMultiple();
-                            if (total < 1 || total > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                                respBody.add(RespCodeEnum.ERROR.getCode(), "相同两个数字投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
+                            if (total < agentSettingPo.getMinBetNoPerDigital()  || total > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
+                                respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
                                 return respBody;
                             }
                             BettingBaseVo bettingBaseVo = new BettingBaseVo();
