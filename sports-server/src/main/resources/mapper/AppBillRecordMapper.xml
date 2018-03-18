@@ -48,7 +48,7 @@
 				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
 				<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
-				<if test="model.parentId != null and model.parentId != ''">AND u.parentId=#{model.parentId}</if>
+				<if test="model.parentId != null and model.parentId != ''">AND u.id=#{model.parentId}</if>
 
 			</where>
 		) as t
