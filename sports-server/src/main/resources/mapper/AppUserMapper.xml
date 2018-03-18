@@ -9,7 +9,8 @@
     </resultMap>
 
     <sql id="fields">
-       uid,mobile,name,nickName,loginPwd,pwdStal,payPwd,payStal,parentId,balance,blockedBalance,bettingAmout,currentProfit,winingAmout,kickBackAmount,errorNo,state,imgPath,createTime,loginTime,todayWiningAmout,todayBettingAmout
+       uid,mobile,name,nickName,loginPwd,pwdStal,payPwd,payStal,parentId,balance,blockedBalance,bettingAmout,currentProfit
+       ,winingAmout,kickBackAmount,errorNo,state,imgPath,createTime,loginTime,todayWiningAmout,todayBettingAmout
     </sql>
 
     <sql id="fields_id">
@@ -147,7 +148,7 @@
     <select id="getPoList" resultType="com.xlf.common.vo.pc.WebUserVo">
         select a.id,a.uid,a.mobile,a.name,a.nickName,a.loginPwd,a.pwdStal,a.payPwd,a.payStal,a.parentId,a.balance
                 ,a.blockedBalance,a.bettingAmout,a.currentProfit,a.winingAmout,a.kickBackAmount,a.errorNo,a.state,a.imgPath,a.createTime,a.loginTime
-                ,u.id as agentId,u.userName as agentName,t.agentName as agentLevel
+                ,u.id as agentId,u.userName as agentName,t.agentName as agentLevel,a.todayWiningAmout,a.todayBettingAmout
         from app_user a left join sys_user u on a.parentId = u.id
         left join sys_agent_setting t on u.agentLevelId=t.id
         <where>
