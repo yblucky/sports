@@ -81,26 +81,32 @@
 	</select>
 
     <select id="billRecordListTotal" resultType="Integer">
-        SELECT count(1) from app_bill_record b left join app_user u on b.userId=u.id where userId=#{userId}
-		and busnessType IN
-		<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
-            #{item}
-        </foreach>
-		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
-		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
+        SELECT count(1) from app_bill_record b left join app_user u on b.userId=u.id
+		<where>
+			1=1
+			AND userId=#{userId}
+			and busnessType IN
+			<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
+				#{item}
+			</foreach>
+			<if test="startTime != null">AND b.createTime &gt;= #{startTime}</if>
+			<if test="endTime != null">AND b.createTime &lt; #{endTime}</if>
+		</where>
     </select>
-
 
     <select id="findBillRecordList" resultType="com.xlf.common.vo.app.AppBillRecordVo">
         SELECT bill.*,user.mobile,user.imgPath,user.nickName from app_bill_record bill left join app_user user on bill.userId=user.id
-        where userId=#{userId}
-        and busnessType IN
-        <foreach collection="list" open="(" close=")" item="item" separator="," index="index">
-            #{item}
-        </foreach>
-		<if test="startTime != null">AND createTime&gt;=#{startTime}</if>
-		<if test="endTime != null">AND createTime&lt;#{endTime}</if>
-        order by bill.createTime desc
+		<where>
+			1=1
+			AND userId=#{userId}
+			and busnessType IN
+			<foreach collection="list" open="(" close=")" item="item" separator="," index="index">
+				#{item}
+			</foreach>
+			<if test="startTime != null">AND bill.createTime &gt;= #{startTime}</if>
+			<if test="endTime != null">AND bill.createTime &lt; #{endTime}</if>
+		</where>
+		order by bill.createTime desc
     </select>
 
 	<insert id="batchSaveKickBackAmoutRecord">

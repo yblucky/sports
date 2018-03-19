@@ -55,7 +55,7 @@ public class ReportController {
      * 盈亏报表
      */
     @GetMapping(value = "/consume")
-    public RespBody findUserRecord(Integer paramTime) {
+    public RespBody findUserRecord(Integer paramTime,String startTime,String endTime) {
         RespBody respBody = new RespBody ();
         try {
             //根据用户id获取用户信息
@@ -87,6 +87,10 @@ public class ReportController {
                 dateMap = DateTimeUtil.getLastMonthTime();
             }else if(ParamTimeEnum.CURRENTMONTH.getCode().intValue() == paramTime){
                 dateMap = DateTimeUtil.getCurrentMonthTime();
+            }else if(ParamTimeEnum.OTHERTIME.getCode().intValue() == paramTime){
+                dateMap = new HashMap<>();
+                dateMap.put("startTime",startTime);
+                dateMap.put("endTime",endTime);
             }
 
             if(dateMap == null){
@@ -94,13 +98,13 @@ public class ReportController {
                 return respBody;
             }
 
-            String startTime = dateMap.get("startTime");
-            String endTime = dateMap.get("endTime");
+            String start = dateMap.get("startTime");
+            String end = dateMap.get("endTime");
 
-            Double costs = billRecordService.report (appUserPo.getId (), busnessTypeListCosts,startTime,endTime);
-            Double income = billRecordService.report (appUserPo.getId (), busnessTypeListIncome,startTime,endTime);
-            Double undo = billRecordService.report (appUserPo.getId (), busnessTypeListUndo,startTime,endTime);
-            Integer costsCount = billRecordService.reportCount (appUserPo.getId (), busnessTypeListCosts,startTime,endTime);
+            Double costs = billRecordService.report (appUserPo.getId (), busnessTypeListCosts,start,end);
+            Double income = billRecordService.report (appUserPo.getId (), busnessTypeListIncome,start,end);
+            Double undo = billRecordService.report (appUserPo.getId (), busnessTypeListUndo,start,end);
+            Integer costsCount = billRecordService.reportCount (appUserPo.getId (), busnessTypeListCosts,start,end);
             Map<String,BigDecimal> map=new HashMap<> ();
             if(costs == null){
                 costs = 0d;

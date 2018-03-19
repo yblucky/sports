@@ -26,10 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 用   户资产相关
@@ -71,11 +68,15 @@ public class RecordController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), AppMessage.PARAM_ERROR, "参数不合法");
             }
             if (org.springframework.util.StringUtils.isEmpty(startTime) || org.springframework.util.StringUtils.isEmpty(endTime)){
-                startTime= DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
-                endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD +" "+"23:59:59");
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                c.add(Calendar.DAY_OF_MONTH, -7);
+                startTime= DateTimeUtil.formatDate(c.getTime(),DateTimeUtil.PATTERN_YYYY_MM_DD);
+                endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
             }
             Date start=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
-            Date end=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
+            Date end=DateTimeUtil.parseDateFromStr(endTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
             if (end.getTime()-start.getTime()>7*24*60*60*1000){
                 respBody.add(RespCodeEnum.ERROR.getCode(), "最大允许查询7天区间");
                 return respBody;

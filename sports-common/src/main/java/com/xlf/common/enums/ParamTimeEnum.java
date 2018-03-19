@@ -10,7 +10,8 @@ public enum ParamTimeEnum {
     LASTWEEK(12, "上周报表", "lastWeek"),
     CURRENTWEEK(13, "本周报表", "currentWeek"),
     LASTMONTH(14, "上月报表", "lastMonth"),
-    CURRENTMONTH (15, "本月报表", "currentMonth");
+    CURRENTMONTH (15, "本月报表", "currentMonth"),
+    OTHERTIME (16, "其他时间报表", "otherTime");
 
     private Integer code;
     private String name;
