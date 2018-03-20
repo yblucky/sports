@@ -316,6 +316,16 @@ public class ToolUtils {
         return list;
     }
 
+    public static List<String> oneLotteryRacingList(String lottery) {
+        List<String> list = new ArrayList<> ();
+        for (int i = 0; i < lottery.length (); i++) {
+            String[] xtemp = {"X", "X", "X", "X", "X","X", "X", "X", "X", "X"};
+            xtemp[i] = lottery.charAt (i) + "";
+            list.add (org.apache.commons.lang3.StringUtils.join (xtemp));
+        }
+        return list;
+    }
+
     public static List<String> quickChoose(Integer type, Integer kindType, Map<Integer, String> map) {
         List<String> list = new ArrayList<> ();
         if (type == 1) {
@@ -377,7 +387,11 @@ public class ToolUtils {
 
 
     public static void main(String[] args) {
-        Map<Integer, String> map = new HashMap<> ();
+        List<String> list=oneLotteryRacingList("1234567890");
+        for (String s:list){
+            System.out.println(s);
+        }
+/*        Map<Integer, String> map = new HashMap<> ();
         map.put (1, "12354");
         map.put (3, "1234");
         List<String> list = quickChoose (2, 1, map);
@@ -385,7 +399,7 @@ public class ToolUtils {
             System.out.println (s);
         }
 
-        System.out.println(list.size());
+        System.out.println(list.size());*/
 
 //        String s="42092";
 //        List<String> list = oneLotteryList (s);
