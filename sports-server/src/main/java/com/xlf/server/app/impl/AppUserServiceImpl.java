@@ -136,6 +136,8 @@ public class AppUserServiceImpl implements AppUserService {
         appUserPo.setKickBackAmount(BigDecimal.ZERO);
         appUserPo.setWiningAmout(BigDecimal.ZERO);
         appUserPo.setErrorNo(5);
+        appUserPo.setTodayBettingAmout(BigDecimal.ZERO);
+        appUserPo.setTodayWiningAmout(BigDecimal.ZERO);
 
         int count = appUserMapper.insert(appUserPo);
 

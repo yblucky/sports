@@ -90,7 +90,7 @@ public class TimeBettingController {
                 cur = "0" + cur;
             }
             if (Integer.valueOf(nex) < 10) {
-                cur = "0" + cur;
+                nex = "0" + nex;
             }
             String historyIssuNo = currentDate + cur;
             String nextIssuNo = currentDate + nex;
