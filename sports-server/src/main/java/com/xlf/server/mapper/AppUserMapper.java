@@ -7,6 +7,7 @@ import com.xlf.common.vo.pc.StatisticsVo;
 import com.xlf.common.vo.pc.WebStatisticsVo;
 import com.xlf.common.vo.pc.WebUserVo;
 import com.xlf.server.base.BaseMapper;
+import com.xlf.server.vo.TaskReturnWaterVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -209,11 +210,15 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     @Update("update app_user set activeNo=activeNo+#{activeNo} where id = #{id}")
     int updateActiveNoCount(@Param("activeNo") Integer activeNo, @Param("id") String id);
 
-    @Select("SELECT id,parentId,kickBackAmount FROM `app_user` WHERE kickBackAmount>0 LIMIT 10")
-    List<AppUserPo> listWaitingReturnWaterUser();
+    @Select("SELECT SUM(kickBackAmount) sumKickBackAmount,kickBackAmount,id,uid,parentId FROM `app_user` GROUP  BY parentId  HAVING  (SUM(kickBackAmount)>0) LIMIT 10")
+    List<TaskReturnWaterVo> listWaitingReturnWaterUser();
 
-    @Select("SELECT COUNT(id) FROM `app_user` WHERE kickBackAmount>0")
+    @Select("SELECT  COUNT(id) FROM `app_user` GROUP  BY parentId  HAVING  (SUM(kickBackAmount)>0)")
     Integer countWaitingReturnWaterUser();
+
+    @Select("SELECT  id,kickBackAmount  FROM `app_user` where  kickBackAmount>0 and parentId=#{parentId}")
+    List<AppUserPo> listWaitingReturnWaterUserByParentId(@Param("parentId") String parentId);
+
 
     Integer batchUpdateKickBackAmout(@Param ("ids") List<String> ids);
 

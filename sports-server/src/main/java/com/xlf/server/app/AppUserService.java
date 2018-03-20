@@ -3,6 +3,7 @@ package com.xlf.server.app;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.vo.app.UserVo;
+import com.xlf.server.vo.TaskReturnWaterVo;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -167,7 +168,16 @@ public interface AppUserService {
      * @return
      * @throws Exception
      */
-    public List<AppUserPo> listWaitingReturnWaterUser() throws Exception;
+    public List<AppUserPo> listWaitingReturnWaterUserByParentId(String parentId) throws Exception;
+
+
+    /**
+     * 根据需要返水的用户
+     *
+     * @return
+     * @throws Exception
+     */
+    public List<TaskReturnWaterVo> listWaitingReturnWaterUser() throws Exception;
 
     public Integer countWaitingReturnWaterUser() throws Exception;
 

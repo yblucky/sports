@@ -8,7 +8,6 @@ import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.AppBillRecordPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
-import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.ConfUtils;
 import com.xlf.common.util.CryptUtils;
@@ -19,9 +18,9 @@ import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.app.SysAgentSettingService;
-import com.xlf.server.common.CommonService;
 import com.xlf.server.mapper.AppUserMapper;
 import com.xlf.server.mapper.SysKeyWordsMapper;
+import com.xlf.server.vo.TaskReturnWaterVo;
 import com.xlf.server.web.SysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,13 +59,13 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUserPo findUserById(String id) throws Exception {
-        return appUserMapper.findUserById (id);
+        return appUserMapper.findUserById(id);
     }
 
     @Override
     public AppUserPo getUserByToken(String token) throws Exception {
         AppUserPo user = null;
-        Object obj = redisService.getObj (token);
+        Object obj = redisService.getObj(token);
         if (obj != null && obj instanceof AppUserPo) {
             user = (AppUserPo) obj;
         }
@@ -76,17 +75,17 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUserPo findUserByMobile(String mobile) throws Exception {
-        return appUserMapper.findUserByMobile (mobile);
+        return appUserMapper.findUserByMobile(mobile);
     }
 
     @Override
     public AppUserPo findUserByParentId(String parentId) throws Exception {
-        return appUserMapper.findUserByParentId (parentId);
+        return appUserMapper.findUserByParentId(parentId);
     }
 
     @Override
     public AppUserPo findUserByNickName(String nickName) throws Exception {
-        return appUserMapper.findUserByNickName (nickName);
+        return appUserMapper.findUserByNickName(nickName);
     }
 
     /**
@@ -97,7 +96,7 @@ public class AppUserServiceImpl implements AppUserService {
      */
     @Override
     public int findKeyWords(String nickName) {
-        return sysKeyWordsMapper.findKeyWords (nickName);
+        return sysKeyWordsMapper.findKeyWords(nickName);
     }
 
     /**
@@ -111,34 +110,34 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public Boolean add(UserVo userVo) throws Exception {
 
-        AppUserPo appUserPo = new AppUserPo ();
+        AppUserPo appUserPo = new AppUserPo();
         //获取盐
-        String pwdStal = ToolUtils.getUUID ();
-        String payStal = ToolUtils.getUUID ();
+        String pwdStal = ToolUtils.getUUID();
+        String payStal = ToolUtils.getUUID();
         //设置登录密码
-        String loginPw = CryptUtils.hmacSHA1Encrypt (userVo.getLoginPwd (), pwdStal);
+        String loginPw = CryptUtils.hmacSHA1Encrypt(userVo.getLoginPwd(), pwdStal);
         //设置支付密码
-        String payPwd = CryptUtils.hmacSHA1Encrypt (userVo.getPayPwd (), payStal);
+        String payPwd = CryptUtils.hmacSHA1Encrypt(userVo.getPayPwd(), payStal);
 
-        appUserPo.setMobile (userVo.getMobile ());
-        appUserPo.setNickName (userVo.getNickName ());
-        appUserPo.setParentId (userVo.getParentId ());
-        appUserPo.setLoginPwd (loginPw);
-        appUserPo.setPayPwd (payPwd);
-        appUserPo.setPwdStal (pwdStal);
-        appUserPo.setPayStal (payStal);
-        appUserPo.setId (ToolUtils.getUUID ());
-        appUserPo.setCreateTime (new Date ());
-        appUserPo.setState (StateEnum.NORMAL.getCode ());
-        appUserPo.setBalance (BigDecimal.ZERO);
-        appUserPo.setBettingAmout (BigDecimal.ZERO);
-        appUserPo.setBlockedBalance (BigDecimal.ZERO);
-        appUserPo.setCurrentProfit (BigDecimal.ZERO);
-        appUserPo.setKickBackAmount (BigDecimal.ZERO);
-        appUserPo.setWiningAmout (BigDecimal.ZERO);
-        appUserPo.setErrorNo (5);
+        appUserPo.setMobile(userVo.getMobile());
+        appUserPo.setNickName(userVo.getNickName());
+        appUserPo.setParentId(userVo.getParentId());
+        appUserPo.setLoginPwd(loginPw);
+        appUserPo.setPayPwd(payPwd);
+        appUserPo.setPwdStal(pwdStal);
+        appUserPo.setPayStal(payStal);
+        appUserPo.setId(ToolUtils.getUUID());
+        appUserPo.setCreateTime(new Date());
+        appUserPo.setState(StateEnum.NORMAL.getCode());
+        appUserPo.setBalance(BigDecimal.ZERO);
+        appUserPo.setBettingAmout(BigDecimal.ZERO);
+        appUserPo.setBlockedBalance(BigDecimal.ZERO);
+        appUserPo.setCurrentProfit(BigDecimal.ZERO);
+        appUserPo.setKickBackAmount(BigDecimal.ZERO);
+        appUserPo.setWiningAmout(BigDecimal.ZERO);
+        appUserPo.setErrorNo(5);
 
-        int count = appUserMapper.insert (appUserPo);
+        int count = appUserMapper.insert(appUserPo);
 
         if (count > 0) {
             return true;
@@ -151,25 +150,25 @@ public class AppUserServiceImpl implements AppUserService {
     public String login(AppUserPo appUserPo) throws Exception {
 
         //获取token
-        String token = RedisKeyEnum.TOKEN_API.getKey () + ToolUtils.getUUID ();
+        String token = RedisKeyEnum.TOKEN_API.getKey() + ToolUtils.getUUID();
         // 登录成功,将用户信息存储到redis中
-        String msg = redisService.putObj (token, appUserPo, confUtils.getSessionTimeout ());
-        if (!msg.equalsIgnoreCase ("ok")) {
+        String msg = redisService.putObj(token, appUserPo, confUtils.getSessionTimeout());
+        if (!msg.equalsIgnoreCase("ok")) {
             // 缓存用户信息失败
-            throw new CommException ("设置token到redis失败");
+            throw new CommException("设置token到redis失败");
         } else {
             //redis是否存在
-            String token_key = redisService.getString (appUserPo.getId ());
-            if (!StringUtils.isEmpty (token_key)) {
+            String token_key = redisService.getString(appUserPo.getId());
+            if (!StringUtils.isEmpty(token_key)) {
                 //删除token_key值
-                redisService.del (token_key);
+                redisService.del(token_key);
             }
             //用另外一个redis去保存token_key,保证用户登录只有一个token_key
-            redisService.putString (appUserPo.getId (), token, confUtils.getSessionTimeout ());
+            redisService.putString(appUserPo.getId(), token, confUtils.getSessionTimeout());
             //登录成功，修改登录时间
-            AppUserPo model = new AppUserPo ();
-            model.setLoginTime (new Date ());
-            appUserMapper.updateById (model, appUserPo.getId ());
+            AppUserPo model = new AppUserPo();
+            model.setLoginTime(new Date());
+            appUserMapper.updateById(model, appUserPo.getId());
             return token;
         }
     }
@@ -177,9 +176,9 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public Boolean LoginOut(String userId) throws Exception {
 
-        String token_key = redisService.getString (userId);
+        String token_key = redisService.getString(userId);
 
-        if (null != userId && !StringUtils.isEmpty (token_key)) {
+        if (null != userId && !StringUtils.isEmpty(token_key)) {
             //删除保存token的值
             redisService.del(userId);
             //删除token_key值
@@ -190,16 +189,16 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public int delUser(String userId) throws Exception {
-        if (StringUtils.isEmpty (userId)) {
+        if (StringUtils.isEmpty(userId)) {
             return 0;
         }
         int rows = 0;
         if (rows < 1) {
-            throw new CommException (msgUtil.getMsg (AppMessage.DELUSER_FAILURE, "删除用户失败"));
+            throw new CommException(msgUtil.getMsg(AppMessage.DELUSER_FAILURE, "删除用户失败"));
         }
-        rows = appUserMapper.deleteByPrimaryKey (userId);
+        rows = appUserMapper.deleteByPrimaryKey(userId);
         if (rows < 1) {
-            throw new CommException (msgUtil.getMsg (AppMessage.DELUSER_FAILURE, "删除用户失败"));
+            throw new CommException(msgUtil.getMsg(AppMessage.DELUSER_FAILURE, "删除用户失败"));
         }
         return rows;
     }
@@ -214,56 +213,65 @@ public class AppUserServiceImpl implements AppUserService {
      */
     @Override
     public int updateById(AppUserPo userPo, String userId) throws Exception {
-        return appUserMapper.updateById (userPo, userId);
+        return appUserMapper.updateById(userPo, userId);
     }
 
 
     @Override
     public int updateBalanceById(String id, BigDecimal balance) {
-        return appUserMapper.updateBalanceById (id, balance);
+        return appUserMapper.updateBalanceById(id, balance);
     }
 
     @Override
     public int updateBlockBalanceById(String id, BigDecimal blockedBalance) {
-        return appUserMapper.updateBlockBalanceById (id, blockedBalance);
+        return appUserMapper.updateBlockBalanceById(id, blockedBalance);
     }
 
     @Override
     public int updateBettingAmoutById(String id, BigDecimal bettingAmout) {
-        return appUserMapper.updateBettingAmoutById (id, bettingAmout);
+        return appUserMapper.updateBettingAmoutById(id, bettingAmout);
     }
 
     @Override
     public int updateCurrentProfitById(String id, BigDecimal currentProfit) {
-        return appUserMapper.updateCurrentProfitById (id, currentProfit);
+        return appUserMapper.updateCurrentProfitById(id, currentProfit);
     }
 
     @Override
     public Integer updateWiningAmoutById(String id, BigDecimal winingAmout) {
-        return appUserMapper.updateWiningAmoutById (id, winingAmout);
+        return appUserMapper.updateWiningAmoutById(id, winingAmout);
     }
 
     @Override
     public Integer updateKickBackAmountById(String id, BigDecimal kickBackAmount) {
-        return appUserMapper.updateKickBackAmountById (id, kickBackAmount);
+        return appUserMapper.updateKickBackAmountById(id, kickBackAmount);
     }
 
     @Override
     public Integer updateUserStateById(String id, Integer state) {
-        return appUserMapper.updateUserStateById (id, state);
+        return appUserMapper.updateUserStateById(id, state);
     }
 
     @Override
     public Integer updateLoginTimeById(String id, Date loginTime) {
-        return appUserMapper.updateLoginTimeById (id, loginTime);
+        return appUserMapper.updateLoginTimeById(id, loginTime);
     }
 
     @Override
-    public List<AppUserPo> listWaitingReturnWaterUser() throws Exception {
+    public List<AppUserPo> listWaitingReturnWaterUserByParentId(String parentId) throws Exception {
         List<AppUserPo> list = null;
-        list = appUserMapper.listWaitingReturnWaterUser ();
+        list = appUserMapper.listWaitingReturnWaterUserByParentId(parentId);
         if (list == null) {
-            return Collections.emptyList ();
+            return Collections.emptyList();
+        }
+        return list;
+    }
+    @Override
+    public List<TaskReturnWaterVo> listWaitingReturnWaterUser() throws Exception {
+        List<TaskReturnWaterVo> list = null;
+        list = appUserMapper.listWaitingReturnWaterUser();
+        if (list == null) {
+            return Collections.emptyList();
         }
         return list;
     }
@@ -271,7 +279,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public Integer countWaitingReturnWaterUser() throws Exception {
         Integer count = 0;
-        count = appUserMapper.countWaitingReturnWaterUser ();
+        count = appUserMapper.countWaitingReturnWaterUser();
         if (count == null) {
             return 0;
         }
@@ -280,18 +288,18 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public Integer batchUpdateKickBackAmout(List<String> ids) {
-        if (CollectionUtils.isEmpty (ids)) {
+        if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
-        return appUserMapper.batchUpdateKickBackAmout (ids);
+        return appUserMapper.batchUpdateKickBackAmout(ids);
     }
 
     @Override
     public Boolean returnWaterService(List<AppBillRecordPo> waterList, List<String> userIds) {
         //已返水的清零处理
-        this.batchUpdateKickBackAmout (userIds);
+        this.batchUpdateKickBackAmout(userIds);
         //插入返水的流水
-        billRecordService.batchSaveKickBackAmoutRecord (waterList);
+        billRecordService.batchSaveKickBackAmoutRecord(waterList);
         return true;
     }
 
@@ -299,47 +307,69 @@ public class AppUserServiceImpl implements AppUserService {
     @Transactional
     public boolean agentRetunWaterService() throws Exception {
 
-        Integer count = this.countWaitingReturnWaterUser ();
+        Integer count = this.countWaitingReturnWaterUser();
         if (count == 0) {
             return true;
         }
-        List<AppBillRecordPo> waterList = new ArrayList<> ();
+        List<AppBillRecordPo> waterList = new ArrayList<>();
         List<String> userIds = new ArrayList<>();
-        List<AppUserPo> appUserPoList = this.listWaitingReturnWaterUser ();
-        String bunessNum = ToolUtils.getUUID ();
-        for (AppUserPo po : appUserPoList) {
-            SysUserVo sysUserVo = sysUserService.findById (po.getParentId ());
-            SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById (sysUserVo.getAgentLevelId ());
+        List<TaskReturnWaterVo> appUserPoList = this.listWaitingReturnWaterUser();
+        String bunessNum = ToolUtils.getUUID();
+        for (TaskReturnWaterVo po : appUserPoList) {
+            SysUserVo sysUserVo = sysUserService.findById(po.getParentId());
+            SysAgentSettingPo sysAgentSettingPo = sysAgentSettingService.findById(sysUserVo.getAgentLevelId());
             //获取返水比率
-            BigDecimal rate = sysAgentSettingPo.getReturnWaterScale ();
-            BigDecimal returnAmount = po.getKickBackAmount ().multiply (rate).setScale (2, BigDecimal.ROUND_HALF_EVEN);
-            BigDecimal beforTotal = sysUserVo.getTotalReturnWater ();
-            BigDecimal afterTotal = beforTotal.add (returnAmount);
-            AppBillRecordPo billRecordPo = new AppBillRecordPo ();
-            billRecordPo.setId (ToolUtils.getUUID ());
-            billRecordPo.setUserId (sysUserVo.getId ());
-            billRecordPo.setBeforeBalance (beforTotal);
-            billRecordPo.setAfterBalance (afterTotal);
-            billRecordPo.setBalance (returnAmount);
-            billRecordPo.setBusinessNumber (bunessNum);
-            billRecordPo.setBusnessType (BusnessTypeEnum.RETURN_WATER.getCode ());
-            billRecordPo.setCreateTime (new Date ());
-            billRecordPo.setRemark ("代理返水结算,此次返水基数是:" + po.getKickBackAmount () + "，返水比例是:" + sysAgentSettingPo.getReturnWaterScale ());
-            billRecordPo.setExtend ("");
-            waterList.add (billRecordPo);
-            userIds.add (po.getId ());
-            Integer row = sysUserService.updateReturnWater (sysUserVo.getId(),returnAmount, returnAmount);
+            BigDecimal rate = sysAgentSettingPo.getReturnWaterScale();
+            BigDecimal returnAmount = po.getSumKickBackAmount().multiply(rate).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal beforTotal = sysUserVo.getTotalReturnWater();
+            BigDecimal afterTotal = beforTotal.add(returnAmount);
+            AppBillRecordPo billRecordPo = new AppBillRecordPo();
+            billRecordPo.setId(ToolUtils.getUUID());
+            billRecordPo.setUserId(sysUserVo.getId());
+            billRecordPo.setBeforeBalance(beforTotal);
+            billRecordPo.setAfterBalance(afterTotal);
+            billRecordPo.setBalance(returnAmount);
+            billRecordPo.setBusinessNumber(bunessNum);
+            billRecordPo.setBusnessType(BusnessTypeEnum.RETURN_WATER.getCode());
+            billRecordPo.setCreateTime(new Date());
+            billRecordPo.setRemark("代理返水结算,此次返水基数是:" + po.getKickBackAmount() + "，返水比例是:" + sysAgentSettingPo.getReturnWaterScale());
+            billRecordPo.setExtend("");
+            waterList.add(billRecordPo);
+            List<AppUserPo> childUserList= this.listWaitingReturnWaterUserByParentId(po.getParentId());
+            if (!CollectionUtils.isEmpty(childUserList)){
+               for (AppUserPo childPo:childUserList){
+                   if (BigDecimal.ZERO.compareTo(childPo.getKickBackAmount())<0){
+                       BigDecimal beforTotalChildPo = childPo.getKickBackAmount();
+                       BigDecimal afterTotalChildPo = BigDecimal.ZERO;
+                       AppBillRecordPo childBillRecordPo = new AppBillRecordPo();
+                       childBillRecordPo.setId(ToolUtils.getUUID());
+                       childBillRecordPo.setUserId(childPo.getId());
+                       childBillRecordPo.setBeforeBalance(beforTotalChildPo);
+                       childBillRecordPo.setAfterBalance(afterTotalChildPo);
+                       childBillRecordPo.setBalance(beforTotalChildPo);
+                       childBillRecordPo.setBusinessNumber(bunessNum);
+                       childBillRecordPo.setBusnessType(BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode());
+                       childBillRecordPo.setCreateTime(new Date());
+                       childBillRecordPo.setRemark("返水结算,对冲返水衡量值");
+                       childBillRecordPo.setExtend(sysUserVo.getLoginName());
+                       waterList.add(billRecordPo);
+                       userIds.add(childPo.getId());
+                   }
+               }
+            }
+
+            Integer row = sysUserService.updateReturnWater(sysUserVo.getId(), returnAmount, returnAmount);
             if (row == null || row == 0) {
-                throw new CommException ("更新代理返水错误");
+                throw new CommException("更新代理返水错误");
             }
         }
-        this.returnWaterService (waterList, userIds);
+        this.returnWaterService(waterList, userIds);
         return false;
     }
 
     @Override
     public void updateStateByParentId(Integer state, String parentId) {
-        appUserMapper.updateStateByParentId(state,parentId);
+        appUserMapper.updateStateByParentId(state, parentId);
     }
 
 
@@ -350,7 +380,7 @@ public class AppUserServiceImpl implements AppUserService {
 
 
     @Override
-    public Integer   updateTodayBettingAmoutTodayWiningAmout(String id,BigDecimal  todayBettingAmout,BigDecimal todayWiningAmout){
-        return appUserMapper.updateTodayBettingAmoutTodayWiningAmout(id,todayBettingAmout,todayWiningAmout);
+    public Integer updateTodayBettingAmoutTodayWiningAmout(String id, BigDecimal todayBettingAmout, BigDecimal todayWiningAmout) {
+        return appUserMapper.updateTodayBettingAmoutTodayWiningAmout(id, todayBettingAmout, todayWiningAmout);
     }
 }
