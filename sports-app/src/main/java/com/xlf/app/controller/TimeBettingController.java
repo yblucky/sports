@@ -9,7 +9,6 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.DateTimeUtil;
-import com.xlf.common.util.LanguageUtil;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.*;
@@ -82,6 +81,8 @@ public class TimeBettingController {
                 return respBody;
             }
             String currentDate = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYYMMDD);
+
+
             //本期期号
             String cur = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo()) : (intervalPo.getIssueNo()) + "";
             String nex = (intervalPo.getIssueNo()) < 100 ? "0" + (intervalPo.getIssueNo() + 1) : (intervalPo.getIssueNo() + 1) + "";
@@ -107,7 +108,11 @@ public class TimeBettingController {
             Integer lotteryOpenInt = Integer.valueOf(lotteryOpen);
 
             //本期投注截止时间
+
             String endDateStr = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
+            if (intervalPo.getIssueNo() == 120) {
+                endDateStr = DateTimeUtil.getDayAddWithPattern(1, DateTimeUtil.PATTERN_YYYYMMDD) + " " + hhmm;
+            }
             Date endDate = DateTimeUtil.parseDateFromStr(endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
             Long end = endDate.getTime() - endBeforeInt * 1000;
             Long start = endDate.getTime() - inteval * 60 * 1000 + openStartInt * 1000;
@@ -136,8 +141,8 @@ public class TimeBettingController {
             //查询上期的开奖结果
             String pre = (intervalPo.getIssueNo() - 1) < 100 ? "0" + (intervalPo.getIssueNo() - 1) : (intervalPo.getIssueNo() - 1) + "";
             String prepre = (intervalPo.getIssueNo() - 2) < 100 ? "0" + (intervalPo.getIssueNo() - 2) : (intervalPo.getIssueNo() - 2) + "";
-            if (intervalPo.getIssueNo() - 1==0){
-                prepre="120";
+            if (intervalPo.getIssueNo() - 1 == 0) {
+                prepre = "120";
             }
 
             if (Integer.valueOf(pre) < 10) {
@@ -151,23 +156,14 @@ public class TimeBettingController {
             }
             AppTimeLotteryPo timeLotteryPo = appTimeLotteryService.findAppTimeLotteryPoByIssuNo(currentDate + pre);
             if (timeLotteryPo == null) {
-                timeLotteryPo = appTimeLotteryService.findAppTimeLotteryPoByIssuNo(currentDate + prepre);
-            }
-            if (timeLotteryPo == null) {
-                if (intervalPo.getIssueNo() == 1) {
-                    pre = DateTimeUtil.getDayMinusWithPattern(-1, DateTimeUtil.PATTERN_YYYYMMDD) + "118";
+                AppTimeLotteryVo vo = appTimeLotteryService.loadAwardNumber();
+                if (vo != null) {
+                    timeLotteryPo = setAppTimeLotteryPo(vo.getId(), vo.getIssueNo(), vo.getLotteryOne(), vo.getLotteryTwo(), vo.getLotteryThree(), vo.getLotteryFour(), vo.getLotteryFive());
+                } else {
+                    timeLotteryPo = setAppTimeLotteryPo("", "", null, null, null, null, null);
                 }
-                timeLotteryPo = new AppTimeLotteryPo();
-                timeLotteryPo.setId("");
-                timeLotteryPo.setIssueNo("系统维护");
-                timeLotteryPo.setFlag(LotteryFlagEnum.NO.getCode());
-                timeLotteryPo.setLotteryOne(10);
-                timeLotteryPo.setLotteryTwo(10);
-                timeLotteryPo.setLotteryThree(10);
-                timeLotteryPo.setLotteryFour(10);
-                timeLotteryPo.setLotteryFive(10);
-                timeLotteryPo.setLotteryTime(new Date());
             }
+
             infoVo.setAppTimeLotteryPo(timeLotteryPo);
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取时时彩信息成功!", infoVo);
         } catch (Exception ex) {
@@ -175,6 +171,21 @@ public class TimeBettingController {
             LogUtils.error("获取时时彩信息失败！", ex);
         }
         return respBody;
+    }
+
+    private AppTimeLotteryPo setAppTimeLotteryPo(String id, String issueNo, Integer one, Integer two, Integer three, Integer foure, Integer five) {
+        AppTimeLotteryPo timeLotteryPo;
+        timeLotteryPo = new AppTimeLotteryPo();
+        timeLotteryPo.setId(id);
+        timeLotteryPo.setIssueNo(issueNo);
+        timeLotteryPo.setFlag(LotteryFlagEnum.NO.getCode());
+        timeLotteryPo.setLotteryOne(one);
+        timeLotteryPo.setLotteryTwo(two);
+        timeLotteryPo.setLotteryThree(three);
+        timeLotteryPo.setLotteryFour(foure);
+        timeLotteryPo.setLotteryFive(five);
+        timeLotteryPo.setLotteryTime(new Date());
+        return timeLotteryPo;
     }
 
 
@@ -574,8 +585,8 @@ public class TimeBettingController {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "非二字定投注");
                     return respBody;
                 }
-                if (baseVo.getMultiple() < agentSettingPo.getMinBetNoPerDigital()  || baseVo.getMultiple() > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                    respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字单注投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-"+ + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注" + baseVo.getBettingContent() + "超限制");
+                if (baseVo.getMultiple() < agentSettingPo.getMinBetNoPerDigital() || baseVo.getMultiple() > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
+                    respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字单注投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "-" + +agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注" + baseVo.getBettingContent() + "超限制");
                     return respBody;
                 }
                 if (hasBettingCount > 0) {
@@ -588,8 +599,8 @@ public class TimeBettingController {
                         for (AppTimeBettingPo po : timeBettingPos) {
                             total += baseVo.getMultiple();
                             total += po.getMultiple();
-                            if (total < agentSettingPo.getMinBetNoPerDigital()  || total > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
-                                respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字投注范围为【" + agentSettingPo.getMinBetNoPerDigital()+"-" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
+                            if (total < agentSettingPo.getMinBetNoPerDigital() || total > agentSettingPo.getTimeDoubleMaxBetNoPerKind()) {
+                                respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "-" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
                                 return respBody;
                             }
                             BettingBaseVo bettingBaseVo = new BettingBaseVo();
@@ -639,15 +650,15 @@ public class TimeBettingController {
 
 
             Map<String, Set<String>> sigleGroupMap = new HashMap<>();
-             for (BettingBaseVo bettingBaseVo : allList) {
+            for (BettingBaseVo bettingBaseVo : allList) {
                 for (String regex : regexTimeTwoList) {
                     if (ToolUtils.regex(bettingBaseVo.getBettingContent(), regex)) {
                         twoGroupSet.add(regex);
                         if (sigleGroupMap.containsKey(regex)) {
-                            Set set= sigleGroupMap.get(regex);
+                            Set set = sigleGroupMap.get(regex);
                             set.add(bettingBaseVo.getBettingContent());
                         } else {
-                            Set<String> singleSet=new HashSet<>();
+                            Set<String> singleSet = new HashSet<>();
                             singleSet.add(bettingBaseVo.getBettingContent());
                             sigleGroupMap.put(regex, singleSet);
                         }
@@ -655,8 +666,8 @@ public class TimeBettingController {
                             respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
-                        Integer singleMapSetSize=sigleGroupMap.get(regex).size();
-                        if (twoGroupSet.size() > 0 && singleMapSetSize> agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
+                        Integer singleMapSetSize = sigleGroupMap.get(regex).size();
+                        if (twoGroupSet.size() > 0 && singleMapSetSize > agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
                             respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
                         }
@@ -808,17 +819,17 @@ public class TimeBettingController {
             //检验用户是否登录
             AppUserPo appUserPo = commonService.checkToken();
 
-            if (paging.getPageNumber()>15){
+            if (paging.getPageNumber() > 15) {
                 paging.setPageNumber(15);
             }
 
-            if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)){
-                startTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
-                endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD +" "+"23:59:59");
+            if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
+                startTime = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD);
+                endTime = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD + " " + "23:59:59");
             }
-            Date start=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
-            Date end=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
-            if (end.getTime()-start.getTime()>7*24*60*60*1000){
+            Date start = DateTimeUtil.parseDateFromStr(startTime, DateTimeUtil.PATTERN_YYYY_MM_DD);
+            Date end = DateTimeUtil.parseDateFromStr(startTime, DateTimeUtil.PATTERN_YYYY_MM_DD);
+            if (end.getTime() - start.getTime() > 7 * 24 * 60 * 60 * 1000) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "最大允许查询7天区间");
                 return respBody;
             }
@@ -843,16 +854,15 @@ public class TimeBettingController {
      * 开奖号码
      */
     @GetMapping(value = "/loadAwardNumber")
-    public RespBody loadAwardNumber(HttpServletRequest request,String issueNo) {
+    public RespBody loadAwardNumber(HttpServletRequest request) {
         RespBody respBody = new RespBody();
         try {
             //检验用户是否登录
             AppUserPo appUserPo = commonService.checkToken();
-
             //根据用户id获取用户信息
-            AppTimeLotteryVo appTimeLotteryVo = appTimeLotteryService.loadAwardNumber(issueNo);
+            AppTimeLotteryVo appTimeLotteryVo = appTimeLotteryService.loadAwardNumber();
 
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取上期开奖号码成功",appTimeLotteryVo);
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取上期开奖号码成功", appTimeLotteryVo);
         } catch (CommException ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
         } catch (Exception ex) {
@@ -893,10 +903,10 @@ public class TimeBettingController {
         }
         System.out.println(lists.size());*/
 
-       Integer a=10;
-       if (a-1==9){
-           System.out.println(0000);
-       }
+        Integer a = 10;
+        if (a - 1 == 9) {
+            System.out.println(0000);
+        }
     }
 }
 

@@ -36,5 +36,5 @@ public interface AppTimeLotteryMapper extends BaseMapper<AppTimeLotteryPo> {
 //    public AppTimeLotteryVo loadAwardNumber(@Param("issueNo") String issueNo) throws Exception;
 
     @Select("SELECT * FROM `app_time_lottery` order by lotteryTime desc LIMIT 1")
-    public AppTimeLotteryVo loadAwardNumber(@Param("issueNo") String issueNo) throws Exception;
+    public AppTimeLotteryVo loadAwardNumber() throws Exception;
 }

@@ -123,6 +123,18 @@ public final class DateTimeUtil {
     }
 
     /**
+     * 加上多少天,并进行格式化
+     */
+    public static String getDayAddWithPattern(int day,String pattern) {
+        Calendar cal_1 = Calendar.getInstance();//获取当前日期
+        cal_1.set(Calendar.DATE, cal_1.get(Calendar.DATE) + day);
+        cal_1.set(Calendar.HOUR_OF_DAY, 0);
+        cal_1.set(Calendar.MINUTE, 0);
+        cal_1.set(Calendar.SECOND, 0);
+        return DateTimeUtil.formatDate (new Date(cal_1.getTimeInMillis()),pattern);
+    }
+
+    /**
      * 减去多少天,并进行格式化
      */
     public static String getDayMinusWithPattern(int day,String pattern) {
@@ -450,5 +462,6 @@ public final class DateTimeUtil {
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,10));
         SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
         System.out.println(sdf.format(new Date()) + " 23:59:59");
+        System.out.println(DateTimeUtil.getDayAddWithPattern(1,DateTimeUtil.PATTERN_YYYYMMDD));
     }
 }
