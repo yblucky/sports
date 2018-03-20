@@ -825,10 +825,11 @@ public class TimeBettingController {
 
             if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
                 startTime = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD);
-                endTime = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD + " " + "23:59:59");
+                endTime = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD);
             }
+            endTime+=" "+"23:59:59";
             Date start = DateTimeUtil.parseDateFromStr(startTime, DateTimeUtil.PATTERN_YYYY_MM_DD);
-            Date end = DateTimeUtil.parseDateFromStr(startTime+" "+"23:59:59", DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS);
+            Date end = DateTimeUtil.parseDateFromStr(startTime, DateTimeUtil.PATTERN_YYYY_MM_DD);
             if (end.getTime() - start.getTime() > 7 * 24 * 60 * 60 * 1000) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "最大允许查询7天区间");
                 return respBody;

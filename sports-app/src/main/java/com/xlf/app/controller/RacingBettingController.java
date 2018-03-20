@@ -47,8 +47,6 @@ public class RacingBettingController {
     @Resource
     private SysUserService sysUserService;
     @Resource
-    private LanguageUtil languageUtil;
-    @Resource
     private AppSysAgentSettingService appSysAgentSettingService;
     @Resource
     private AppRacingBettingService appRacingBettingService;
@@ -56,8 +54,6 @@ public class RacingBettingController {
     private AppTimeIntervalService appTimeIntervalService;
     @Resource
     private AppRacingLotteryService appRacingLotteryService;
-    @Resource
-    private KeyService keyService;
 
 
     @GetMapping("/racingInfo")
