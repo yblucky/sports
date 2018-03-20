@@ -862,7 +862,7 @@ public class TimeBettingController {
             //根据用户id获取用户信息
             AppTimeLotteryVo appTimeLotteryVo = appTimeLotteryService.loadAwardNumber();
 
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取上期开奖号码成功", appTimeLotteryVo);
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), " 获取上期开奖号码成功", appTimeLotteryVo);
         } catch (CommException ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
         } catch (Exception ex) {
