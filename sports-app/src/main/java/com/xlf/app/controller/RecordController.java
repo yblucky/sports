@@ -76,7 +76,7 @@ public class RecordController {
                 endTime=DateTimeUtil.formatDate(new Date(),DateTimeUtil.PATTERN_YYYY_MM_DD);
             }
             Date start=DateTimeUtil.parseDateFromStr(startTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
-            Date end=DateTimeUtil.parseDateFromStr(endTime,DateTimeUtil.PATTERN_YYYY_MM_DD);
+            Date end=DateTimeUtil.parseDateFromStr(endTime,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS);
             if (end.getTime()-start.getTime()>7*24*60*60*1000){
                 respBody.add(RespCodeEnum.ERROR.getCode(), "最大允许查询7天区间");
                 return respBody;
@@ -197,6 +197,4 @@ public class RecordController {
         }
         return respBody;
     }
-
-
 }

@@ -23,26 +23,31 @@ public class TimeBettingWayTwoScheduleTask extends BaseScheduleTask {
     @Override
     protected void doSpecificTask() {
         try {
-            AppTimeLotteryPo lotteryPo = appTimeLotteryService.findLast();
-            if (lotteryPo == null) {
-                log.info("没有待结算的投注订单");
-                return;
-            }
-            List<AppTimeBettingPo> list = null;
-
-            Boolean flag = false;
-            flag = appTimeLotteryService.batchTimeLotteryHandleWayTwoService(lotteryPo, flag, BetTypeEnum.TIME_ONE.getCode ());
-            flag = appTimeLotteryService.batchTimeLotteryHandleWayTwoService(lotteryPo, flag, BetTypeEnum.TIME_TWO.getCode ());
-            if (!flag) {
-                //本期时时彩全部设置为未中奖
-                appTimeBettingService.updateBatchLotteryFlag(lotteryPo.getIssueNo());
-            }
-            //修改本期为全部已结算完成
-            appTimeLotteryService.updateFlagById(lotteryPo.getId());
+            if (timeOpenTask()) return;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
         }
+    }
+
+    private boolean timeOpenTask() throws Exception {
+        AppTimeLotteryPo lotteryPo = appTimeLotteryService.findLast();
+        if (lotteryPo == null) {
+            log.info("没有待结算的投注订单");
+            return true;
+        }
+        List<AppTimeBettingPo> list = null;
+
+        Boolean flag = false;
+        flag = appTimeLotteryService.batchTimeLotteryHandleWayTwoService(lotteryPo, flag, BetTypeEnum.TIME_ONE.getCode ());
+        flag = appTimeLotteryService.batchTimeLotteryHandleWayTwoService(lotteryPo, flag, BetTypeEnum.TIME_TWO.getCode ());
+        if (!flag) {
+            //本期时时彩全部设置为未中奖
+            appTimeBettingService.updateBatchLotteryFlag(lotteryPo.getIssueNo());
+        }
+        //修改本期为全部已结算完成
+        appTimeLotteryService.updateFlagById(lotteryPo.getId());
+        return false;
     }
 }

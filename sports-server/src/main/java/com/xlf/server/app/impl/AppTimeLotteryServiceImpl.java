@@ -285,6 +285,27 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         return listPo;
     }
 
+    @Override
+    public boolean timeOpenTask() throws Exception {
+        AppTimeLotteryPo lotteryPo = this.findLast();
+        if (lotteryPo == null) {
+            log.info("没有待结算的投注订单");
+            return true;
+        }
+        List<AppTimeBettingPo> list = null;
+
+        Boolean flag = false;
+        flag = this.batchTimeLotteryHandleWayTwoService(lotteryPo, flag, BetTypeEnum.TIME_ONE.getCode ());
+        flag = this.batchTimeLotteryHandleWayTwoService(lotteryPo, flag, BetTypeEnum.TIME_TWO.getCode ());
+        if (!flag) {
+            //本期时时彩全部设置为未中奖
+            appTimeBettingService.updateBatchLotteryFlag(lotteryPo.getIssueNo());
+        }
+        //修改本期为全部已结算完成
+        this.updateFlagById(lotteryPo.getId());
+        return false;
+    }
+
     private static AppTimeLotteryPo getAppTimeLotteryPo(String str) {
         AppTimeLotteryPo po = new AppTimeLotteryPo();
         List<String> list = new ArrayList<String>();
@@ -343,4 +364,6 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             System.out.println(ToolUtils.toJson(po));
         }
     }
+
+
 }

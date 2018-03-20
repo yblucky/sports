@@ -38,4 +38,6 @@ public interface AppTimeLotteryService {
     public Integer countLotteryInfoTotal(String startTime, String endTime) throws Exception;
 
     public AppTimeLotteryVo loadAwardNumber() throws Exception;
+
+    public boolean timeOpenTask() throws Exception;
 }
