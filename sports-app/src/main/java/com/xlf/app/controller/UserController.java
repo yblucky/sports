@@ -239,7 +239,7 @@ public class UserController {
             vo.setPayPwd ("*");
             vo.setLoginPwd ("*");
             vo.setPayStal ("*");
-            vo.setPayPwd ("*");
+            vo.setPwdStal ("*");
 
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取成功", vo);
         } catch (CommException ex) {

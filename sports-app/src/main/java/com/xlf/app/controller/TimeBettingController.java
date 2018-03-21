@@ -90,7 +90,7 @@ public class TimeBettingController {
                 cur = "0" + cur;
             }
             if (Integer.valueOf(nex) < 10) {
-                cur = "0" + cur;
+                nex = "0" + nex;
             }
             String historyIssuNo = currentDate + cur;
             String nextIssuNo = currentDate + nex;
@@ -111,7 +111,7 @@ public class TimeBettingController {
 
             String endDateStr = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
             if (intervalPo.getIssueNo() == 120) {
-                endDateStr = DateTimeUtil.getDayAddWithPattern(1, DateTimeUtil.PATTERN_YYYYMMDD) + " " + hhmm;
+                endDateStr = DateTimeUtil.getDayAddWithPattern(1, DateTimeUtil.PATTERN_YYYY_MM_DD) + " " + hhmm;
             }
             Date endDate = DateTimeUtil.parseDateFromStr(endDateStr, DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
             Long end = endDate.getTime() - endBeforeInt * 1000;
