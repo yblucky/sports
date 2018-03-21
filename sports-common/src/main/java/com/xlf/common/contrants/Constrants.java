@@ -1,7 +1,5 @@
 package com.xlf.common.contrants;
 
-import com.xlf.common.util.ToolUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,37 +26,32 @@ public class Constrants {
     public static final String REG_TIME_EIGHT_DOUBLE = "X\\dXX\\d";
     public static final String REG_TIME_NINE_DOUBLE = "\\d\\dXXX";
     public static final String REG_TIME_TEN_DOUBLE = "\\dXX\\dX";
-
-    public static void main(String[] args) {
-        Map m = new HashMap ();
-        m.put (1, "1223");
-        m.put (2, "123");
-        List<String> list = ToolUtils.quickChoose (2, 1, m);
-        List<List<String>> lists = new ArrayList<> ();
-        for (int i = 0; i < list.size (); i++) {
-            List innerliset = null;
-            if (i % 10 == 0) {
-                innerliset = new ArrayList ();
-                lists.add (innerliset);
-            }
-            int index = 0;
-            if (i > 10) {
-                index = list.size () / 10;
-                lists.get (index).add (list.get (i));
-            } else {
-                lists.get (0).add (list.get (i));
-            }
-
+    public static final List<String> racingRegexList = new ArrayList<String>() {
+        {
+            add(0, "\\dXXXXXXXXX");
+            add(1, "X\\dXXXXXXXX");
+            add(2, "XX\\dXXXXXXX");
+            add(3, "XXX\\dXXXXXX");
+            add(4, "XXXX\\dXXXXX");
+            add(5, "XXXXX\\dXXXX");
+            add(6, "XXXXXX\\dXXX");
+            add(7, "XXXXXXX\\dXX");
+            add(8, "XXXXXXXX\\dX");
+            add(9, "XXXXXXXXX\\d");
         }
-
-        System.out.println ("000000000000000000000000");
-        System.out.println (lists.size ());
-        for (List<String> list1 : lists) {
-            System.out.println (list1.size ());
-            System.out.println ("9999999999");
-            for (String sss : list1) {
-                System.out.println (sss);
-            }
+    };
+    public static final Map<String, String> racingRegexDescMap = new HashMap<String, String>() {
+        {
+            put("\\dXXXXXXXXX", "1赛道");
+            put("X\\dXXXXXXXX", "2赛道");
+            put("XX\\dXXXXXXX", "3赛道");
+            put("XXX\\dXXXXXX", "4赛道");
+            put("XXXX\\dXXXXX", "5赛道");
+            put("XXXXX\\dXXXX", "6赛道");
+            put("XXXXXX\\dXXX", "7赛道");
+            put("XXXXXXX\\dXX", "8赛道");
+            put("XXXXXXXX\\dX", "9赛道");
+            put("XXXXXXXXX\\d", "10赛道");
         }
-    }
+    };
 }

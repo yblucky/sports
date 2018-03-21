@@ -28,4 +28,6 @@ public interface AppRacingLotteryService {
 
     Integer save(AppRacingLotteryPo po);
 
+    public AppRacingLotteryPo loadAwardNumber() throws Exception;
+
 }

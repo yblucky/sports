@@ -2,6 +2,7 @@ package com.xlf.server.mapper;
 
 
 import com.xlf.common.po.AppRacingBettingPo;
+import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.pc.LotteryVo;
 import com.xlf.server.base.BaseMapper;
@@ -44,7 +45,12 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
     @Select("SELECT * FROM `app_racing_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
     List<AppRacingBettingPo> findRecordList(@Param("userId") String userId, @Param("businessNumber") String businessNumber, RowBounds rowBounds);
 
-    Integer countBettingByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent);
+    Integer countBettingByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent, @Param("betTpye") Integer betTpye);
 
-    List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent, RowBounds rowBounds);
+    List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param("betTpye")Integer betTpye, RowBounds rowBounds);
+
+    Integer wininggCountAndWingConent(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag,@Param ("betType") Integer betType, @Param("list") List<String> winingList);
+
+    List<AppRacingBettingPo> listWininggByIssuNoAndWingConent(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag, @Param ("betType") Integer betType, @Param("list") List<String> winingList, RowBounds rowBounds);
+
 }

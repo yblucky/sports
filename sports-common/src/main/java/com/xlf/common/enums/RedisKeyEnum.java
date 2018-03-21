@@ -12,7 +12,8 @@ public enum RedisKeyEnum {
     TIME_BETTIING_ISSUNO("time_bettiing", 10 * 60 * 60),
     RACING_BETTIING_ISSUNO("racing_bettiing", 10 * 60 * 60),
     TIME_BETTIING_ONE("time_bettiing_one", 10  * 60),
-    TIME_BETTIING_TWO("time_bettiing_two", 10  * 60);
+    TIME_BETTIING_TWO("time_bettiing_two", 10  * 60),
+    RACING_BETTIING_ONE("raing_bettiing_one", 10  * 60);
 
     private final String key;
 

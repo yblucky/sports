@@ -7,6 +7,7 @@ public class RacingBettingVo {
     private String issueNo;
     private String payPwd;
     private Integer serialNumber;
+    private Integer betType;
     private List<RacingBettingBaseVo> raingList = new ArrayList<>();
 
 
@@ -32,6 +33,14 @@ public class RacingBettingVo {
 
     public void setSerialNumber(Integer serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public Integer getBetType() {
+        return betType;
+    }
+
+    public void setBetType(Integer betType) {
+        this.betType = betType;
     }
 
     public List<RacingBettingBaseVo> getRaingList() {

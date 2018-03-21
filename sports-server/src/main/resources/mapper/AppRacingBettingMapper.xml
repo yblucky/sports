@@ -146,6 +146,29 @@
         </where>
     </select>
 
+
+    <select id="wininggCountAndWingConent" resultType="java.lang.Integer">
+        select count(id) from
+        <include refid="table_name"/>
+        <where>
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag} AND betType=#{betType} AND bettingContent IN
+            <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
+        </where>
+    </select>
+
+
+
+    <select id="listWininggByIssuNoAndWingConent" resultType="com.xlf.common.po.AppRacingBettingPo">
+        select
+        <include refid="fields_id"/>
+        from
+        <include refid="table_name"/>
+        <where>
+            issueNo=#{issuNo} AND lotteryFlag=#{lotteryFlag} AND betType=#{betType}   AND bettingContent IN
+            <foreach collection="list" separator="," open="(" close=")" item="item">#{item}</foreach>
+        </where>
+    </select>
+
 </mapper>
 
 

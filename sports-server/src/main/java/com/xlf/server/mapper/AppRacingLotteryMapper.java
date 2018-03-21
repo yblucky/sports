@@ -3,6 +3,7 @@ package com.xlf.server.mapper;
 
 import com.xlf.common.po.AppRacingLotteryPo;
 import com.xlf.common.po.AppTimeLotteryPo;
+import com.xlf.common.vo.app.AppTimeLotteryVo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -21,4 +22,7 @@ public interface AppRacingLotteryMapper extends BaseMapper<AppRacingLotteryPo> {
 
     @Select("SELECT * FROM `app_racing_lottery` where issueNo=#{issueNo}")
     AppRacingLotteryPo findAppRacingLotteryPoByIssuNo(String issuNo);
+
+    @Select("SELECT * FROM `app_racing_lottery` order by lotteryTime desc LIMIT 1")
+    public AppRacingLotteryPo loadAwardNumber() throws Exception;
 }

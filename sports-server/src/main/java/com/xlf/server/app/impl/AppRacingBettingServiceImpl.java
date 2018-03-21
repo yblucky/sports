@@ -73,11 +73,16 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
 
         String businessNumber = ToolUtils.getUUID ();
         appUserService.updateBalanceById (userId, totalPrice.multiply (new BigDecimal ("-1")));
-        appUserService.updateBettingAmoutById (userId, totalPrice);
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.RACING_BETTING.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "北京赛车下注",  vo.getIssueNo ());
         for (RacingBettingBaseVo base : vo.getRaingList ()) {
             this.save (businessNumber, vo.getIssueNo(), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getLotterySix (), base.getLotterySeven (), base.getLotteryEight (), base.getLotteryNine (), base.getLotteryTen (), base.getMultiple ());
         }
+        appUserService.updateBettingAmoutById (userId, totalPrice);
+        //盈亏衡量
+        BigDecimal afterKick = userPo.getKickBackAmount ().add (totalPrice).setScale (2, BigDecimal.ROUND_HALF_EVEN);
+        appUserService.updateKickBackAmountById (userId, totalPrice);
+        appBillRecordService.saveBillRecord (businessNumber, userPo.getId (), BusnessTypeEnum.ADD_KICKBACKAMOUNT_RECORD.getCode (), totalPrice, userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "PK10下注后返水增加", vo.getIssueNo());
+        appUserService.updateTodayBettingAmoutTodayWiningAmout(userId,totalPrice,BigDecimal.ZERO);
     }
 
     @Override
@@ -169,9 +174,9 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     }
 
     @Override
-    public Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent) throws Exception {
+    public Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye) throws Exception {
         Integer count = 0;
-        count = appRacingBettingMapper.countBettingByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent);
+        count = appRacingBettingMapper.countBettingByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent,betTpye);
         if (count == null) {
             count = 0;
         }
@@ -179,12 +184,12 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     }
 
     @Override
-    public List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Paging paging) throws Exception {
+    public List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye,Paging paging) throws Exception {
         RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
         if (StringUtils.isEmpty (issueNo) || StringUtils.isEmpty (userId) || StringUtils.isEmpty (bettingContent)) {
             return Collections.emptyList ();
         }
-        List<AppRacingBettingPo> list = appRacingBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent, rowBounds);
+        List<AppRacingBettingPo> list = appRacingBettingMapper.findListByUserIdAndIssueNoAndContent (userId,issueNo,bettingContent,betTpye, rowBounds);
         if (list == null) {
             list = Collections.emptyList ();
         }
@@ -228,6 +233,33 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         appUserService.updateCurrentProfitById (userId, totalPrice);
         return true;
     }
+
+
+    @Override
+    public List<AppRacingBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag, Integer betType, Paging paging, List<String> winingList) {
+        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        if (StringUtils.isEmpty (issuNo)) {
+            return Collections.emptyList ();
+        }
+        List<AppRacingBettingPo> list = appRacingBettingMapper.listWininggByIssuNoAndWingConent (issuNo, lotteryFlag,betType,winingList, rowBounds);
+        if (list == null) {
+            list = Collections.emptyList ();
+        }
+        return list;
+    }
+
+    @Override
+    public Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag,Integer betType, List<String> winingList) {
+        Integer count = 0;
+        count = appRacingBettingMapper.wininggCountAndWingConent (issuNo, lotteryFlag,betType, winingList);
+        if (count == null) {
+            count = 0;
+        }
+        return count;
+    }
+
+
+
 
 
 }

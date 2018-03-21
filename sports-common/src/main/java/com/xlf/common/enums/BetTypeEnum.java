@@ -9,7 +9,8 @@ package com.xlf.common.enums;
  */
 public enum BetTypeEnum {
 	TIME_ONE(10,"时时彩一字定"),
-	TIME_TWO(20,"时时彩二字定");
+	TIME_TWO(20,"时时彩二字定"),
+	RACE_ONE(30,"PK10一字定");
 	private Integer code;
 	private String name;
 

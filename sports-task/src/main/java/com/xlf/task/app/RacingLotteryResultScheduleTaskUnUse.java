@@ -18,8 +18,8 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 
-public class RacingLotteryResultScheduleTask extends BaseScheduleTask {
-    private static final Logger log = LoggerFactory.getLogger (RacingLotteryResultScheduleTask.class);
+public class RacingLotteryResultScheduleTaskUnUse extends BaseScheduleTask {
+    private static final Logger log = LoggerFactory.getLogger (RacingLotteryResultScheduleTaskUnUse.class);
     @Resource
     private AppRacingLotteryService appRacingLotteryService;
     @Resource

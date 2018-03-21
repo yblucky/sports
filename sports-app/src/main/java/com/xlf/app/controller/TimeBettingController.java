@@ -498,9 +498,9 @@ public class TimeBettingController {
                 Integer lastBettingTotalNo = (Integer) lastBettingTotalNoObj;
                 totalBettingNo += lastBettingTotalNo;
             }
-            BigDecimal winRate = new BigDecimal(commonService.findParameter("winRate"));
+            BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds()));
-            if (currentProfitSum.multiply(winRate).compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
+            if (currentProfitSum.multiply(timeOneWinRate).compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }
@@ -686,10 +686,9 @@ public class TimeBettingController {
                 Integer lastBettingTotalNo = (Integer) lastBettingTotalNoObj;
                 totalBettingNo += lastBettingTotalNo;
             }
-            BigDecimal winRate = new BigDecimal(commonService.findParameter("winRate"));
+            BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()));
-            System.out.println(currentProfitSum.multiply(winRate));
-            if (currentProfitSum.multiply(winRate).compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
+            if (currentProfitSum.multiply(timeDoubleWinRate).compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }

@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.util.List;
 
-public class TimeBettingScheduleTask extends BaseScheduleTask {
-    private static final Logger log = LoggerFactory.getLogger(TimeBettingScheduleTask.class);
+public class TimeBettingScheduleTaskUnUse extends BaseScheduleTask {
+    private static final Logger log = LoggerFactory.getLogger(TimeBettingScheduleTaskUnUse.class);
     @Resource
     private AppTimeLotteryService appTimeLotteryService;
     @Resource

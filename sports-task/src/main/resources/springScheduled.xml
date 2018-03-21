@@ -13,11 +13,10 @@
     <context:component-scan base-package="com.xlf.task"/>
 
     <!-- 赛车开奖，早上九点到晚上十二点每13分钟执行一次 -->
-<!--    <bean id="racingBettingScheduleTask" class="com.xlf.task.app.RacingBettingScheduleTask"></bean>
-    <task:scheduled-tasks>
-        <task:scheduled ref="racingBettingScheduleTask" method="doTask" cron="0 */3 9-23 * * ?"></task:scheduled>
-    </task:scheduled-tasks>-->
-
+    <!--    <bean id="racingBettingScheduleTask" class="com.xlf.task.app.RacingBettingScheduleTask"></bean>
+        <task:scheduled-tasks>
+            <task:scheduled ref="racingBettingScheduleTask" method="doTask" cron="0 */3 9-23 * * ?"></task:scheduled>
+        </task:scheduled-tasks>-->
 
 
     <!--  时时彩开奖，早上十点到凌晨两点每1分钟执行一次 -->
@@ -27,28 +26,23 @@
     </task:scheduled-tasks>
 
 
-
-
-
     <!-- 获取网上结果赛车开奖，早上九点到晚上十二点每3分钟执行一次 -->
- <!--   <bean id="racingLotteryResultScheduleTask" class="com.xlf.task.app.PayRacingLotteryResultScheduleTask"></bean>
+    <bean id="racingLotteryResultScheduleTask" class="com.xlf.task.app.PayRacingLotteryResultScheduleTask"></bean>
     <task:scheduled-tasks>
         <task:scheduled ref="racingLotteryResultScheduleTask" method="doTask" cron="*/30 * 9-23 * * ?"></task:scheduled>
-    </task:scheduled-tasks>-->
-
+    </task:scheduled-tasks>
 
 
     <!-- 获取网上结果时时彩开奖，早上十点到凌晨两点每1分钟执行一次 -->
     <bean id="timeLotteryResultScheduleTask" class="com.xlf.task.app.PayTimeLotteryResultScheduleTask"></bean>
     <task:scheduled-tasks>
-        <task:scheduled ref="timeLotteryResultScheduleTask" method="doTask" cron="0/30 * 10-23,0-2 * * ?"></task:scheduled>
+        <task:scheduled ref="timeLotteryResultScheduleTask" method="doTask"
+                        cron="0/30 * 10-23,0-2 * * ?"></task:scheduled>
     </task:scheduled-tasks>
 
 
-
-
     <!-- 每日返水，每天凌晨三点,每5分钟执行一次 -->
-     <bean id="returnWalterScheduleTask" class="com.xlf.task.app.ReturnWalterScheduleTask"></bean>
+    <bean id="returnWalterScheduleTask" class="com.xlf.task.app.ReturnWalterScheduleTask"></bean>
     <task:scheduled-tasks>
         <task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="0 0/5 4-5  * * ?"></task:scheduled>
     </task:scheduled-tasks>
@@ -59,12 +53,4 @@
         <!--<task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="0 0 3 * * ?"></task:scheduled>-->
         <task:scheduled ref="clearReturnWalterScheduleTask" method="doTask" cron="0 0 3 * * ?"></task:scheduled>
     </task:scheduled-tasks>
-
-
-   <!-- <bean id="returnWalterScheduleTask" class="com.xlf.task.app.ReturnWalterScheduleTask"></bean>
-    <task:scheduled-tasks>
-        &lt;!&ndash;<task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="0 0 3 * * ?"></task:scheduled>&ndash;&gt;
-        <task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="0 0/1 * * * ?"></task:scheduled>
-    </task:scheduled-tasks>-->
-
 </beans>

@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class TimeLotteryResultScheduleTask extends BaseScheduleTask {
+public class TimeLotteryResultScheduleTaskUnUse extends BaseScheduleTask {
     @Resource
     private AppTimeLotteryService appTimeLotteryService;
 

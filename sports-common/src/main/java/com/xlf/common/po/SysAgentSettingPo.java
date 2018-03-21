@@ -111,6 +111,32 @@ public class SysAgentSettingPo implements Serializable {
      */
     private Integer timeDoubleMaxBetNoPerKind;
 
+
+    /**
+     *单注赛车最小投注数量
+     */
+    private Integer minBetNoPerDigitalRace;
+
+    /**
+     *单注赛车最大投注数量
+     */
+    private Integer maxBetNoPerDigitalRace;
+
+    /**
+     *同时选赛道上限
+     */
+    private Integer maxBetRracks;
+
+    /**
+     *单赛道不同选号上限
+     */
+    private Integer maxBetNoPerRrack;
+
+    /**
+     *赛车赔率
+     */
+    private BigDecimal racingOdds;
+
     public String getId() {
         return id;
     }
@@ -254,5 +280,45 @@ public class SysAgentSettingPo implements Serializable {
 
     public BigDecimal getMaxWithdrawPerDay() {
         return maxWithdrawPerDay;
+    }
+
+    public Integer getMinBetNoPerDigitalRace() {
+        return minBetNoPerDigitalRace;
+    }
+
+    public void setMinBetNoPerDigitalRace(Integer minBetNoPerDigitalRace) {
+        this.minBetNoPerDigitalRace = minBetNoPerDigitalRace;
+    }
+
+    public Integer getMaxBetNoPerDigitalRace() {
+        return maxBetNoPerDigitalRace;
+    }
+
+    public void setMaxBetNoPerDigitalRace(Integer maxBetNoPerDigitalRace) {
+        this.maxBetNoPerDigitalRace = maxBetNoPerDigitalRace;
+    }
+
+    public Integer getMaxBetRracks() {
+        return maxBetRracks;
+    }
+
+    public void setMaxBetRracks(Integer maxBetRracks) {
+        this.maxBetRracks = maxBetRracks;
+    }
+
+    public Integer getMaxBetNoPerRrack() {
+        return maxBetNoPerRrack;
+    }
+
+    public void setMaxBetNoPerRrack(Integer maxBetNoPerRrack) {
+        this.maxBetNoPerRrack = maxBetNoPerRrack;
+    }
+
+    public BigDecimal getRacingOdds() {
+        return racingOdds;
+    }
+
+    public void setRacingOdds(BigDecimal racingOdds) {
+        this.racingOdds = racingOdds;
     }
 }
