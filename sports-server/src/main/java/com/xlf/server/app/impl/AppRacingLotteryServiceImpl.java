@@ -230,6 +230,7 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
             AppRacingLotteryPo model = new AppRacingLotteryPo();
             JSONObject rowJson = jsonArray.getJSONObject(i);
             model.setLotteryTime(new Date(rowJson.getLong("opentimestamp")));
+            model.setCreateTime(new Date());
             model.setIssueNo(rowJson.getString("expect"));
             String opencode = rowJson.getString("opencode");
             String[] array = opencode.split(",");

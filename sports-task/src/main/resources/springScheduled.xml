@@ -13,10 +13,10 @@
     <context:component-scan base-package="com.xlf.task"/>
 
     <!-- 赛车开奖，早上九点到晚上十二点每13分钟执行一次 -->
-    <!--    <bean id="racingBettingScheduleTask" class="com.xlf.task.app.RacingBettingScheduleTask"></bean>
+        <bean id="racingBettingScheduleTask" class="com.xlf.task.app.RacingBettingScheduleTask"></bean>
         <task:scheduled-tasks>
-            <task:scheduled ref="racingBettingScheduleTask" method="doTask" cron="0 */3 9-23 * * ?"></task:scheduled>
-        </task:scheduled-tasks>-->
+            <task:scheduled ref="racingBettingScheduleTask" method="doTask" cron="0/30 * 9-23 * * ?"></task:scheduled>
+        </task:scheduled-tasks>
 
 
     <!--  时时彩开奖，早上十点到凌晨两点每1分钟执行一次 -->

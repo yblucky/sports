@@ -25,15 +25,15 @@ public class PayRacingLotteryResultScheduleTask extends BaseScheduleTask {
         if (CollectionUtils.isEmpty (lotteryPos)) {
             return;
         }
-        for (int i = 0; i < lotteryPos.size (); i++) {
+        for (AppRacingLotteryPo po:lotteryPos) {
             //将正确的开奖结果写入数据库
-            AppRacingLotteryPo model = appRacingLotteryService.findAppRacingLotteryPoByIssuNo (lotteryPos.get (i).getIssueNo ());
+            AppRacingLotteryPo model = appRacingLotteryService.findAppRacingLotteryPoByIssuNo (po.getIssueNo ());
             if (model != null) {
-                return;
+                break;
             } else {
-                model.setId (ToolUtils.getUUID ());
-                model.setFlag(LotteryFlagEnum.NO.getCode());
-                appRacingLotteryService.save (model);
+                po.setId (ToolUtils.getUUID ());
+                po.setFlag(LotteryFlagEnum.NO.getCode());
+                appRacingLotteryService.save (po);
             }
         }
     }
