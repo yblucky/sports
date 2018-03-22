@@ -1,6 +1,7 @@
 package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
+import com.xlf.common.enums.BetTypeEnum;
 import com.xlf.common.enums.OddsEnum;
 import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.po.AppTimeBettingPo;
@@ -10,10 +11,7 @@ import com.xlf.common.resp.RespBody;
 import com.xlf.common.service.RedisService;
 import com.xlf.common.util.LogUtils;
 import com.xlf.common.vo.pc.SysUserVo;
-import com.xlf.server.app.AppTimeBettingService;
-import com.xlf.server.app.AppTimeLotteryService;
-import com.xlf.server.app.AppUserService;
-import com.xlf.server.app.SysAgentSettingService;
+import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.common.KaptchaService;
 import com.xlf.server.web.SysUserService;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +48,8 @@ public class CommonController {
     private SysAgentSettingService sysAgentSettingService;
     @Resource
     private AppTimeBettingService appTimeBettingService;
+    @Resource
+    private AppRacingBettingService appRacingBettingService;
     @Resource
     private AppTimeLotteryService appTimeLotteryService;
     @Resource
@@ -281,10 +282,9 @@ public class CommonController {
      * @throws Exception
      */
     @GetMapping("/loadNotice")
-    public RespBody loadNotice(HttpServletRequest request) throws Exception {
+    public RespBody loadNotice(HttpServletRequest request,String id) throws Exception {
         RespBody respBody = new RespBody ();
         try {
-
             String notice = commonService.findParameter("timeNotice");
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取时时彩公告成功!", notice);
         } catch (Exception ex) {
