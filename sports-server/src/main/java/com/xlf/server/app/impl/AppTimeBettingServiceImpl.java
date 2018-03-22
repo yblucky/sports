@@ -250,5 +250,16 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", bettingPo.getIssueNo ());
         return true;
     }
+
+    @Override
+    public BigDecimal sumUnLotteryByUserId(String userId,Integer betType) {
+
+        BigDecimal sum=appTimeBettingMapper.sumUnLotteryByUserId(userId,betType);
+        if (sum==null){
+            sum=BigDecimal.ZERO;
+        }
+        return  sum;
+    }
+
 }
 

@@ -49,4 +49,7 @@ public interface AppTimeBettingMapper extends BaseMapper<AppTimeBettingPo> {
     Integer countBettingByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param ("betType") Integer betType);
 
     List<AppTimeBettingPo> findListByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param ("betType") Integer betType, RowBounds rowBounds);
+
+    @Select("SELECT SUM(multiple) FROM `app_time_betting` where userId=#{userId} and lotteryFlag=10 and betType=#{betType}")
+    public  BigDecimal sumUnLotteryByUserId(@Param("userId") String userId,@Param("betType") Integer betType);
 }

@@ -53,4 +53,6 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
 
     List<AppRacingBettingPo> listWininggByIssuNoAndWingConent(@Param("issuNo") String issuNo, @Param("lotteryFlag") Integer lotteryFlag, @Param ("betType") Integer betType, @Param("list") List<String> winingList, RowBounds rowBounds);
 
+    @Select("SELECT SUM(multiple) FROM `app_time_betting` where userId=#{userId} and lotteryFlag=10")
+    public  BigDecimal sumUnLotteryByUserId(@Param("userId") String userId);
 }

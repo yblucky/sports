@@ -15,10 +15,7 @@ import com.xlf.common.util.LogUtils;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.*;
 import com.xlf.common.vo.pc.SysUserVo;
-import com.xlf.server.app.AppRacingBettingService;
-import com.xlf.server.app.AppRacingLotteryService;
-import com.xlf.server.app.AppSysAgentSettingService;
-import com.xlf.server.app.AppTimeIntervalService;
+import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +54,8 @@ public class RacingBettingController {
     private AppRacingLotteryService appRacingLotteryService;
     @Resource
     private RedisService redisService;
+    @Resource
+    private AppTimeBettingService appTimeBettingService;
 
 
     @GetMapping("/racingInfo")
@@ -430,9 +429,23 @@ public class RacingBettingController {
                 Integer lastBettingTotalNo = (Integer) lastBettingTotalNoObj;
                 totalBettingNo += lastBettingTotalNo;
             }
-            BigDecimal pk10WinRate = new BigDecimal(commonService.findParameter("pk10WinRate"));
+
+
+            BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
+            BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
+            BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
             BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getRacingOdds()));
-            if (currentProfitSum.multiply(pk10WinRate).compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
+            BigDecimal timeSumOneUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_ONE.getCode());
+            BigDecimal timeSumTwoUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_TWO.getCode());
+            BigDecimal pk10SumUnOpen= appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
+            ;
+
+            currentProfitSum=currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
+            currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
+            currentProfitSum=currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
+
+
+            if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }

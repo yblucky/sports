@@ -259,6 +259,14 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     }
 
 
+    @Override
+    public BigDecimal sumUnLotteryByUserId(String userId) {
+        BigDecimal sum=appRacingBettingMapper.sumUnLotteryByUserId(userId);
+        if (sum==null){
+            sum=BigDecimal.ZERO;
+        }
+        return  sum;
+    }
 
 
 

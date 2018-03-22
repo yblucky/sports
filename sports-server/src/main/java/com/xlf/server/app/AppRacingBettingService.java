@@ -2,11 +2,9 @@ package com.xlf.server.app;
 
 import com.xlf.common.enums.RacingSeatEnum;
 import com.xlf.common.po.AppRacingBettingPo;
-import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.app.RacingBettingVo;
 import com.xlf.common.vo.pc.LotteryVo;
-import org.apache.ibatis.session.RowBounds;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,15 +38,17 @@ public interface AppRacingBettingService {
 
     AppRacingBettingPo findById(String id);
 
-    Boolean undoRacingBettingService(String userId,String bettingId) throws Exception;
+    Boolean undoRacingBettingService(String userId, String bettingId) throws Exception;
 
-    Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye)throws Exception;
+    Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent, Integer betTpye) throws Exception;
 
-    List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye,Paging paging)throws Exception;
+    List<AppRacingBettingPo> findListByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent, Integer betTpye, Paging paging) throws Exception;
 
     int findAllCount(LotteryVo vo);
 
     public List<AppRacingBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag, Integer betType, Paging paging, List<String> winingList);
 
-    Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag,Integer betType,List<String> winingList);
+    Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag, Integer betType, List<String> winingList);
+
+    public BigDecimal sumUnLotteryByUserId(String userId);
 }

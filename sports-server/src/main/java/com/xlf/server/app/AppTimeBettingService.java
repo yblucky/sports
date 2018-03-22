@@ -46,4 +46,6 @@ public interface AppTimeBettingService {
     public List<AppTimeBettingPo> listWininggByIssuNoAndWingConent(String issuNo, Integer lotteryFlag,Integer betType, Paging paging, List<String> winingList);
 
     Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag,Integer betType,List<String> winingList);
+
+    public BigDecimal sumUnLotteryByUserId(String userId,Integer betType);
 }
