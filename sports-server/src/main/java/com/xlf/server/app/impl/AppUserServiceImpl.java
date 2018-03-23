@@ -268,6 +268,7 @@ public class AppUserServiceImpl implements AppUserService {
         }
         return list;
     }
+
     @Override
     public List<TaskReturnWaterVo> listWaitingReturnWaterUser() throws Exception {
         List<TaskReturnWaterVo> list = null;
@@ -334,35 +335,37 @@ public class AppUserServiceImpl implements AppUserService {
             billRecordPo.setBusinessNumber(bunessNum);
             billRecordPo.setBusnessType(BusnessTypeEnum.RETURN_WATER.getCode());
             billRecordPo.setCreateTime(new Date());
-            billRecordPo.setRemark("代理返水结算,此次返水基数是:" + po.getKickBackAmount() + "，返水比例是:" + sysAgentSettingPo.getReturnWaterScale());
+            billRecordPo.setRemark("代理返水结算,此次返水基数是:" + po.getSumKickBackAmount() + "，返水比例是:" + sysAgentSettingPo.getReturnWaterScale());
             billRecordPo.setExtend("");
             waterList.add(billRecordPo);
-            List<AppUserPo> childUserList= this.listWaitingReturnWaterUserByParentId(po.getParentId());
-            if (!CollectionUtils.isEmpty(childUserList)){
-               for (AppUserPo childPo:childUserList){
-                   if (BigDecimal.ZERO.compareTo(childPo.getKickBackAmount())<0){
-                       BigDecimal beforTotalChildPo = childPo.getKickBackAmount();
-                       BigDecimal afterTotalChildPo = BigDecimal.ZERO;
-                       AppBillRecordPo childBillRecordPo = new AppBillRecordPo();
-                       childBillRecordPo.setId(ToolUtils.getUUID());
-                       childBillRecordPo.setUserId(childPo.getId());
-                       childBillRecordPo.setBeforeBalance(beforTotalChildPo);
-                       childBillRecordPo.setAfterBalance(afterTotalChildPo);
-                       childBillRecordPo.setBalance(beforTotalChildPo);
-                       childBillRecordPo.setBusinessNumber(bunessNum);
-                       childBillRecordPo.setBusnessType(BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode());
-                       childBillRecordPo.setCreateTime(new Date());
-                       childBillRecordPo.setRemark("返水结算,对冲返水衡量值");
-                       childBillRecordPo.setExtend(sysUserVo.getLoginName());
-                       waterList.add(billRecordPo);
-                       userIds.add(childPo.getId());
-                   }
-               }
+            List<AppUserPo> childUserList = this.listWaitingReturnWaterUserByParentId(po.getParentId());
+            if (!CollectionUtils.isEmpty(childUserList)) {
+                for (AppUserPo childPo : childUserList) {
+                    BigDecimal beforTotalChildPo = childPo.getKickBackAmount();
+                    BigDecimal afterTotalChildPo = BigDecimal.ZERO;
+                    AppBillRecordPo childBillRecordPo = new AppBillRecordPo();
+                    childBillRecordPo.setId(ToolUtils.getUUID());
+                    childBillRecordPo.setUserId(childPo.getId());
+                    childBillRecordPo.setBeforeBalance(beforTotalChildPo);
+                    childBillRecordPo.setAfterBalance(afterTotalChildPo);
+                    childBillRecordPo.setBalance(beforTotalChildPo);
+                    childBillRecordPo.setBusinessNumber(bunessNum);
+                    childBillRecordPo.setBusnessType(BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode());
+                    childBillRecordPo.setCreateTime(new Date());
+                    childBillRecordPo.setRemark("返水结算,对冲返水衡量值");
+                    childBillRecordPo.setExtend(sysUserVo.getLoginName());
+                    waterList.add(childBillRecordPo);
+                    userIds.add(childPo.getId());
+                }
             }
 
             Integer row = sysUserService.updateReturnWater(sysUserVo.getId(), returnAmount, returnAmount);
             if (row == null || row == 0) {
-                throw new CommException("更新代理返水错误");
+                throw new CommException("更新代理今日和累计返水错误");
+            }
+            row= sysUserService.updateBalance(sysUserVo.getId(),returnAmount);
+            if (row == null || row == 0) {
+                throw new CommException("更新代理返水余额错误");
             }
         }
         this.returnWaterService(waterList, userIds);

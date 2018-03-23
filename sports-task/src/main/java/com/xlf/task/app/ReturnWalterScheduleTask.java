@@ -23,13 +23,7 @@ import java.util.List;
 
 public class ReturnWalterScheduleTask extends BaseScheduleTask {
     @Resource
-    private AppTimeLotteryService appTimeLotteryService;
-    @Resource
     private AppUserService appUserService;
-    @Resource
-    private SysUserService sysUserService;
-    @Resource
-    private SysAgentSettingService sysAgentSettingService;
 
 
     @Override

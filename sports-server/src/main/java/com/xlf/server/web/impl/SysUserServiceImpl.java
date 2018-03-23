@@ -147,6 +147,14 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public Integer updateBalance(String id, BigDecimal balance){
+        Integer count = userMapper.updateBalance (id,balance);
+        if (count==null){
+            count=0;
+        }
+        return count;
+    }
+    @Override
     public Integer updateReturnWater(String id,BigDecimal todayWater, BigDecimal totalWater) {
         Integer count = userMapper.updateReturnWater (id,todayWater, totalWater);
         return count;

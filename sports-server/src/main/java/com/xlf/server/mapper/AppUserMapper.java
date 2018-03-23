@@ -216,7 +216,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     @Select("SELECT  COUNT(id) FROM `app_user` GROUP  BY parentId  HAVING  (SUM(kickBackAmount)>0)")
     Integer countWaitingReturnWaterUser();
 
-    @Select("SELECT  id,kickBackAmount  FROM `app_user` where  kickBackAmount>0 and parentId=#{parentId}")
+    @Select("SELECT  id,kickBackAmount  FROM `app_user` where  parentId=#{parentId}")
     List<AppUserPo> listWaitingReturnWaterUserByParentId(@Param("parentId") String parentId);
 
 

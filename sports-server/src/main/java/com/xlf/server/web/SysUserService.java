@@ -7,104 +7,116 @@
 */
 package com.xlf.server.web;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.xlf.common.resp.Paging;
 import com.xlf.common.vo.pc.SysRoleVo;
 import com.xlf.common.vo.pc.SysUserVo;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * 用户业务层接口
+ *
  * @author qsy
  * @version v1.0
  * @date 2017年6月12日
  */
 public interface SysUserService {
 
-	/**
-	 * 获取用户信息
-	 * @param token 令牌
-	 * @return 用户对象
-	 * @throws Exception 
-	 */
-	public SysUserVo SysUserVo(String token) throws Exception;
+    /**
+     * 获取用户信息
+     *
+     * @param token 令牌
+     * @return 用户对象
+     * @throws Exception
+     */
+    public SysUserVo SysUserVo(String token) throws Exception;
 
-	/**
-	 * 获取所有数据
-	 * @param paging
-	 * @param roleType
+    /**
+     * 获取所有数据
+     *
+     * @param paging
+     * @param roleType
      * @return
-	 */
-	public List<SysUserVo> findAll(Paging paging, SysUserVo vo);
+     */
+    public List<SysUserVo> findAll(Paging paging, SysUserVo vo);
 
-	/**
-	 * 查找总记录数
-	 * @return
-	 * @param roleType
-	 */
-	public long findCount(SysUserVo roleType);
+    /**
+     * 查找总记录数
+     *
+     * @param roleType
+     * @return
+     */
+    public long findCount(SysUserVo roleType);
 
-	/**
-	 * 新增用户
-	 * @param parameterVo
-	 * @throws Exception 
-	 */
-	public void add(SysUserVo userVo) throws Exception;
+    /**
+     * 新增用户
+     *
+     * @param parameterVo
+     * @throws Exception
+     */
+    public void add(SysUserVo userVo) throws Exception;
 
-	/**
-	 * 修改用户
-	 * @param userVo
-	 * @throws Exception 
-	 */
-	public void update(SysUserVo userVo) throws Exception;
+    /**
+     * 修改用户
+     *
+     * @param userVo
+     * @throws Exception
+     */
+    public void update(SysUserVo userVo) throws Exception;
 
-	/**
-	 * 删除用户
-	 * @param userVo
-	 */
-	public void delete(SysUserVo userVo);
+    /**
+     * 删除用户
+     *
+     * @param userVo
+     */
+    public void delete(SysUserVo userVo);
 
-	/**
-	 * 查找所有角色
-	 * @return
-	 * @throws Exception 
-	 */
-	public List<SysRoleVo> findRoles() throws Exception;
+    /**
+     * 查找所有角色
+     *
+     * @return
+     * @throws Exception
+     */
+    public List<SysRoleVo> findRoles() throws Exception;
 
-	/**
-	 * 查找登录名是否存在
-	 * @param loginName
-	 * @return
-	 */
-	SysUserVo findByLoginName(String loginName);
+    /**
+     * 查找登录名是否存在
+     *
+     * @param loginName
+     * @return
+     */
+    SysUserVo findByLoginName(String loginName);
 
-	/**
-	 * 查找登录名是否存在
-	 * @param mobile
-	 * @return
-	 */
-	public SysUserVo findByMobile(String mobile);
+    /**
+     * 查找登录名是否存在
+     *
+     * @param mobile
+     * @return
+     */
+    public SysUserVo findByMobile(String mobile);
 
-	/**
-	 * @param id
-	 * @return
-	 */
-	public SysUserVo findById(String id);
+    /**
+     * @param id
+     * @return
+     */
+    public SysUserVo findById(String id);
 
-	/**
-	 * 修改密码
-	 * @param newPw
-	 * @param id
-	 */
-	public void updatePw(String newPw, String id);
+    /**
+     * 修改密码
+     *
+     * @param newPw
+     * @param id
+     */
+    public void updatePw(String newPw, String id);
 
+    public Integer updateBalance(String id, BigDecimal balance);
 
-	public Integer updateReturnWater(String id,BigDecimal  todayWater,BigDecimal  totalWater);
+    public Integer updateReturnWater(String id, BigDecimal todayWater, BigDecimal totalWater);
 
-	SysUserVo getUserByToken(String token) throws Exception;
+    SysUserVo getUserByToken(String token) throws Exception;
 
     void recharge(SysUserVo find, BigDecimal balance) throws Exception;
 
-	public Integer updateClearTotayReturnWater();
+    public Integer updateClearTotayReturnWater();
 }
