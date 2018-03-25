@@ -409,7 +409,7 @@ public class RacingBettingController {
                         }
                         trackMap.get(regex).add(bettingBaseVo.getBettingContent());
                         if (trackMap.get(regex).size() > agentSettingPo.getMaxBetNoPerRrack()) {
-                            respBody.add(RespCodeEnum.ERROR.getCode(), Constrants.racingRegexDescMap.get(regex)+"不符合投注规则,每个赛道最多压注" + agentSettingPo.getMaxBetNoPerRrack() + "个不同的数字");
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "不符合投注规则,每个赛道最多压注" + agentSettingPo.getMaxBetNoPerRrack() + "个不同的数字");
                             return respBody;
                         }
                         if (trackMap.size() > agentSettingPo.getMaxBetRracks()) {
