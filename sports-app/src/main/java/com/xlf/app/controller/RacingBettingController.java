@@ -357,7 +357,7 @@ public class RacingBettingController {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "单赛道单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigitalRace() + "," + agentSettingPo.getMaxBetNoPerDigitalRace() + "】注" + baseVo.getBettingContent() + "超限制");
                     return respBody;
                 }
-                if (baseVo.getBettingContent().replaceAll("\\d", "").length() != 4) {
+                if (baseVo.getBettingContent().replaceAll("\\d", "").length() != 9) {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "非一字定投注");
                     return respBody;
                 }
@@ -408,28 +408,23 @@ public class RacingBettingController {
                             trackMap.put(regex, new HashSet<String>());
                         }
                         trackMap.get(regex).add(bettingBaseVo.getBettingContent());
-                        if (map.get(regex).size() > agentSettingPo.getMaxBetNoPerRrack()) {
+                        if (trackMap.get(regex).size() > agentSettingPo.getMaxBetNoPerRrack()) {
                             respBody.add(RespCodeEnum.ERROR.getCode(), Constrants.racingRegexDescMap.get(regex)+"不符合投注规则,每个赛道最多压注" + agentSettingPo.getMaxBetNoPerRrack() + "个不同的数字");
+                            return respBody;
+                        }
+                        if (trackMap.size() > agentSettingPo.getMaxBetRracks()) {
+                            respBody.add(RespCodeEnum.ERROR.getCode(), "每期最多下注赛道为" + agentSettingPo.getMaxBetRracks());
                             return respBody;
                         }
                     }
                 }
             }
-            if (map.size() > agentSettingPo.getMaxBetRracks()) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "每期最多下注赛道为" + agentSettingPo.getMaxBetRracks());
-                return respBody;
-            }
+
             //最大可能中奖金额
             if (userPo.getBalance().compareTo(new BigDecimal(thisTotalBettingNo.toString())) == -1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "用户余额不足，无法完成下注");
                 return respBody;
             }
-            Object lastBettingTotalNoObj = redisService.getObj(RedisKeyEnum.RACING_BETTIING_ONE.getKey() + (Long.valueOf(vo.getIssueNo()) - 1) + userPo.getId());
-            if (lastBettingTotalNoObj != null) {
-                Integer lastBettingTotalNo = (Integer) lastBettingTotalNoObj;
-                totalBettingNo += lastBettingTotalNo;
-            }
-
 
             BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
@@ -448,7 +443,6 @@ public class RacingBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }
-            redisService.putObj(RedisKeyEnum.RACING_BETTIING_ONE.getKey() + vo.getIssueNo() + userPo.getId(), totalBettingNo, RedisKeyEnum.RACING_BETTIING_ONE.getSeconds());
             BigDecimal maximumAward = new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds());
             appRacingBettingService.racingBettingService(userPo.getId(), vo, new BigDecimal(thisTotalBettingNo));
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "投注成功,等待开奖");
@@ -457,6 +451,29 @@ public class RacingBettingController {
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "投注失败");
             LogUtils.error("投注失败！", ex);
+        }
+        return respBody;
+    }
+
+
+    /**
+     * 开奖号码
+     */
+    @GetMapping(value = "/loadAwardNumber")
+    public RespBody loadAwardNumber(HttpServletRequest request) {
+        RespBody respBody = new RespBody();
+        try {
+            //检验用户是否登录
+            AppUserPo appUserPo = commonService.checkToken();
+            //根据用户id获取用户信息
+            AppRacingLotteryPo po = appRacingLotteryService.loadAwardNumber();
+
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取上期开奖号码成功", po);
+        } catch (CommException ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "获取上期开奖号码成功");
+            LogUtils.error("获取上期开奖号码成功", ex);
         }
         return respBody;
     }

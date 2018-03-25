@@ -142,7 +142,7 @@
         <include refid="table_name"/>
         <where>
             userId=#{userId} AND issueNo=#{issueNo}
-            <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
+            <if test="bettingContent!=null and bettingContent!=''">AND bettingContent=#{bettingContent}</if>
         </where>
     </select>
 
