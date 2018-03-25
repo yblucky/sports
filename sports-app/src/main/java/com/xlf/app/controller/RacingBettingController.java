@@ -438,7 +438,6 @@ public class RacingBettingController {
             BigDecimal timeSumOneUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_ONE.getCode());
             BigDecimal timeSumTwoUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_TWO.getCode());
             BigDecimal pk10SumUnOpen= appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
-            ;
 
             currentProfitSum=currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
             currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
