@@ -48,8 +48,25 @@
     <update id="updateFlagById">
         update <include refid="table_name"/> set flag = 20 , lotteryTime=now()  where id=#{id}
     </update>
-    
-    
+
+    <select id="countLotteryInfoTotal" resultType="Integer">
+        SELECT count(1) from <include refid="table_name"/>
+        <where>
+            1=1
+            <if test="startTime!='' and startTime!=null">AND createTime &gt;=#{startTime}</if>
+            <if test="endTime!='' and endTime!=null">AND createTime &lt;=#{endTime}</if>
+        </where>
+    </select>
+
+    <select id="loadLotteryInfoList" resultType="com.xlf.common.po.AppRacingLotteryPo">
+        SELECT * FROM <include refid="table_name"/>
+        <where>
+            1=1
+            <if test="startTime!='' and startTime!=null">AND createTime &gt;=#{startTime}</if>
+            <if test="endTime!='' and endTime!=null">AND createTime &lt;=#{endTime}</if>
+        </where>
+        order by lotteryTime desc
+    </select>
     
 </mapper>
 

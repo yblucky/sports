@@ -8,6 +8,7 @@ import com.xlf.common.resp.Paging;
 import com.xlf.common.util.DateTimeUtil;
 import com.xlf.common.util.HttpUtils;
 import com.xlf.common.util.ToolUtils;
+import com.xlf.common.vo.app.AppTimeLotteryVo;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.common.vo.task.RacingLotteryVo;
 import com.xlf.server.app.*;
@@ -252,5 +253,37 @@ public class AppRacingLotteryServiceImpl implements AppRacingLotteryService {
     @Override
     public AppRacingLotteryPo loadAwardNumber() throws Exception {
         return appRacingLotteryMapper.loadAwardNumber();
+    }
+
+    /**
+     * 获取开奖号码列表
+     *
+     * @param paging
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<AppRacingLotteryPo> loadLotteryInfoList(Paging paging, String startTime, String endTime) throws Exception {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(), paging.getPageSize());
+        List<AppRacingLotteryPo> list = appRacingLotteryMapper.loadLotteryInfoList(startTime, endTime, rowBounds);
+        if (list == null || CollectionUtils.isEmpty(list)) {
+            list = Collections.emptyList();
+        }
+        return list;
+    }
+
+    /**
+     * 统计开奖号码列表数
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Integer countLotteryInfoTotal(String startTime, String endTime) throws Exception {
+        Integer count = appRacingLotteryMapper.countLotteryInfoTotal(startTime, endTime);
+        if (count == null) {
+            count = 0;
+        }
+        return count;
     }
 }

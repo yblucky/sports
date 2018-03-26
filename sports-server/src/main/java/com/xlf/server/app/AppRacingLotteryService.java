@@ -2,6 +2,8 @@ package com.xlf.server.app;
 
 import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppRacingLotteryPo;
+import com.xlf.common.resp.Paging;
+import com.xlf.common.vo.app.AppTimeLotteryVo;
 import com.xlf.common.vo.task.RacingLotteryVo;
 
 import java.util.List;
@@ -29,5 +31,11 @@ public interface AppRacingLotteryService {
     Integer save(AppRacingLotteryPo po);
 
     public AppRacingLotteryPo loadAwardNumber() throws Exception;
+
+    //获取开奖号码列表
+    public List<AppRacingLotteryPo> loadLotteryInfoList(Paging paging, String startTime, String endTime) throws Exception;
+
+    //获取开奖号码列表
+    public Integer countLotteryInfoTotal(String startTime, String endTime) throws Exception;
 
 }

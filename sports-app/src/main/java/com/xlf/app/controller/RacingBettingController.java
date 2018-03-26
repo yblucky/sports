@@ -478,6 +478,51 @@ public class RacingBettingController {
         return respBody;
     }
 
+    /**
+     * 北京赛车开奖记录
+     */
+    @GetMapping(value = "/awardNumberList")
+    public RespBody awardNumberList(HttpServletRequest request, Paging paging, String startTime, String endTime) {
+        RespBody respBody = new RespBody();
+        try {
+            //根据用户id获取用户信息
+            List<AppRacingLotteryPo> list = null;
+            //检验用户是否登录
+            AppUserPo appUserPo = commonService.checkToken();
+
+            if (paging.getPageNumber() > 15) {
+                paging.setPageNumber(15);
+            }
+
+            if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
+                startTime = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD);
+                endTime = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD);
+            }
+            endTime+=" "+"23:59:59";
+            Date start = DateTimeUtil.parseDateFromStr(startTime, DateTimeUtil.PATTERN_YYYY_MM_DD);
+            Date end = DateTimeUtil.parseDateFromStr(startTime, DateTimeUtil.PATTERN_YYYY_MM_DD);
+            if (end.getTime() - start.getTime() > 7 * 24 * 60 * 60 * 1000) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "最大允许查询7天区间");
+                return respBody;
+            }
+            //获取总记录数量
+            int total = appRacingLotteryService.countLotteryInfoTotal(startTime, endTime);
+            if (total > 0) {
+                list = appRacingLotteryService.loadLotteryInfoList(paging, startTime, endTime);
+            }
+            //返回前端总记录
+            paging.setTotalCount(total);
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "获取开奖列表成功", paging, list);
+        } catch (CommException ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "获取开奖列表失败");
+            LogUtils.error("获取开奖列  表失败！", ex);
+        }
+        return respBody;
+    }
+
+
     public static void main(String args[]) {
         String a="1XXXXXXXXX";
         String regEx="\\dXXXXXXXXX";
