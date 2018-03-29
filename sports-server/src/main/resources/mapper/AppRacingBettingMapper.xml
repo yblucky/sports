@@ -75,22 +75,29 @@
     </update>
 
 
-
     <select id="findAllCount" resultType="java.lang.Integer">
         select count(1) from
-            (SELECT a.id,a.issueNo,a.userId,a.betType,
-                    a.bettingContent as betContent,a.multiple as betAmount,b.flag as gameState
-                    ,a.lotteryFlag as state,a.winningAmount,a.createTime,a.businessNumber,
-                    concat(b.lotteryOne,',',b.lotteryTwo,',',b.lotteryThree,',',b.lotteryFour,',',b.lotteryFive) as lotteryResult
-             FROM `app_time_betting` a LEFT JOIN app_time_lottery b on a.issueNo=b.issueNo
-            <where>
-                1 = 1
-                <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
-                <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
-                <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
-                <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
-                <if test="model.businessNumber != null and model.businessNumber != ''">AND a.businessNumber=#{model.businessNumber}</if>
-            </where>
+        (SELECT a.id,a.issueNo,a.userId
+        FROM `app_time_betting` a LEFT JOIN app_time_lottery b on a.issueNo=b.issueNo
+        <where>
+            1 = 1
+            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
+            <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
+            <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
+            <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
+            <if test="model.businessNumber != null and model.businessNumber != ''">AND a.businessNumber=#{model.businessNumber}</if>
+        </where>
+        union all
+        SELECT a.id,a.issueNo,a.userId
+        FROM `app_racing_betting` a LEFT JOIN app_racing_lottery b on a.issueNo=b.issueNo
+        <where>
+            1 = 1
+            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
+            <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
+            <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
+            <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
+            <if test="model.businessNumber != null and model.businessNumber != ''">AND a.businessNumber=#{model.businessNumber}</if>
+        </where>
         ) as t
         LEFT  join app_user u on t.userid=u.id
         <where>
@@ -100,22 +107,35 @@
             <if test="model.parentId != null and model.parentId != ''">AND u.parentId = #{model.parentId}</if>
         </where>
     </select>
-
     <select id="findAll" resultType="com.xlf.common.vo.pc.LotteryVo">
         select t.*,u.uid,u.nickName,u.mobile from
-            (SELECT a.id,a.issueNo,a.userId,a.betType,
-                    a.bettingContent as betContent,a.multiple as betAmount,b.flag as gameState
-                    ,a.lotteryFlag as state,a.winningAmount,a.createTime,a.businessNumber,
-                    concat(b.lotteryOne,',',b.lotteryTwo,',',b.lotteryThree,',',b.lotteryFour,',',b.lotteryFive) as lotteryResult
-             FROM `app_time_betting` a LEFT JOIN app_time_lottery b on a.issueNo=b.issueNo
-            <where>
-                1 = 1
-                <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
-                <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
-                <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
-                <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
-                <if test="model.businessNumber != null and model.businessNumber != ''">AND a.businessNumber=#{model.businessNumber}</if>
-            </where>
+        (SELECT a.id,a.issueNo,a.userId,a.betType,
+        a.bettingContent as betContent,a.multiple as betAmount,b.flag as gameState
+        ,a.lotteryFlag as state,a.winningAmount,a.createTime,a.businessNumber,
+        concat(b.lotteryOne,',',b.lotteryTwo,',',b.lotteryThree,',',b.lotteryFour,',',b.lotteryFive) as lotteryResult,'10' as gameType
+        FROM `app_time_betting` a LEFT JOIN app_time_lottery b on a.issueNo=b.issueNo
+        <where>
+            1 = 1
+            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
+            <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
+            <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
+            <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
+            <if test="model.businessNumber != null and model.businessNumber != ''">AND a.businessNumber=#{model.businessNumber}</if>
+        </where>
+        union all
+        SELECT a.id,a.issueNo,a.userId,a.betType,
+        a.bettingContent as betContent,a.multiple as betAmount,b.flag as gameState
+        ,a.lotteryFlag as state,a.winningAmount,a.createTime,a.businessNumber,
+        concat(b.lotteryOne,',',b.lotteryTwo,',',b.lotteryThree,',',b.lotteryFour,',',b.lotteryFive,',',b.lotterySix,',',b.lotterySeven,',',b.lotteryEight,',',b.lotteryNine,',',b.lotteryTen) as lotteryResult,'20' as gameType
+        FROM `app_racing_betting` a LEFT JOIN app_racing_lottery b on a.issueNo=b.issueNo
+        <where>
+            1 = 1
+            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
+            <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
+            <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
+            <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
+            <if test="model.businessNumber != null and model.businessNumber != ''">AND a.businessNumber=#{model.businessNumber}</if>
+        </where>
         ) as t
         LEFT  join app_user u on t.userid=u.id
         <where>
@@ -126,7 +146,6 @@
         </where>
         ORDER BY t.createTime DESC
     </select>
-
     <select id="countBettingByUserIdAndIssueNoAndContent" resultType="java.lang.Integer">
         select count(id) from
         <include refid="table_name"/>
