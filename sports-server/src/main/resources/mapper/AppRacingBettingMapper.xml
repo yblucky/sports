@@ -169,6 +169,19 @@
         </where>
     </select>
 
+    <!-- 批量删除下注订单 -->
+    <update id="updateLotteryFlagAndWingAmoutByIds">
+        UPDATE
+        <include refid="table_name"/>
+        SET lotteryFlag=#{lotteryFlag},winningAmount=#{winingAmout}
+        <where>
+            id in
+            <foreach item="idItem" collection="ids" index="index" open="(" separator="," close=")">
+                #{idItem}
+            </foreach>
+        </where>
+    </update>
+
 </mapper>
 
 

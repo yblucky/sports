@@ -55,4 +55,7 @@ public interface AppRacingBettingMapper extends BaseMapper<AppRacingBettingPo> {
 
     @Select("SELECT SUM(multiple) FROM `app_time_betting` where userId=#{userId} and lotteryFlag=10")
     public  BigDecimal sumUnLotteryByUserId(@Param("userId") String userId);
+
+    //批量删除赛车下单
+    Integer updateLotteryFlagAndWingAmoutByIds(@Param("ids") String[] ids,@Param("lotteryFlag") Integer lotteryFlag, @Param("winingAmout") BigDecimal winingAmout);
 }

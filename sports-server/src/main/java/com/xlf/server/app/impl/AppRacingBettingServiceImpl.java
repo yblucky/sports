@@ -212,12 +212,27 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
 
     @Override
     @Transactional
-    public Boolean undoRacingBettingService(String userId, String bettingId) throws Exception {
-        AppRacingBettingPo bettingPo = this.findById (bettingId);
-        if (!bettingPo.getUserId ().equals (userId)){
-            throw new CommException ("只能撤销自己的下注单");
+    public Boolean undoRacingBettingService(String userId, String[] bettingIds) throws Exception {
+        if(bettingIds == null && bettingIds.length <= 0){
+            throw new CommException ("撤销参数有误");
         }
-        BigDecimal totalPrice = new BigDecimal (bettingPo.getMultiple ());
+
+        AppRacingBettingPo bettingPo = null;
+        //定义一个变量保存金额
+        BigDecimal totalPrice = new BigDecimal(0);
+        for (String bettingId:bettingIds) {
+            bettingPo = this.findById (bettingIds[0]);
+            if (!bettingPo.getUserId ().equals (userId)){
+                throw new CommException ("只能撤销自己的下注单");
+            }
+            if (!LotteryFlagEnum.NO.getCode ().equals (bettingPo.getLotteryFlag ())){
+                throw new CommException ("不可撤销");
+            }
+
+            //计算金额
+            totalPrice.add(new BigDecimal(bettingPo.getMultiple ()));
+        }
+
         AppUserPo userPo = appUserService.findUserById (userId);
         BigDecimal before = userPo.getBalance ();
         BigDecimal after = userPo.getBalance ().add (totalPrice);
@@ -228,6 +243,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         String businessNumber = bettingPo.getBusinessNumber ();
         appUserService.updateBalanceById (userId, totalPrice);
         appUserService.updateBettingAmoutById (userId, totalPrice.multiply (new BigDecimal ("-1")));
+        appRacingBettingMapper.updateLotteryFlagAndWingAmoutByIds (bettingIds,LotteryFlagEnum.UNDO.getCode (),BigDecimal.ZERO);
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.RACING_UNDO.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "北京赛车下注后撤单", "");
         appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", "");

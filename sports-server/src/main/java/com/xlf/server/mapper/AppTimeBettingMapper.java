@@ -37,6 +37,8 @@ public interface AppTimeBettingMapper extends BaseMapper<AppTimeBettingPo> {
     @Update("update  `app_time_betting` set lotteryFlag=#{lotteryFlag} , winningAmount=#{winingAmout} where id=#{id}")
     Integer updateLotteryFlagAndWingAmoutById(@Param("id") String id,@Param("lotteryFlag") Integer lotteryFlag, @Param("winingAmout") BigDecimal winingAmout);
 
+    //批量删除下单
+    Integer updateLotteryFlagAndWingAmoutByIds(@Param("ids") String[] ids,@Param("lotteryFlag") Integer lotteryFlag, @Param("winingAmout") BigDecimal winingAmout);
 
     Integer updateBatchLotteryFlag(@Param("issueNo") String issueNo);
 

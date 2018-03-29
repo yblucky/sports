@@ -762,7 +762,15 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数有误");
                 return respBody;
             }
-            AppTimeBettingPo bettingPo = appTimeBettingService.findById(vo.getId());
+            String[] ids = vo.getId().split(",");
+            if(ids == null && ids.length <= 0){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数有误");
+                return respBody;
+            }
+
+            //获取第一个下单记录来获取撤单参数
+            String firstId = ids[0];
+            AppTimeBettingPo bettingPo = appTimeBettingService.findById(firstId);
             if (bettingPo == null) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "找不到下单记录");
                 return respBody;
@@ -784,7 +792,7 @@ public class TimeBettingController {
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken();
-            appTimeBettingService.undoTimeBettingService(userPo.getId(), vo.getId());
+            appTimeBettingService.undoTimeBettingService(userPo.getId(),ids);
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "撤单成功");
         } catch (CommException ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());

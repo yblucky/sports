@@ -38,7 +38,7 @@ public interface AppRacingBettingService {
 
     AppRacingBettingPo findById(String id);
 
-    Boolean undoRacingBettingService(String userId, String bettingId) throws Exception;
+    Boolean undoRacingBettingService(String userId, String[] bettingIds) throws Exception;
 
     Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent, Integer betTpye) throws Exception;
 

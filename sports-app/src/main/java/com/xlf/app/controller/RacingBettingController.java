@@ -266,7 +266,14 @@ public class RacingBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
                 return respBody;
             }
-            AppRacingBettingPo bettingPo = appRacingBettingService.findById (vo.getId ());
+
+            String[] ids = vo.getId().split(",");
+            if(ids == null && ids.length <= 0){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数有误");
+                return respBody;
+            }
+            String firstId = ids[0];
+            AppRacingBettingPo bettingPo = appRacingBettingService.findById (firstId);
             if (bettingPo == null) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "找不到下单记录");
                 return respBody;
@@ -283,7 +290,7 @@ public class RacingBettingController {
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
-            appRacingBettingService.undoRacingBettingService (userPo.getId (), vo.getId ());
+            appRacingBettingService.undoRacingBettingService (userPo.getId (), ids);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());

@@ -37,7 +37,7 @@ public interface AppTimeBettingService {
 
     AppTimeBettingPo findById(String id);
 
-    Boolean undoTimeBettingService(String userId, String bettingId) throws Exception;
+    Boolean undoTimeBettingService(String userId, String[] bettingIds) throws Exception;
 
     Integer countBettingByUserIdAndIssueNoAndContent(String userId, String issueNo, String bettingContent,Integer betTpye)throws Exception;
 

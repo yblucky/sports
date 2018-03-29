@@ -223,15 +223,26 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
 
     @Override
     @Transactional
-    public Boolean undoTimeBettingService(String userId, String bettingId) throws Exception {
-        AppTimeBettingPo bettingPo = this.findById (bettingId);
-        if (!bettingPo.getUserId ().equals (userId)){
-            throw new CommException ("只能撤销自己的下注单");
+    public Boolean undoTimeBettingService(String userId, String[] bettingIds) throws Exception {
+        if(bettingIds == null && bettingIds.length <= 0){
+            throw new CommException ("撤销参数有误");
         }
-        if (!LotteryFlagEnum.NO.getCode ().equals (bettingPo.getLotteryFlag ())){
-            throw new CommException ("不可撤销");
+        AppTimeBettingPo bettingPo = null;
+        //定义一个变量保存金额
+        BigDecimal totalPrice = new BigDecimal(0);
+        for (String bettingId:bettingIds) {
+            bettingPo = this.findById (bettingIds[0]);
+            if (!bettingPo.getUserId ().equals (userId)){
+                throw new CommException ("只能撤销自己的下注单");
+            }
+            if (!LotteryFlagEnum.NO.getCode ().equals (bettingPo.getLotteryFlag ())){
+                throw new CommException ("不可撤销");
+            }
+
+            //计算金额
+            totalPrice.add(new BigDecimal(bettingPo.getMultiple ()));
         }
-        BigDecimal totalPrice = new BigDecimal (bettingPo.getMultiple ());
+
         AppUserPo userPo = appUserService.findUserById (userId);
         BigDecimal before = userPo.getBalance ();
         BigDecimal after = userPo.getBalance ().add (totalPrice);
@@ -243,7 +254,7 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appUserService.updateBalanceById (userId, totalPrice);
         appUserService.updateBlockBalanceById(userId, totalPrice.multiply (new BigDecimal (-1)));
         appUserService.updateBettingAmoutById (userId, totalPrice.multiply (new BigDecimal ("-1")));
-        this.updateLotteryFlagAndWingAmoutById (bettingId,LotteryFlagEnum.UNDO.getCode (),BigDecimal.ZERO);
+        appTimeBettingMapper.updateLotteryFlagAndWingAmoutByIds (bettingIds,LotteryFlagEnum.UNDO.getCode (),BigDecimal.ZERO);
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.TIME_UNDO.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "时时彩下注后撤单", bettingPo.getIssueNo ());
         appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appUserService.updateTodayBettingAmoutTodayWiningAmout(userId,totalPrice.multiply(new BigDecimal ("-1")),BigDecimal.ZERO);
