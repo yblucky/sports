@@ -66,7 +66,7 @@ public class RacingBettingController {
             Calendar calendar = Calendar.getInstance ();
             calendar.setTime (new Date ());
             Integer hour = calendar.get (Calendar.HOUR_OF_DAY);
-            Integer inteval = 10;
+            Integer inteval = 5;
             String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, inteval);
             AppTimeIntervalPo intervalPo = appTimeIntervalService.findByTime (hhmm, LotteryTypeEnum.RACING.getCode ());
             if (intervalPo == null) {
