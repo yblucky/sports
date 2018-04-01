@@ -40,7 +40,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
     private AppBillRecordService appBillRecordService;
 
     @Override
-    public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer lotterySix, Integer lotterySeven, Integer lotteryEight, Integer lotteryNine, Integer lotteryTen, Integer multiple,String bettingContent) throws Exception {
+    public void save(String businessNumber, String issueNo, String userId, Integer lotteryOne, Integer lotteryTwo, Integer lotteryThree, Integer lotteryFour, Integer lotteryFive, Integer lotterySix, Integer lotterySeven, Integer lotteryEight, Integer lotteryNine, Integer lotteryTen, Integer multiple,String bettingContent,Integer serialNumber) throws Exception {
         AppRacingBettingPo model = new AppRacingBettingPo ();
         model.setId (ToolUtils.getUUID ());
         model.setIssueNo(issueNo);
@@ -61,6 +61,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         model.setWinningAmount (BigDecimal.ZERO);
         model.setMultiple (multiple);
         model.setBettingContent (bettingContent);
+        model.setSerialNumber(serialNumber);
         appRacingBettingMapper.insert (model);
     }
 
@@ -76,7 +77,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
         appUserService.updateBalanceById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appBillRecordService.saveBillRecord (businessNumber, userId, BusnessTypeEnum.RACING_BETTING.getCode (), totalPrice, before, after, "用户" + userPo.getMobile () + "北京赛车下注",  vo.getIssueNo ());
         for (RacingBettingBaseVo base : vo.getRaingList ()) {
-            this.save (businessNumber, vo.getIssueNo(), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getLotterySix (), base.getLotterySeven (), base.getLotteryEight (), base.getLotteryNine (), base.getLotteryTen (), base.getMultiple (),base.getBettingContent());
+            this.save (businessNumber, vo.getIssueNo(), userId, base.getLotteryOne (), base.getLotteryTwo (), base.getLotteryThree (), base.getLotteryFour (), base.getLotteryFive (), base.getLotterySix (), base.getLotterySeven (), base.getLotteryEight (), base.getLotteryNine (), base.getLotteryTen (), base.getMultiple (),base.getBettingContent(),vo.getSerialNumber());
         }
         appUserService.updateBettingAmoutById (userId, totalPrice);
         //盈亏衡量
@@ -230,7 +231,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
             }
 
             //计算金额
-            totalPrice.add(new BigDecimal(bettingPo.getMultiple ()));
+            totalPrice= totalPrice.add(new BigDecimal(bettingPo.getMultiple ()));
         }
 
         AppUserPo userPo = appUserService.findUserById (userId);

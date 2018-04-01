@@ -66,7 +66,7 @@ public class RacingBettingController {
             Calendar calendar = Calendar.getInstance ();
             calendar.setTime (new Date ());
             Integer hour = calendar.get (Calendar.HOUR_OF_DAY);
-            Integer inteval = 10;
+            Integer inteval = 5;
             String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, inteval);
             AppTimeIntervalPo intervalPo = appTimeIntervalService.findByTime (hhmm, LotteryTypeEnum.RACING.getCode ());
             if (intervalPo == null) {
@@ -284,14 +284,20 @@ public class RacingBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
                 return respBody;
             }
-            Long openDate = DateTimeUtil.getLongTimeByDatrStr (DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + timeIntervalPo.getTime ());
-            if ((System.currentTimeMillis () + 60 * 1000) >= openDate) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), "开奖不足一分钟,无法撤单");
+            Long openDate = DateTimeUtil.getLongTimeByDatrStr(timeIntervalPo.getTime());
+            String undoBefore = commonService.findParameter("undoBefore");
+            Integer undoBeforeInt = Integer.valueOf(undoBefore);
+            if (org.springframework.util.StringUtils.isEmpty(undoBefore)) {
+                respBody.add(RespCodeEnum.ERROR.getCode(),   "撤单参数时间有误");
+                return respBody;
+            }
+            if ((System.currentTimeMillis() + undoBeforeInt * 1000) >= openDate) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "开奖不足" + undoBeforeInt + "秒,无法撤单");
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
             appRacingBettingService.undoRacingBettingService (userPo.getId (), ids);
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "撤单成功");
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
