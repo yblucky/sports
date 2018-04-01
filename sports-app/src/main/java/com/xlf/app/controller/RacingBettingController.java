@@ -288,7 +288,7 @@ public class RacingBettingController {
             String undoBefore = commonService.findParameter("undoBefore");
             Integer undoBeforeInt = Integer.valueOf(undoBefore);
             if (org.springframework.util.StringUtils.isEmpty(undoBefore)) {
-                respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数时间有误");
+                respBody.add(RespCodeEnum.ERROR.getCode(),   "撤单参数时间有误");
                 return respBody;
             }
             if ((System.currentTimeMillis() + undoBeforeInt * 1000) >= openDate) {
