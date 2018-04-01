@@ -763,7 +763,7 @@ public class TimeBettingController {
                 return respBody;
             }
             String[] ids = vo.getId().split(",");
-            if(ids == null && ids.length <= 0){
+            if(ids == null &&   ids.length <= 0){
                 respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数有误");
                 return respBody;
             }
