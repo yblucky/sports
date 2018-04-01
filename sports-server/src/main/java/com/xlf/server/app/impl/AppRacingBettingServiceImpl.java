@@ -231,7 +231,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
             }
 
             //计算金额
-            totalPrice.add(new BigDecimal(bettingPo.getMultiple ()));
+            totalPrice= totalPrice.add(new BigDecimal(bettingPo.getMultiple ()));
         }
 
         AppUserPo userPo = appUserService.findUserById (userId);

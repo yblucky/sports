@@ -297,7 +297,7 @@ public class RacingBettingController {
             }
             AppUserPo userPo = commonService.checkToken ();
             appRacingBettingService.undoRacingBettingService (userPo.getId (), ids);
-            respBody.add (RespCodeEnum.SUCCESS.getCode (), msgUtil.getMsg (AppMessage.WAIT_PAYING, "撤单成功"));
+            respBody.add (RespCodeEnum.SUCCESS.getCode (), "撤单成功");
         } catch (CommException ex) {
             respBody.add (RespCodeEnum.ERROR.getCode (), ex.getMessage ());
         } catch (Exception ex) {
