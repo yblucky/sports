@@ -284,9 +284,15 @@ public class RacingBettingController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数有误");
                 return respBody;
             }
-            Long openDate = DateTimeUtil.getLongTimeByDatrStr (DateTimeUtil.formatDate (new Date (), DateTimeUtil.PATTERN_YYYY_MM_DD) + timeIntervalPo.getTime ());
-            if ((System.currentTimeMillis () + 60 * 1000) >= openDate) {
-                respBody.add (RespCodeEnum.ERROR.getCode (), "开奖不足一分钟,无法撤单");
+            Long openDate = DateTimeUtil.getLongTimeByDatrStr(timeIntervalPo.getTime());
+            String undoBefore = commonService.findParameter("undoBefore");
+            Integer undoBeforeInt = Integer.valueOf(undoBefore);
+            if (org.springframework.util.StringUtils.isEmpty(undoBefore)) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数时间有误");
+                return respBody;
+            }
+            if ((System.currentTimeMillis() + undoBeforeInt * 1000) >= openDate) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "开奖不足" + undoBeforeInt + "秒,无法撤单");
                 return respBody;
             }
             AppUserPo userPo = commonService.checkToken ();
