@@ -50,6 +50,6 @@ public interface SysParameterMapper extends BaseMapper<SysParameterPo> {
      */
     public List<SysParameterVo> getInfoByTime(@Param("model") SysParameterVo sysParameterVo, @Param("startRow") int startRow, @Param("pageSize") int pageSize);
 
-    @Update("UPDATE `sys_parameter` set paraValue=#{value} WHERE paraName=#{paraName}")
+    @Update("UPDATE `sys_parameter` set paraValue=#{value},updateTime=NOW() WHERE paraName=#{paraName}")
     Integer updateParameterByName(@Param("paraName") String paraName, @Param("value") String value);
 }
