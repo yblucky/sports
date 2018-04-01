@@ -33,10 +33,9 @@ public class PayRacingLotteryResultScheduleTask extends BaseScheduleTask {
             //将正确的开奖结果写入数据库
             AppRacingLotteryPo model = appRacingLotteryService.findAppRacingLotteryPoByIssuNo (po.getIssueNo ());
             String currentDate = DateTimeUtil.formatDate(new Date(), DateTimeUtil.PATTERN_YYYY_MM_DD);
-            String hhmmStart=" 01:55:30";
-            String hhmmEnd=" 02:10";
+            String hhmmStart=" 23:55:30";
             Date start=DateTimeUtil.parseDateFromStr(currentDate+hhmmStart,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS);
-            Date end=DateTimeUtil.parseDateFromStr(currentDate+hhmmEnd,DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM);
+            Date end=new Date(start.getTime()+10*60*1000);
             if (model != null) {
                 if (po.getCreateTime().after(start) && po.getCreateTime().before(end)){
                     commonService.updateParameterByName ("yesterdayRacingIssuNo", po.getIssueNo());
