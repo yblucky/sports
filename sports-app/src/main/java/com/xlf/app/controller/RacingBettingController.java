@@ -333,7 +333,11 @@ public class RacingBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "下注参数有误");
                 return respBody;
             }
-
+            String isRacingOpen = commonService.findParameter("isRacingOpen");
+            if(StringUtils.isEmpty(isRacingOpen) || "off".equals(isRacingOpen)){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "PK10暂停投注");
+                return respBody;
+            }
             String endBefore = commonService.findParameter("endBefore");
             if (StringUtils.isEmpty(endBefore)) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "PK10投注系统投注参数有误");

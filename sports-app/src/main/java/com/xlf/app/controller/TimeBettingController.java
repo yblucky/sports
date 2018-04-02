@@ -348,6 +348,11 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "非一字定投注");
                 return respBody;
             }
+            String isTimeOpen = commonService.findParameter("isTimeOpen");
+            if(org.apache.commons.lang3.StringUtils.isEmpty(isTimeOpen) || "off".equals(isTimeOpen)){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "时时彩暂停投注");
+                return respBody;
+            }
             String endBefore = commonService.findParameter("endBefore");
             if (StringUtils.isEmpty(endBefore)) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "时时彩系统投注参数有误");
@@ -547,6 +552,11 @@ public class TimeBettingController {
             }
             if (BetTypeEnum.TIME_TWO.getCode() != vo.getBetType()) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "非二字定投注");
+                return respBody;
+            }
+            String isTimeOpen = commonService.findParameter("isTimeOpen");
+            if(org.apache.commons.lang3.StringUtils.isEmpty(isTimeOpen) || "off".equals(isTimeOpen)){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "时时彩暂停投注");
                 return respBody;
             }
             String endBefore = commonService.findParameter("endBefore");
