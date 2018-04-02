@@ -180,7 +180,8 @@
     
     
     <select id="homeSUM" resultType="com.xlf.common.vo.pc.WebStatisticsVo">
-    	select ifnull(SUM(balance),0) as balance,ifnull(SUM(bettingAmout),0) as bettingAmout,ifnull(SUM(winingAmout),0) as winingAmout,ifnull(SUM(currentProfit),0) as currentProfit,ifnull(count(1),0) as userCount
+    	select ifnull(SUM(balance),0) as balance,ifnull(SUM(todayBettingAmout),0) as bettingAmout,ifnull(SUM(todayWiningAmout),0) as winingAmout
+    	,ifnull(SUM(todayWiningAmout-todayBettingAmout),0) as currentProfit,ifnull(SUM(winingAmout-bettingAmout),0) as totalProfit,ifnull(count(1),0) as userCount
     	  from app_user
     </select>
     

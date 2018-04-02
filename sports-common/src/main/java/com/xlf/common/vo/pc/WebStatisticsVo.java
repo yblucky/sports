@@ -36,6 +36,10 @@ public class WebStatisticsVo {
      * 用户总数
      * */
     private Integer userCount;
+    /**
+     * 用户总盈亏
+     * */
+    private BigDecimal totalProfit;
 
     public Integer getBusnessType() {
         return busnessType;
@@ -91,5 +95,13 @@ public class WebStatisticsVo {
 
     public void setUserCount(Integer userCount) {
         this.userCount = userCount;
+    }
+
+    public BigDecimal getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(BigDecimal totalProfit) {
+        this.totalProfit = totalProfit;
     }
 }

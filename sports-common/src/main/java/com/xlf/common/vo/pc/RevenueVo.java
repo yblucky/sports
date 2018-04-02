@@ -2,13 +2,14 @@ package com.xlf.common.vo.pc;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 营收列表Vo类
  * Created by Administrator on 2017/8/17.
  */
-public class RevenueVo {
+public class RevenueVo implements Serializable{
 
     /**
      * 代理编号
@@ -54,6 +55,10 @@ public class RevenueVo {
      * 时间类型 10 今日 20 昨天 30 上周 40 本周 50 上月 60 本月
      * */
     private String dateType;
+    /**
+     * 时间类型 10 重慶時時彩 20 北京賽車
+     * */
+    private String gameType;
     /**
      * 时间相差天数
      * */
