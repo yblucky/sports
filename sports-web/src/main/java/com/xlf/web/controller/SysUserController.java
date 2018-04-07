@@ -138,11 +138,13 @@ public class SysUserController {
 		RespBody respBody = new RespBody();
 		try {
 			//判断用户是否存在
-			SysUserVo findUser = sysUserService.findByLoginName(userVo.getMobile());
+			SysUserVo findUser = sysUserService.findByLoginName(userVo.getLoginName());
 			if(findUser == null){
-				if(userVo.getRoleType().intValue() ==20){
+				if(userVo.getRoleType()!= null && userVo.getRoleType().intValue() ==20){
 					//默认角色就是代理
 					userVo.setRoleId("1001");
+				}else {
+					userVo.setRoleType(RoleTypeEnum.ADMIN.getCode());
 				}
 				sysUserService.add(userVo);
 				respBody.add(RespCodeEnum.SUCCESS.getCode(), "用户信息保存成功");

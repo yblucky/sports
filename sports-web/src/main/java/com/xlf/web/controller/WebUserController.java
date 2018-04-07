@@ -27,6 +27,7 @@ import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import com.xlf.server.web.WebUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.util.StringUtil;
 
@@ -221,6 +222,50 @@ public class WebUserController {
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "修改密码失败");
             LogUtils.error("修改密码失败", ex);
+        }
+        return respBody;
+    }
+
+    /**
+     * 修改登陆密码
+     *
+     * @return 响应对象
+     */
+    @PostMapping("/upPayPwd")
+    public RespBody upPayPwd(@RequestBody AppUserPo po) {
+        RespBody respBody = new RespBody();
+        try {
+            SysUserVo token = commonService.checkWebToken();
+            if (token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
+                return respBody;
+            }
+            AppUserPo find = webAppUserService.findUid(po.getMobile());
+            if (null == find) {
+                find = webAppUserService.findUserByMobile(po.getMobile());
+            }
+            if (null == find) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "找不到用户");
+                return respBody;
+            }
+            if (StringUtils.isEmpty(po.getPayPwd())) {
+                respBody.add(RespCodeEnum.ERROR.getCode(), "新支付密码不能为空");
+                return respBody;
+            }
+            //验证通过，更改登录密码
+            AppUserPo model = new AppUserPo();
+            //每次更新密码都要刷新盐
+            String salt = ToolUtils.getUUID();
+            //根据新盐加密登录密码
+            String payPw = CryptUtils.hmacSHA1Encrypt(po.getPayPwd(), salt);
+            model.setPayPwd(payPw);
+            model.setPayStal(salt);
+            //调用通用的更新方法
+            webAppUserService.updateById(model, find.getId());
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "修改支付密码成功");
+        } catch (Exception ex) {
+            respBody.add(RespCodeEnum.ERROR.getCode(), "修改支付密码失败");
+            LogUtils.error("修改支付密码失败", ex);
         }
         return respBody;
     }
