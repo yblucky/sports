@@ -523,11 +523,19 @@ public class TimeBettingController {
             }
             //计算中奖的概率
             Integer sumBettingNo=0;
+            int j=0;
             for (int i=1;i<6;i++){
                 if (countMap.containsKey(i)){
-                    sumBettingNo+=ToolUtils.compareMapList(countMap.get(i)).get(0).getValue();
+                    i++;
+                    Integer mutiple=ToolUtils.compareMapList(countMap.get(i)).get(0).getValue();
+                    sumBettingNo+=mutiple;
                 }
             }
+
+
+            BigDecimal scale= new BigDecimal(map.size()).divide(new BigDecimal(10));
+
+
             //最大可能中奖金额
             if (userPo.getBalance().compareTo(new BigDecimal(thisTotalBettingNo.toString())) == -1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "用户余额不足，无法完成下注");
@@ -536,7 +544,7 @@ public class TimeBettingController {
             BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
-            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()).multiply(timeOneWinRate));
+            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()).multiply(timeOneWinRate).multiply(scale));
             BigDecimal timeSumOneUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_ONE.getCode());
             BigDecimal timeSumTwoUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_TWO.getCode());
             BigDecimal pk10SumUnOpen= appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
@@ -732,10 +740,12 @@ public class TimeBettingController {
                 return respBody;
             }
 
+            BigDecimal scale= new BigDecimal(twoGroupSet.size()).divide(new BigDecimal(10));
+
             BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
-            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()).multiply(timeDoubleWinRate));
+            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()).multiply(timeDoubleWinRate).multiply(scale));
             BigDecimal timeSumOneUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_ONE.getCode());
             BigDecimal timeSumTwoUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_TWO.getCode());
             BigDecimal pk10SumUnOpen= appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
@@ -968,10 +978,10 @@ public class TimeBettingController {
         }
         System.out.println(lists.size());*/
 
-        Integer a = 10;
+      /*  Integer a = 10;
         if (a - 1 == 9) {
             System.out.println(0000);
-        }
+        }*/
     }
 }
 
