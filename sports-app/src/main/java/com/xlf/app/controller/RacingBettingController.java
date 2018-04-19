@@ -2,9 +2,11 @@ package com.xlf.app.controller;
 
 import com.xlf.common.annotation.SystemControllerLog;
 import com.xlf.common.contrants.Constrants;
-import com.xlf.common.enums.*;
+import com.xlf.common.enums.BetTypeEnum;
+import com.xlf.common.enums.LotteryFlagEnum;
+import com.xlf.common.enums.LotteryTypeEnum;
+import com.xlf.common.enums.RespCodeEnum;
 import com.xlf.common.exception.CommException;
-import com.xlf.common.language.AppMessage;
 import com.xlf.common.po.*;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
@@ -446,7 +448,7 @@ public class RacingBettingController {
             BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
-            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getRacingOdds()));
+            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getRacingOdds()).multiply(pk10OneWinRate));
             BigDecimal timeSumOneUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_ONE.getCode());
             BigDecimal timeSumTwoUnOpen= appTimeBettingService.sumUnLotteryByUserId(userPo.getId(),BetTypeEnum.TIME_TWO.getCode());
             BigDecimal pk10SumUnOpen= appRacingBettingService.sumUnLotteryByUserId(userPo.getId());

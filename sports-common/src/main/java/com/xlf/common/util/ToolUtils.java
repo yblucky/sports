@@ -386,11 +386,31 @@ public class ToolUtils {
     }
 
 
-    public static void main(String[] args) {
-        List<String> list=oneLotteryRacingList("1234567890");
-        for (String s:list){
-            System.out.println(s);
+    public  static  List<Map.Entry<String,Integer>>  compareMapList( Map<String,Integer> map){
+        List<Map.Entry<String,Integer>> list = new ArrayList<Map.Entry<String,Integer>>(map.entrySet());
+        Collections.sort(list,new Comparator<Map.Entry<String,Integer>>() {
+            public int compare(Map.Entry<String, Integer> o1,  Map.Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        for(Map.Entry<String,Integer> mapping:list){
+            System.out.println(mapping.getKey()+":"+mapping.getValue());
         }
+        return list;
+    }
+
+
+    public static void main(String[] args) {
+        Map<String, Integer> map = new TreeMap<String, Integer>();
+        map.put("12XXX",100);
+        map.put("1X3XX",300);
+        map.put("11XXX",500);
+        map.put("2X5XX",600);
+        compareMapList(map);
+//        List<String> list=oneLotteryRacingList("1234567890");
+//        for (String s:list){
+//            System.out.println(s);
+//        }
 /*        Map<Integer, String> map = new HashMap<> ();
         map.put (1, "12354");
         map.put (3, "1234");
