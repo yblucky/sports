@@ -400,13 +400,45 @@ public class ToolUtils {
     }
 
 
+    public  static    BigDecimal  calcRate(  List<Double> list){
+        BigDecimal rate=new BigDecimal(0.1);
+        if (list.size()==1){
+            return new BigDecimal(list.get(0));
+        }
+        if (list.size()==2){
+            BigDecimal rateOne=new BigDecimal(list.get(0));
+            BigDecimal rateTwo=new BigDecimal(list.get(1));
+            return  rateOne.multiply(BigDecimal.ONE.subtract(rateTwo)).add(rateTwo.multiply(BigDecimal.ONE.subtract(rateOne))).add(rateOne.multiply( rateTwo));
+
+        }
+        if (list.size()==3){
+            BigDecimal rateOne=new BigDecimal(list.get(0));
+            BigDecimal rateTwo=new BigDecimal(list.get(1));
+            BigDecimal rateThree=new BigDecimal(list.get(2));
+            return  rateOne.multiply(BigDecimal.ONE.subtract(rateTwo)).multiply(BigDecimal.ONE.subtract(rateThree))
+                    .add(rateTwo.multiply(BigDecimal.ONE.subtract(rateOne)).multiply(BigDecimal.ONE.subtract( rateThree))
+                    .add(rateThree.multiply(BigDecimal.ONE.subtract(rateOne)).multiply(BigDecimal.ONE.subtract( rateTwo))
+                    .add(rateOne.multiply(rateTwo).multiply(BigDecimal.ONE.subtract(rateThree)))
+                    .add(rateOne.multiply(rateThree).multiply(BigDecimal.ONE.subtract(rateTwo)))
+                    .add(rateTwo.multiply(rateThree).multiply(BigDecimal.ONE.subtract(rateOne)))
+                    .add(rateTwo.multiply(rateThree).multiply(rateOne)))).setScale(4,BigDecimal.ROUND_HALF_EVEN);
+
+        }
+        return rate;
+    }
+
     public static void main(String[] args) {
-        Map<String, Integer> map = new TreeMap<String, Integer>();
+        List<Double> list=new ArrayList<>();
+        list.add(0.3);
+        list.add(0.3);
+        list.add(0.3);
+        System.out.println(calcRate(list));
+        /*Map<String, Integer> map = new TreeMap<String, Integer>();
         map.put("12XXX",100);
         map.put("1X3XX",300);
         map.put("11XXX",500);
         map.put("2X5XX",600);
-        compareMapList(map);
+        compareMapList(map);*/
 //        List<String> list=oneLotteryRacingList("1234567890");
 //        for (String s:list){
 //            System.out.println(s);
