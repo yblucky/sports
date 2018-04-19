@@ -638,6 +638,15 @@ public class TimeBettingController {
             Integer totalBettingNo = 0;
             Integer thisTotalBettingNo = 0;
             Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_TWO.getCode());
+            if (hasBettingCount>0){
+                List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_TWO.getCode(), paging);
+                for (AppTimeBettingPo po : timeBettingPos) {
+                    BettingBaseVo bettingBaseVo = new BettingBaseVo();
+                    bettingBaseVo.setMultiple(po.getMultiple());
+                    bettingBaseVo.setBettingContent(po.getBettingContent());
+                    allList.add(bettingBaseVo);
+                }
+            }
             for (TimeBettingBaseVo baseVo : vo.getTimeList()) {
                 if (baseVo.getBettingContent().replaceAll("\\d", "").length() != 3) {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "非二字定投注");
@@ -650,7 +659,7 @@ public class TimeBettingController {
                 if (hasBettingCount > 0) {
                     Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.TIME_TWO.getCode());
                     if (count > 0) {
-                        paging.setPageSize(30);
+                        paging.setPageSize(100);
                         paging.setPageNumber(1);
                         List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.TIME_TWO.getCode(), paging);
                         Integer total = 0;
@@ -661,21 +670,14 @@ public class TimeBettingController {
                                 respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "-" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
                                 return respBody;
                             }
-                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                            bettingBaseVo.setMultiple(po.getMultiple());
-                            bettingBaseVo.setBettingContent(po.getBettingContent());
-                            allList.add(bettingBaseVo);
-                        }
-                    } else {
-                        List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_TWO.getCode(), paging);
-                        for (AppTimeBettingPo po : timeBettingPos) {
-                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                            bettingBaseVo.setMultiple(po.getMultiple());
-                            bettingBaseVo.setBettingContent(po.getBettingContent());
-                            allList.add(bettingBaseVo);
+//                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
+//                            bettingBaseVo.setMultiple(po.getMultiple());
+//                            bettingBaseVo.setBettingContent(po.getBettingContent());
+//                            allList.add(bettingBaseVo);
                         }
                     }
                 }
+
                 BettingBaseVo bettingBaseVo = new BettingBaseVo();
                 bettingBaseVo.setMultiple(baseVo.getMultiple());
                 bettingBaseVo.setBettingContent(baseVo.getBettingContent());
@@ -695,27 +697,20 @@ public class TimeBettingController {
                         if (sigleGroupMap.containsKey(regex)) {
                             Set set = sigleGroupMap.get(regex);
                             set.add(bettingBaseVo.getBettingContent());
-                            if (!countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())) {
+                           /* if (!countMap.containsKey(regex) ||(countMap.containsKey(regex)  && !countMap.get(regex).containsKey(bettingBaseVo.getBettingContent()))) {
                                 Map m = new HashMap();
                                 m.put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
                                 countMap.put(regex, m);
                             } else {
                                 Integer already = countMap.get(regex).get(bettingBaseVo.getBettingContent()).intValue();
                                 countMap.get(regex).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
-                            }
+                            }*/
                         } else {
                             Set<String> singleSet = new HashSet<>();
                             singleSet.add(bettingBaseVo.getBettingContent());
                             sigleGroupMap.put(regex, singleSet);
-                            if (!countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())) {
-                                Map m = new HashMap();
-                                m.put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
-                                countMap.put(regex, m);
-                            } else {
-                                Integer already = countMap.get(regex).get(bettingBaseVo.getBettingContent()).intValue();
-                                countMap.get(regex).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
-                            }
                         }
+
                         if (twoGroupSet.size() > 0 && twoGroupSet.size() > agentSettingPo.getTimeDoubleMaxBetSeats()) {
                             respBody.add(RespCodeEnum.ERROR.getCode(), "二字定组合每期最多组合位数为" + agentSettingPo.getTimeDoubleMaxBetSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
@@ -724,6 +719,20 @@ public class TimeBettingController {
                         if (twoGroupSet.size() > 0 && singleMapSetSize > agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats()) {
                             respBody.add(RespCodeEnum.ERROR.getCode(), "二字定每期两个位组合100种最多选取" + agentSettingPo.getTimeDoubleMaxBetKindPerTwoSeats() + "种," + regex.replace("\\d", "口") + "组合超限");
                             return respBody;
+                        }
+                        if ( !countMap.containsKey(regex)) {
+                            Map m = new HashMap();
+                            m.put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                            countMap.put(regex, m);
+                            continue;
+                        }
+                        if (countMap.containsKey(regex)  && !countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())){
+                            countMap.get(regex).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                            continue;
+                        }
+                        if (countMap.containsKey(regex)  && countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())){
+                            Integer already = countMap.get(regex).get(bettingBaseVo.getBettingContent()).intValue();
+                            countMap.get(regex).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
                         }
                     }
                 }
