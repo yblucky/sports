@@ -523,10 +523,8 @@ public class TimeBettingController {
             }
             //计算中奖的概率
             Integer sumBettingNo = 0;
-            int j = 0;
             for (int i = 1; i < 6; i++) {
                 if (countMap.containsKey(i)) {
-                    i++;
                     Integer mutiple = ToolUtils.compareMapList(countMap.get(i)).get(0).getValue();
                     sumBettingNo += mutiple;
                 }
