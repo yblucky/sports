@@ -532,7 +532,7 @@ public class TimeBettingController {
 
 
             BigDecimal scale = new BigDecimal(map.size()).divide(new BigDecimal(10));
-
+            scale=BigDecimal.ONE;
 
             //最大可能中奖金额
             if (userPo.getBalance().compareTo(new BigDecimal(thisTotalBettingNo.toString())) == -1) {
@@ -552,6 +552,7 @@ public class TimeBettingController {
 //            currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
             currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
 
+            currentProfitSum= currentProfitSum.subtract(userPo.getTodayBettingAmout());
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
@@ -754,6 +755,7 @@ public class TimeBettingController {
 
 
             BigDecimal lastScale=ToolUtils.calcRate(doubles);
+            lastScale=BigDecimal.ONE;
             BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
@@ -766,7 +768,7 @@ public class TimeBettingController {
 //            currentProfitSum=currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
 //            currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
             currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
-
+            currentProfitSum= currentProfitSum.subtract(userPo.getTodayBettingAmout());
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
