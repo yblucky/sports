@@ -7,6 +7,7 @@ package com.xlf.common.enums;
 public enum BusnessTypeEnum {
 
     BACK_RECHARGE (11, "后台充值", "back_recharge"),
+    AGENT_RECHARGE (112, "代理充值", "back_recharge"),
     WITHDRAWALS (12, "提现", "withdrawals"),
     WITHDRAWALS_FAIL (13, "提现驳回", "withdrawals fail"),
     TIME_BETTING (21, "时时彩投注", "time_betting"),

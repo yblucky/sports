@@ -187,11 +187,12 @@ public class WebUserServiceImpl implements WebUserService {
                 throw new CommException("充值失败！！！");
             }
             //流水记录
-            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), token.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
+            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), token.getId(), BusnessTypeEnum.AGENT_RECHARGE.getCode()
                     , balance, balance, token.getBalance().add(balance.multiply(new BigDecimal(-1))), "代理帮会员充值-扣除代理对应余额", "");
+        }else {
+            //流水记录
+            appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), userPo.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
+                    , balance, balance, balance.add(userPo.getBalance()), "后台充值", "");
         }
-        //流水记录
-        appBillRecordService.saveBillRecord(ToolUtils.getOrderNo(), userPo.getId(), BusnessTypeEnum.BACK_RECHARGE.getCode()
-                , balance, balance, balance.add(userPo.getBalance()), "后台充值", "");
     }
 }

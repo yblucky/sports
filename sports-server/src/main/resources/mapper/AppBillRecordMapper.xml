@@ -148,8 +148,8 @@
 				<if test="model.mobile != null and model.mobile != ''">AND a.mobile=#{model.mobile}</if>
 				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
-				<if test="model.startDiff != null">AND datediff(b.createtime,now())>=#{model.startDiff}</if>
-				<if test="model.endDiff != null">AND datediff(b.createtime,now()) &lt;=#{model.endDiff}</if>
+				<if test="model.startDiff != null and  model.startDiff != -399">AND datediff(b.createtime,now())>=#{model.startDiff}</if>
+				<if test="model.endDiff != null and model.startDiff != -399">AND datediff(b.createtime,now()) &lt;=#{model.endDiff}</if>
 			</where>
 			  GROUP BY a.id
 			) as t2 on a.id=t2.id

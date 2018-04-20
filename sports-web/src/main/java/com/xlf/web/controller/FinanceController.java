@@ -117,6 +117,9 @@ public class FinanceController {
                 int today = new Date().getDate();
                 vo.setStartDiff(today * -1);
                 vo.setEndDiff(0);
+            } else if (vo.getStartTime() != null || vo.getEndTime() != null) {
+                vo.setStartDiff(-399);
+                vo.setEndDiff(-399);
             } else {
                 vo.setStartDiff(0);
                 vo.setEndDiff(0);
