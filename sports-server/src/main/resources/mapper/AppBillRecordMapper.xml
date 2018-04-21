@@ -42,14 +42,12 @@
 			SELECT b.*,'代理' as uid,u.mobile from app_bill_record b inner join sys_user u on b.userId=u.id
 			<where>
 				1 = 1
-				<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
 				<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
 				<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
 				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
 				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
 				<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
 				<if test="model.parentId != null and model.parentId != ''">AND u.id=#{model.parentId}</if>
-
 			</where>
 		) as t
 		ORDER BY t.createTime DESC
@@ -146,10 +144,10 @@
 				a.roleType='20'
 				<if test="model.userId != null and model.userId != ''">AND a.id=#{model.userId}</if>
 				<if test="model.mobile != null and model.mobile != ''">AND a.mobile=#{model.mobile}</if>
-				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
-				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
-				<if test="model.startDiff != null and  model.startDiff != -399">AND datediff(b.createtime,now())>=#{model.startDiff}</if>
-				<if test="model.endDiff != null and model.endDiff != -399">AND datediff(b.createtime,now()) &lt;=#{model.endDiff}</if>
+				<if test="model.startTime != null">AND date_add(b.createTime,interval 1 day)&gt;=#{model.startTime}</if>
+				<if test="model.endTime != null">AND date_add(b.createTime,interval 1 day)&lt;#{model.endTime}</if>
+				<if test="model.startDiff != null and  model.startDiff != -399">AND datediff(date_add(b.createTime,interval 1 day),now())>=#{model.startDiff}</if>
+				<if test="model.endDiff != null and model.endDiff != -399">AND datediff(date_add(b.createTime,interval 1 day),now()) &lt;=#{model.endDiff}</if>
 			</where>
 			  GROUP BY a.id
 			) as t2 on a.id=t2.id

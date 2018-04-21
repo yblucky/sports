@@ -3,6 +3,7 @@ package com.xlf.common.vo.pc;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -34,11 +35,11 @@ public class RevenueVo implements Serializable{
     /**
      *投注积分
      * */
-    private int betScore;
+    private BigDecimal betScore;
     /**
      * 会员结果
      * */
-    private int memberRs;
+    private BigDecimal memberRs;
     /**
      * 备注
      * */
@@ -110,19 +111,19 @@ public class RevenueVo implements Serializable{
         this.betCount = betCount;
     }
 
-    public int getBetScore() {
+    public BigDecimal getBetScore() {
         return betScore;
     }
 
-    public void setBetScore(int betScore) {
+    public void setBetScore(BigDecimal betScore) {
         this.betScore = betScore;
     }
 
-    public int getMemberRs() {
+    public BigDecimal getMemberRs() {
         return memberRs;
     }
 
-    public void setMemberRs(int memberRs) {
+    public void setMemberRs(BigDecimal memberRs) {
         this.memberRs = memberRs;
     }
 

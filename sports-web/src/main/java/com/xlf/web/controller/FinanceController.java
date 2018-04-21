@@ -25,6 +25,7 @@ import com.xlf.server.app.AppBillRecordService;
 import com.xlf.server.app.AppRacingBettingService;
 import com.xlf.server.app.AppTimeLotteryService;
 import com.xlf.server.common.CommonService;
+import com.xlf.server.web.SysUserService;
 import com.xlf.server.web.WebWithDrawService;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +51,7 @@ public class FinanceController {
     @Resource
     private WebWithDrawService webWithDrawService;
     @Resource
-    private AppTimeLotteryService appTimeLotteryService;
+    private SysUserService sysUserService;
 
     /**
      * 注单列表
@@ -124,11 +125,19 @@ public class FinanceController {
                 vo.setStartDiff(0);
                 vo.setEndDiff(0);
             }
+            SysUserVo sysUserVo = new SysUserVo();
             //代理登录只能查看自己的营收记录
             if (userVo.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()) {
                 vo.setUserId(userVo.getId());
+                sysUserVo.setId(userVo.getId());
             }
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功", appBillRecordService.revenueList(vo, paging));
+            long counts = sysUserService.findCount(sysUserVo);
+            List<RevenueVo> list = null;
+            if(counts >0){
+                list = appBillRecordService.revenueList(vo, paging);
+            }
+            paging.setTotalCount(counts);
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功", paging,list);
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "加载注单失败");
             LogUtils.error("加载注单失败！", ex);
