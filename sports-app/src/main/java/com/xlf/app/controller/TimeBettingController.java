@@ -391,6 +391,15 @@ public class TimeBettingController {
             Integer totalBettingNo = 0;
             Integer thisTotalBettingNo = 0;
             Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_ONE.getCode());
+            if (hasBettingCount>0){
+                List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_TWO.getCode(), paging);
+                for (AppTimeBettingPo po : timeBettingPos) {
+                    BettingBaseVo bettingBaseVo = new BettingBaseVo();
+                    bettingBaseVo.setMultiple(po.getMultiple());
+                    bettingBaseVo.setBettingContent(po.getBettingContent());
+                    allList.add(bettingBaseVo);
+                }
+            }
             for (TimeBettingBaseVo baseVo : vo.getTimeList()) {
                 if (baseVo.getMultiple() < agentSettingPo.getMinBetNoPerDigital() || baseVo.getMultiple() > agentSettingPo.getMaxBetNoPerDigital()) {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "," + agentSettingPo.getMaxBetNoPerDigital() + "】注" + baseVo.getBettingContent() + "超限制");
@@ -414,14 +423,6 @@ public class TimeBettingController {
                                 respBody.add(RespCodeEnum.ERROR.getCode(), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "," + agentSettingPo.getMaxBetNoPerDigital() + "】注," + baseVo.getBettingContent() + "超限制");
                                 return respBody;
                             }
-                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                            bettingBaseVo.setMultiple(po.getMultiple());
-                            bettingBaseVo.setBettingContent(po.getBettingContent());
-                            allList.add(bettingBaseVo);
-                        }
-                    } else {
-                        List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_ONE.getCode(), paging);
-                        for (AppTimeBettingPo po : timeBettingPos) {
                             BettingBaseVo bettingBaseVo = new BettingBaseVo();
                             bettingBaseVo.setMultiple(po.getMultiple());
                             bettingBaseVo.setBettingContent(po.getBettingContent());
@@ -633,6 +634,7 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
+            paging.setPageSize(1000);
             List<BettingBaseVo> allList = new ArrayList<>();
             Integer totalBettingNo = 0;
             Integer thisTotalBettingNo = 0;
@@ -658,8 +660,6 @@ public class TimeBettingController {
                 if (hasBettingCount > 0) {
                     Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.TIME_TWO.getCode());
                     if (count > 0) {
-                        paging.setPageSize(100);
-                        paging.setPageNumber(1);
                         List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.TIME_TWO.getCode(), paging);
                         Integer total = 0;
                         for (AppTimeBettingPo po : timeBettingPos) {

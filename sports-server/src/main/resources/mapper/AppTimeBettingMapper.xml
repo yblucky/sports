@@ -85,7 +85,8 @@
         select count(id) from
         <include refid="table_name"/>
         <where>
-            userId=#{userId} AND issueNo=#{issueNo}
+            userId=#{userId}
+            <if test="issueNo!=null">AND issueNo=#{issueNo}</if>
             <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
             <if test="betType!=null">AND betType=#{betType}</if>
         </where>
@@ -96,7 +97,8 @@
         select  <include refid="fields_id"/> from
         <include refid="table_name"/>
         <where>
-            userId=#{userId} AND issueNo=#{issueNo}
+            userId=#{userId}
+            <if test="issueNo!=null">AND issueNo=#{issueNo}</if>
             <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
             <if test="betType!=null">AND betType=#{betType}</if>
         </where>
