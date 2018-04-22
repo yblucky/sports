@@ -160,7 +160,7 @@
         select  <include refid="fields_id"/> from
         <include refid="table_name"/>
         <where>
-            userId=#{userId} AND issueNo=#{issueNo}
+            userId=#{userId} AND issueNo=#{issueNo} AND lotteryFlag != 30
             <if test="bettingContent!=null and bettingContent!=''">AND bettingContent=#{bettingContent}</if>
         </where>
     </select>

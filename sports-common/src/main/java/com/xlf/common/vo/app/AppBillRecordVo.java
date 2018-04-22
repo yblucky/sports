@@ -16,6 +16,7 @@ public class AppBillRecordVo extends AppBillRecordPo {
     private String busnessTypeName;
     private String busnessTypeEgName;
     private String extend;
+    private Integer isAwarded;
 
     public Integer getUid() {
         return uid;
@@ -79,5 +80,13 @@ public class AppBillRecordVo extends AppBillRecordPo {
     @Override
     public void setExtend(String extend) {
         this.extend = extend;
+    }
+
+    public Integer getIsAwarded() {
+        return isAwarded;
+    }
+
+    public void setIsAwarded(Integer isAwarded) {
+        this.isAwarded = isAwarded;
     }
 }

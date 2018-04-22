@@ -52,5 +52,5 @@
     <task:scheduled-tasks>
         <!--<task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="0 0 3 * * ?"></task:scheduled>-->
         <task:scheduled ref="clearReturnWalterScheduleTask" method="doTask" cron="0 0 3 * * ?"></task:scheduled>
-    </task:scheduled-tasks>  
+    </task:scheduled-tasks>
 </beans>

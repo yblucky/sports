@@ -53,8 +53,8 @@
         SELECT count(1) from <include refid="table_name"/>
         <where>
             1=1
-            <if test="startTime!='' and startTime!=null">AND date_sub(createTime,interval 2 hour) &gt;=#{startTime}</if>
-            <if test="endTime!='' and endTime!=null">AND date_sub(createTime,interval 2 hour) &lt;=#{endTime}</if>
+            <if test="startTime!='' and startTime!=null">AND lotteryTime &gt;=#{startTime}</if>
+            <if test="endTime!='' and endTime!=null">AND lotteryTime &lt;=#{endTime}</if>
         </where>
     </select>
 
@@ -62,8 +62,8 @@
         SELECT * FROM <include refid="table_name"/>
         <where>
             1=1
-            <if test="startTime!='' and startTime!=null">AND createTime &gt;=#{startTime}</if>
-            <if test="endTime!='' and endTime!=null">AND createTime &lt;=#{endTime}</if>
+            <if test="startTime!='' and startTime!=null">AND lotteryTime &gt;=#{startTime}</if>
+            <if test="endTime!='' and endTime!=null">AND lotteryTime &lt;=#{endTime}</if>
         </where>
         order by lotteryTime desc
     </select>

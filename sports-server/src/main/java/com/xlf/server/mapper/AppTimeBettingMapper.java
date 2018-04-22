@@ -54,4 +54,8 @@ public interface AppTimeBettingMapper extends BaseMapper<AppTimeBettingPo> {
 
     @Select("SELECT SUM(multiple) FROM `app_time_betting` where userId=#{userId} and lotteryFlag=10 and betType=#{betType}")
     public  BigDecimal sumUnLotteryByUserId(@Param("userId") String userId,@Param("betType") Integer betType);
+
+    //根据用户id和下注订单状态查询是否有未开奖订单
+    @Select("SELECT COUNT(*) FROM `app_time_betting` WHERE userId=#{userId} and issueNo != #{issueNo} and lotteryFlag=10")
+    public Integer findCountOrderByUserId(@Param("userId") String userId,@Param("issueNo") String issueNo);
 }

@@ -272,5 +272,11 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         return  sum;
     }
 
+    //根据用户id和下注订单状态查询是否有未开奖订单
+    @Override
+    public Integer findCountOrderByUserId(String userId,String issueNo){
+        return appTimeBettingMapper.findCountOrderByUserId(userId,issueNo);
+    }
+
 }
 

@@ -48,4 +48,7 @@ public interface AppTimeBettingService {
     Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag,Integer betType,List<String> winingList);
 
     public BigDecimal sumUnLotteryByUserId(String userId,Integer betType);
+
+    //根据用户id和下注订单状态查询是否有未开奖订单
+    Integer findCountOrderByUserId(String userId,String issueNo);
 }

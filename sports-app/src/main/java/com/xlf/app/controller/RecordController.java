@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -91,6 +92,26 @@ public class RecordController {
             if (total > 0) {
                 list = billRecordService.findBillRecordList (appUserPo.getId (), busnessTypeList, paging,startTime,endTime);
             }
+
+            //判断是否中奖
+            if(list != null){
+                for(AppBillRecordVo vo : list){
+                    //根据businessNumber单号查询数据
+                    List<AppTimeBettingPo> bettingPoList =  appTimeBettingService.findRecordList (appUserPo.getId (), vo.getBusinessNumber(), paging);
+                    //判断是否中奖
+                    for (AppTimeBettingPo appTimeBettingPo : bettingPoList){
+                        if(new BigDecimal(0).compareTo(appTimeBettingPo.getWinningAmount()) < 0){
+                                //中奖
+                                vo.setIsAwarded(2);
+                                break;
+                        }else {
+                                //未中奖
+                                vo.setIsAwarded(1);
+                        }
+                    }
+                }
+            }
+
             //返回前端总记录
             paging.setTotalCount (total);
             respBody.add (RespCodeEnum.SUCCESS.getCode (), "获取用户记录成功", paging, list);

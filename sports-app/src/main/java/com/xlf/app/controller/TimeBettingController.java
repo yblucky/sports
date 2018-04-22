@@ -387,6 +387,14 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
+
+            //判断是否有下注单没有进行开奖
+            int flagCount = appTimeBettingService.findCountOrderByUserId(userPo.getId(),vo.getIssueNo());
+            if(flagCount > 0){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "上期开奖未结算，无法下注");
+                return respBody;
+            }
+
             paging.setPageSize(10000);
             List<BettingBaseVo> allList = new ArrayList<>();
             Integer totalBettingNo = 0;
@@ -633,6 +641,14 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
+
+            //判断是否有下注单没有进行开奖
+            int flagCount = appTimeBettingService.findCountOrderByUserId(userPo.getId(),vo.getIssueNo());
+            if(flagCount > 0){
+                respBody.add(RespCodeEnum.ERROR.getCode(), "上期开奖未进行结算，无法下注");
+                return respBody;
+            }
+
             paging.setPageSize(10000);
             List<BettingBaseVo> allList = new ArrayList<>();
             Integer totalBettingNo = 0;
