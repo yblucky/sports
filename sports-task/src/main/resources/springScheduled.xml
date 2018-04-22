@@ -44,7 +44,7 @@
     <!-- 每日返水，每天凌晨三点,每5分钟执行一次 -->
     <bean id="returnWalterScheduleTask" class="com.xlf.task.app.ReturnWalterScheduleTask"></bean>
     <task:scheduled-tasks>
-        <task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="0 0/5 4  * * ?"></task:scheduled>
+        <task:scheduled ref="returnWalterScheduleTask" method="doTask" cron="0 0/5 9  * * ?"></task:scheduled>
     </task:scheduled-tasks>
 
     <!-- 用户返水清零,每天三点钟执行 -->

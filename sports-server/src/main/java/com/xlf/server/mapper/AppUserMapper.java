@@ -2,7 +2,6 @@ package com.xlf.server.mapper;
 
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.vo.app.UserInfoVo;
-import com.xlf.common.vo.pc.HomeUser;
 import com.xlf.common.vo.pc.StatisticsVo;
 import com.xlf.common.vo.pc.WebStatisticsVo;
 import com.xlf.common.vo.pc.WebUserVo;
@@ -213,7 +212,7 @@ public interface AppUserMapper extends BaseMapper<AppUserPo> {
     @Select("SELECT SUM(kickBackAmount) sumKickBackAmount,kickBackAmount,id,uid,parentId FROM `app_user` GROUP  BY parentId  HAVING  (SUM(kickBackAmount)>0) LIMIT 10")
     List<TaskReturnWaterVo> listWaitingReturnWaterUser();
 
-    @Select("SELECT  COUNT(id) FROM `app_user` GROUP  BY parentId  HAVING  (SUM(kickBackAmount)>0)")
+    @Select("SELECT  COUNT(id) FROM `app_user` GROUP  BY parentId  HAVING  (SUM(kickBackAmount)>0) LIMIT 1")
     Integer countWaitingReturnWaterUser();
 
     @Select("SELECT  id,kickBackAmount  FROM `app_user` where  parentId=#{parentId}")
