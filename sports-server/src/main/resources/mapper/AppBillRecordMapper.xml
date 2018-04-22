@@ -164,7 +164,7 @@
 			#{item}
 		</foreach>
 		<if test="startTime != null">AND date_sub(b.createTime,interval 2 hour) &gt;=#{startTime}</if>
-		<if test="endTime != null">AND date_sub(b.createTime,interval 2 hour) &lt; date_add(#{endTime},interval 1 day)</if>
+		<if test="endTime != null">AND date_sub(b.createTime,interval 2 hour) &lt; #{endTime}</if>
 	</select>
 
 
@@ -175,7 +175,7 @@
 			#{item}
 		</foreach>
 		<if test="startTime != null">AND date_sub(b.createTime,interval 2 hour) &gt;=#{startTime}</if>
-		<if test="endTime != null">AND date_sub(b.createTime,interval 2 hour) &lt; date_add(#{endTime},interval 1 day)</if>
+		<if test="endTime != null">AND date_sub(b.createTime,interval 2 hour) &lt; #{endTime}</if>
 	</select>
 </mapper>
 
