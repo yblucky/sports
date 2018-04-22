@@ -696,6 +696,7 @@ public class TimeBettingController {
                         if (sigleGroupMap.containsKey(regex)) {
                             Set set = sigleGroupMap.get(regex);
                             set.add(bettingBaseVo.getBettingContent());
+
                            /* if (!countMap.containsKey(regex) ||(countMap.containsKey(regex)  && !countMap.get(regex).containsKey(bettingBaseVo.getBettingContent()))) {
                                 Map m = new HashMap();
                                 m.put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
