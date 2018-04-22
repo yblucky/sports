@@ -387,12 +387,13 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
+            paging.setPageSize(10000);
             List<BettingBaseVo> allList = new ArrayList<>();
             Integer totalBettingNo = 0;
             Integer thisTotalBettingNo = 0;
             Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_ONE.getCode());
             if (hasBettingCount>0){
-                List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_TWO.getCode(), paging);
+                List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_ONE.getCode(), paging);
                 for (AppTimeBettingPo po : timeBettingPos) {
                     BettingBaseVo bettingBaseVo = new BettingBaseVo();
                     bettingBaseVo.setMultiple(po.getMultiple());
@@ -412,8 +413,6 @@ public class TimeBettingController {
                 if (hasBettingCount > 0) {
                     Integer count = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.TIME_ONE.getCode());
                     if (count > 0) {
-                        paging.setPageSize(30);
-                        paging.setPageNumber(1);
                         List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.TIME_ONE.getCode(), paging);
                         Integer total = 0;
                         for (AppTimeBettingPo po : timeBettingPos) {
@@ -543,7 +542,7 @@ public class TimeBettingController {
             BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
-            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()).multiply(timeOneWinRate).multiply(scale));
+            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getOdds()).multiply(timeOneWinRate).multiply(scale));
             BigDecimal timeSumOneUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_ONE.getCode());
             BigDecimal timeSumTwoUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_TWO.getCode());
             BigDecimal pk10SumUnOpen = appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
@@ -634,7 +633,7 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "已达到当日最大盈利额度，今日不可再下注");
                 return respBody;
             }
-            paging.setPageSize(1000);
+            paging.setPageSize(10000);
             List<BettingBaseVo> allList = new ArrayList<>();
             Integer totalBettingNo = 0;
             Integer thisTotalBettingNo = 0;
