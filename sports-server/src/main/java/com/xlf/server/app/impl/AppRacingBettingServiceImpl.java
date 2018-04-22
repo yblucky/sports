@@ -164,7 +164,7 @@ public class AppRacingBettingServiceImpl implements AppRacingBettingService {
 
     @Override
     public List<AppRacingBettingPo> findRecordList(String userId, String businessNumber, Paging paging) {
-        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), paging.getPageSize ());
+        RowBounds rowBounds = new RowBounds (paging.getPageNumber (), 9999);
         if (StringUtils.isEmpty (businessNumber) || StringUtils.isEmpty (userId)) {
             return Collections.emptyList ();
         }
