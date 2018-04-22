@@ -129,7 +129,7 @@
 					1 = 1 and a.state='10'
 					<if test="model.userId != null and model.userId != ''">AND a.parentId=#{model.userId}</if>
 					<if test="model.startTime != null">AND date_sub(b.createTime,interval 2 hour)&gt;=#{model.startTime}</if>
-					<if test="model.endTime != null">AND date_sub(b.createTime,interval 2 hour)&lt;#{model.endTime}</if>
+					<if test="model.endTime != null">AND date_sub(b.createTime,interval 2 hour)&lt;date_add(#{model.endTime},interval 1 day)</if>
 					<if test="model.startDiff != null and  model.startDiff != -399">AND datediff(date_sub(b.createTime,interval 2 hour),now())>=#{model.startDiff}</if>
 					<if test="model.endDiff != null and model.endDiff != -399">AND datediff(date_sub(b.createTime,interval 2 hour),now()) &lt;=#{model.endDiff}</if>
 				</where>
@@ -144,10 +144,10 @@
 				a.roleType='20'
 				<if test="model.userId != null and model.userId != ''">AND a.id=#{model.userId}</if>
 				<if test="model.mobile != null and model.mobile != ''">AND a.mobile=#{model.mobile}</if>
-				<if test="model.startTime != null">AND date_add(b.createTime,interval 1 day)&gt;=#{model.startTime}</if>
-				<if test="model.endTime != null">AND date_add(b.createTime,interval 1 day)&lt;#{model.endTime}</if>
-				<if test="model.startDiff != null and  model.startDiff != -399">AND datediff(date_add(b.createTime,interval 1 day),now())>=#{model.startDiff}</if>
-				<if test="model.endDiff != null and model.endDiff != -399">AND datediff(date_add(b.createTime,interval 1 day),now()) &lt;=#{model.endDiff}</if>
+				<if test="model.startTime != null">AND date_sub(b.createTime,interval 1 day)&gt;=#{model.startTime}</if>
+				<if test="model.endTime != null">AND date_sub(b.createTime,interval 1 day)&lt;date_add(#{model.endTime},interval 1 day)</if>
+				<if test="model.startDiff != null and  model.startDiff != -399">AND datediff(date_sub(b.createTime,interval 1 day),now())>=#{model.startDiff}</if>
+				<if test="model.endDiff != null and model.endDiff != -399">AND datediff(date_sub(b.createTime,interval 1 day),now()) &lt;=#{model.endDiff}</if>
 			</where>
 			  GROUP BY a.id
 			) as t2 on a.id=t2.id

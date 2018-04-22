@@ -47,7 +47,7 @@ public class RevenueVo implements Serializable{
     /**
      * 实际盈亏
      * */
-    private int agentProfit;
+    private BigDecimal agentProfit;
     /**
      * 代理编号
      * */
@@ -135,11 +135,11 @@ public class RevenueVo implements Serializable{
         this.remark = remark;
     }
 
-    public int getAgentProfit() {
+    public BigDecimal getAgentProfit() {
         return agentProfit;
     }
 
-    public void setAgentProfit(int agentProfit) {
+    public void setAgentProfit(BigDecimal agentProfit) {
         this.agentProfit = agentProfit;
     }
 

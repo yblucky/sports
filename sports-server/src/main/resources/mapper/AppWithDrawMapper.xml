@@ -23,7 +23,9 @@
     
     
     <select id="findAll" resultType="com.xlf.common.vo.pc.AppWithDrawVo">
-       	SELECT w.*,u.uid,u.mobile,c.name,c.bankCard,c.branch from app_withdraw w left join app_user u on w.userId=u.id  left join app_bank_card c on   w.bankCardId = c.id
+       	SELECT w.*,u.uid,u.mobile,c.name,c.bankCard,w.bankCardName as branch from app_withdraw w
+		left join app_user u on w.userId=u.id
+		left join app_bank_card c on   w.bankCardId = c.id
        	<where>
        	 1 = 1
        	<if test="model.id != null and model.id != ''">AND w.id=#{model.id}</if>
