@@ -37,7 +37,7 @@
     <bean id="timeLotteryResultScheduleTask" class="com.xlf.task.app.PayTimeLotteryResultScheduleTask"></bean>
     <task:scheduled-tasks>
         <task:scheduled ref="timeLotteryResultScheduleTask" method="doTask"
-                        cron="0/30 * 10-23,0-2 * * ?"></task:scheduled>
+                        cron="*/30 * * * * ?"></task:scheduled>
     </task:scheduled-tasks>
 
 

@@ -94,7 +94,7 @@ public class RecordController {
             }
 
             //判断是否中奖
-            if(list != null){
+/*            if(list != null){
                 for(AppBillRecordVo vo : list){
                     //根据businessNumber单号查询数据
                     List<AppTimeBettingPo> bettingPoList =  appTimeBettingService.findRecordList (appUserPo.getId (), vo.getBusinessNumber(), paging);
@@ -110,7 +110,7 @@ public class RecordController {
                         }
                     }
                 }
-            }
+            }*/
 
             //返回前端总记录
             paging.setTotalCount (total);
