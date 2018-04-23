@@ -556,6 +556,11 @@ public class TimeBettingController {
             BigDecimal pk10SumUnOpen = appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
 
 
+            //获取二定位的缓存
+            String doublewin=redisService.getString(vo.getIssueNo()+userPo.getId()+"double");
+            if(!StringUtils.isEmpty(doublewin)){
+                currentProfitSum=currentProfitSum.add(new BigDecimal(doublewin));
+            }
 //            currentProfitSum=currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
 //            currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
             currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
@@ -565,6 +570,12 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }
+
+            //缓存一定位下注中奖的最大额度
+            BigDecimal onewin = new BigDecimal(sumBettingNo).multiply(agentSettingPo.getOdds()).multiply(timeOneWinRate).multiply(scale);
+            redisService.putString(vo.getIssueNo()+userPo.getId()+"one",onewin.toString(),3000);
+
+
             BigDecimal maximumAward = new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds());
             appTimeBettingService.timeBettingService(userPo.getId(), vo, new BigDecimal(thisTotalBettingNo));
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "投注成功,等待开奖");
@@ -783,12 +794,21 @@ public class TimeBettingController {
 
 //            currentProfitSum=currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
 //            currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
+            //获取一定位的缓存
+            String onewin=redisService.getString(vo.getIssueNo()+userPo.getId()+"one");
+            if(!StringUtils.isEmpty(onewin)){
+                currentProfitSum=currentProfitSum.add(new BigDecimal(onewin));
+            }
             currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
             currentProfitSum= currentProfitSum.subtract(userPo.getTodayBettingAmout());
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }
+            //缓存二定位下注中奖的最大额度
+            BigDecimal doublewin = new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()).multiply(timeDoubleWinRate).multiply(lastScale);
+            redisService.putString(vo.getIssueNo()+userPo.getId()+"double",doublewin.toString(),3000);
+
             BigDecimal maximumAward = new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds());
             appTimeBettingService.timeBettingService(userPo.getId(), vo, new BigDecimal(thisTotalBettingNo));
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "投注成功,等待开奖");
