@@ -264,14 +264,6 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appUserService.updateTodayBettingAmoutTodayWiningAmout(userId,totalPrice.multiply(new BigDecimal ("-1")),BigDecimal.ZERO);
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", bettingPo.getIssueNo ());
-        String undo= redisService.getString(bettingPo.getIssueNo()+userPo.getId()+bettingPo.getBetType());
-        if (StringUtils.isEmpty(undo)){
-            redisService.putString(bettingPo.getIssueNo()+userPo.getId()+bettingPo.getBetType(),totalPrice.toString(),3000);
-        }else {
-            redisService.putString(bettingPo.getIssueNo()+userPo.getId()+bettingPo.getBetType(),new BigDecimal(undo).add(totalPrice).toString(),3000);
-        }
-
-
         return true;
     }
 
