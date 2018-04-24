@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.xlf.common.contrants.Constrants.REG_TIME_THREE;
+
 /**
  * 用户资产相关
  */
@@ -445,19 +447,23 @@ public class TimeBettingController {
                 thisTotalBettingNo += baseVo.getMultiple();
             }
             Map<Integer, Set<String>> map = new HashMap<>();
-            Map<Integer, Map<String, Integer>> countMap = new HashMap<>();
+            Map<String, Map<String, Integer>> countMap = new HashMap<>();
 
             for (BettingBaseVo bettingBaseVo : allList) {
                 if (ToolUtils.regex(bettingBaseVo.getBettingContent(), Constrants.REG_TIME_ONE)) {
                     if (!map.containsKey(1)) {
                         map.put(1, new HashSet<String>());
                         Map m = new HashMap();
-                        m.put(Constrants.REG_TIME_ONE, bettingBaseVo.getMultiple());
-                        countMap.put(1, m);
+                        countMap.put(Constrants.REG_TIME_ONE, m);
+                    }
+                    if (countMap.containsKey(Constrants.REG_TIME_ONE) && !countMap.get(Constrants.REG_TIME_ONE).containsKey(bettingBaseVo.getBettingContent())) {
+                        countMap.get(Constrants.REG_TIME_ONE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                    } else {
+                        Integer already = countMap.get(Constrants.REG_TIME_ONE).get(bettingBaseVo.getBettingContent()).intValue();
+                        countMap.get(Constrants.REG_TIME_ONE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
                     }
                     map.get(1).add(bettingBaseVo.getBettingContent());
-                    Integer already = countMap.get(1).get(Constrants.REG_TIME_ONE).intValue();
-                    countMap.get(1).put(Constrants.REG_TIME_ONE, already + bettingBaseVo.getMultiple());
+
                     if (map.get(1).size() > agentSettingPo.getMaxBetDigitalNoPerSeat()) {
                         respBody.add(RespCodeEnum.ERROR.getCode(), "万位不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat() + "个不同的数字");
                         return respBody;
@@ -467,27 +473,33 @@ public class TimeBettingController {
                     if (!map.containsKey(2)) {
                         map.put(2, new HashSet<String>());
                         Map m = new HashMap();
-                        m.put(Constrants.REG_TIME_TWO, bettingBaseVo.getMultiple());
-                        countMap.put(2, m);
+                        countMap.put(Constrants.REG_TIME_TWO, m);
+                    }
+                    if (countMap.containsKey(Constrants.REG_TIME_TWO) && !countMap.get(Constrants.REG_TIME_TWO).containsKey(bettingBaseVo.getBettingContent())) {
+                        countMap.get(Constrants.REG_TIME_TWO).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                    } else {
+                        Integer already = countMap.get(Constrants.REG_TIME_TWO).get(bettingBaseVo.getBettingContent()).intValue();
+                        countMap.get(Constrants.REG_TIME_TWO).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
                     }
                     map.get(2).add(bettingBaseVo.getBettingContent());
-                    Integer already = countMap.get(2).get(Constrants.REG_TIME_TWO).intValue();
-                    countMap.get(2).put(Constrants.REG_TIME_TWO, already + bettingBaseVo.getMultiple());
                     if (map.get(2).size() > agentSettingPo.getMaxBetDigitalNoPerSeat()) {
                         respBody.add(RespCodeEnum.ERROR.getCode(), "千位不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat() + "个不同的数字");
                         return respBody;
                     }
                 }
-                if (ToolUtils.regex(bettingBaseVo.getBettingContent(), Constrants.REG_TIME_THREE)) {
+                if (ToolUtils.regex(bettingBaseVo.getBettingContent(), REG_TIME_THREE)) {
                     if (!map.containsKey(3)) {
                         map.put(3, new HashSet<String>());
                         Map m = new HashMap();
-                        m.put(Constrants.REG_TIME_THREE, bettingBaseVo.getMultiple());
-                        countMap.put(3, m);
+                        countMap.put(REG_TIME_THREE, m);
+                    }
+                    if (countMap.containsKey(REG_TIME_THREE) && !countMap.get(REG_TIME_THREE).containsKey(bettingBaseVo.getBettingContent())) {
+                        countMap.get(REG_TIME_THREE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                    } else {
+                        Integer already = countMap.get(REG_TIME_THREE).get(bettingBaseVo.getBettingContent()).intValue();
+                        countMap.get(REG_TIME_THREE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
                     }
                     map.get(3).add(bettingBaseVo.getBettingContent());
-                    Integer already = countMap.get(3).get(Constrants.REG_TIME_THREE).intValue();
-                    countMap.get(3).put(Constrants.REG_TIME_THREE, already + bettingBaseVo.getMultiple());
                     if (map.get(3).size() > agentSettingPo.getMaxBetDigitalNoPerSeat()) {
                         respBody.add(RespCodeEnum.ERROR.getCode(), "百位不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat() + "个不同的数字");
                         return respBody;
@@ -497,12 +509,15 @@ public class TimeBettingController {
                     if (!map.containsKey(4)) {
                         map.put(4, new HashSet<String>());
                         Map m = new HashMap();
-                        m.put(Constrants.REG_TIME_FOURE, bettingBaseVo.getMultiple());
-                        countMap.put(4, m);
+                        countMap.put(Constrants.REG_TIME_FOURE, m);
+                    }
+                    if (countMap.containsKey(4) && !countMap.get(Constrants.REG_TIME_FOURE).containsKey(bettingBaseVo.getBettingContent())) {
+                        countMap.get(Constrants.REG_TIME_FOURE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                    } else {
+                        Integer already = countMap.get(Constrants.REG_TIME_FOURE).get(bettingBaseVo.getBettingContent()).intValue();
+                        countMap.get(Constrants.REG_TIME_FOURE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
                     }
                     map.get(4).add(bettingBaseVo.getBettingContent());
-                    Integer already = countMap.get(4).get(Constrants.REG_TIME_FOURE).intValue();
-                    countMap.get(4).put(Constrants.REG_TIME_FOURE, already + bettingBaseVo.getMultiple());
                     if (map.get(4).size() > agentSettingPo.getMaxBetDigitalNoPerSeat()) {
                         respBody.add(RespCodeEnum.ERROR.getCode(), "十位不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat() + "个不同的数字");
                         return respBody;
@@ -512,12 +527,15 @@ public class TimeBettingController {
                     if (!map.containsKey(5)) {
                         map.put(5, new HashSet<String>());
                         Map m = new HashMap();
-                        m.put(Constrants.REG_TIME_FIVE, bettingBaseVo.getMultiple());
-                        countMap.put(5, m);
+                        countMap.put(Constrants.REG_TIME_FIVE, m);
+                    }
+                    if (countMap.containsKey(5) && !countMap.get(Constrants.REG_TIME_FIVE).containsKey(bettingBaseVo.getBettingContent())) {
+                        countMap.get(Constrants.REG_TIME_FIVE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                    } else {
+                        Integer already = countMap.get(Constrants.REG_TIME_FIVE).get(bettingBaseVo.getBettingContent()).intValue();
+                        countMap.get(Constrants.REG_TIME_FIVE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
                     }
                     map.get(5).add(bettingBaseVo.getBettingContent());
-                    Integer already = countMap.get(5).get(Constrants.REG_TIME_FIVE).intValue();
-                    countMap.get(5).put(Constrants.REG_TIME_FIVE, already + bettingBaseVo.getMultiple());
                     if (map.get(5).size() > agentSettingPo.getMaxBetDigitalNoPerSeat()) {
                         respBody.add(RespCodeEnum.ERROR.getCode(), "个位不符合投注规则,每个位最多压注" + agentSettingPo.getMaxBetDigitalNoPerSeat() + "个不同的数字");
                         return respBody;
@@ -531,9 +549,25 @@ public class TimeBettingController {
             }
             //计算中奖的概率
             Integer sumBettingNo = 0;
-            for (int i = 1; i < 6; i++) {
-                if (countMap.containsKey(i)) {
-                    Integer mutiple = ToolUtils.compareMapList(countMap.get(i)).get(0).getValue();
+            for (int i=0;i<countMap.size();i++){
+                if (countMap.containsKey(Constrants.REG_TIME_ONE)) {
+                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_ONE)).get(0).getValue();
+                    sumBettingNo += mutiple;
+                }
+                if (countMap.containsKey(Constrants.REG_TIME_TWO)) {
+                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_TWO)).get(0).getValue();
+                    sumBettingNo += mutiple;
+                }
+                if (countMap.containsKey(Constrants.REG_TIME_THREE)) {
+                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_THREE)).get(0).getValue();
+                    sumBettingNo += mutiple;
+                }
+                if (countMap.containsKey(Constrants.REG_TIME_FOURE)) {
+                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_FOURE)).get(0).getValue();
+                    sumBettingNo += mutiple;
+                }
+                if (countMap.containsKey(Constrants.REG_TIME_FIVE)) {
+                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_FIVE)).get(0).getValue();
                     sumBettingNo += mutiple;
                 }
             }
