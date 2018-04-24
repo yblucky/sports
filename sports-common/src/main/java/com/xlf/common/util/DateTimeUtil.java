@@ -441,11 +441,19 @@ public final class DateTimeUtil {
     public static Map<String,String> getCurrentDayTime(){
         SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
         String day = sdf.format(new Date());
-
         System.out.println(sdf.format(new Date()) + " 23:59:59");
         Map<String,String> dateMap = new HashMap<>();
         dateMap.put("startTime",day + " 00:00:00");
         dateMap.put("endTime",day + " 23:59:59");
+        //凌晨两点内算昨天那期
+        String startDay = "";
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if(hour <= 2){
+            calendar.add(Calendar.DATE,-1);
+            startDay = sdf.format(calendar.getTime());
+            dateMap.put("startTime",startDay + " 10:00:00");
+        }
 
         return  dateMap;
     }
