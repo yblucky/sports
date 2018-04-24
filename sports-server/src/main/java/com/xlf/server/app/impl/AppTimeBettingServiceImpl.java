@@ -1,11 +1,14 @@
 package com.xlf.server.app.impl;
 
-import com.xlf.common.enums.*;
+import com.xlf.common.enums.BetTypeEnum;
+import com.xlf.common.enums.BusnessTypeEnum;
+import com.xlf.common.enums.LotteryFlagEnum;
+import com.xlf.common.enums.TimeSeatEnum;
 import com.xlf.common.exception.CommException;
-import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.resp.Paging;
+import com.xlf.common.service.RedisService;
 import com.xlf.common.util.ToolUtils;
 import com.xlf.common.vo.app.TimeBettingBaseVo;
 import com.xlf.common.vo.app.TimeBettingVo;
@@ -37,6 +40,8 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
     private AppUserService appUserService;
     @Resource
     private AppBillRecordService appBillRecordService;
+    @Resource
+    private RedisService redisService;
 
 
     @Override
@@ -259,6 +264,14 @@ public class AppTimeBettingServiceImpl implements AppTimeBettingService {
         appUserService.updateKickBackAmountById (userId, totalPrice.multiply (new BigDecimal ("-1")));
         appUserService.updateTodayBettingAmoutTodayWiningAmout(userId,totalPrice.multiply(new BigDecimal ("-1")),BigDecimal.ZERO);
         appBillRecordService.saveBillRecord (bettingPo.getBusinessNumber (), userPo.getId (), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode (), totalPrice.multiply (new BigDecimal ("-1")), userPo.getKickBackAmount (), afterKick, userPo.getMobile () + "【" + userPo.getNickName () + "】" + "下注后撤单返水减少", bettingPo.getIssueNo ());
+        String undo= redisService.getString(bettingPo.getIssueNo()+userPo.getId()+bettingPo.getBetType());
+        if (StringUtils.isEmpty(undo)){
+            redisService.putString(bettingPo.getIssueNo()+userPo.getId()+bettingPo.getBetType(),totalPrice.toString(),3000);
+        }else {
+            redisService.putString(bettingPo.getIssueNo()+userPo.getId()+bettingPo.getBetType(),new BigDecimal(undo).add(totalPrice).toString(),3000);
+        }
+
+
         return true;
     }
 

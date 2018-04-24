@@ -85,7 +85,7 @@
         select count(id) from
         <include refid="table_name"/>
         <where>
-            userId=#{userId}
+            userId=#{userId}  AND lotteryFlag != 30
             <if test="issueNo!=null">AND issueNo=#{issueNo}</if>
             <if test="bettingContent!=null">AND bettingContent=#{bettingContent}</if>
             <if test="betType!=null">AND betType=#{betType}</if>
