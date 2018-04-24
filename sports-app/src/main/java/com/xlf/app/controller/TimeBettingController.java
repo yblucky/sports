@@ -566,6 +566,11 @@ public class TimeBettingController {
             currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
 
             currentProfitSum= currentProfitSum.subtract(userPo.getTodayBettingAmout());
+            String undo= redisService.getString(vo.getIssueNo()+userPo.getId()+BetTypeEnum.TIME_TWO.getCode().toString());
+            if (!StringUtils.isEmpty(undo)){
+                currentProfitSum=currentProfitSum.subtract(new BigDecimal(undo));
+            }
+            currentProfitSum= currentProfitSum.subtract(new BigDecimal(thisTotalBettingNo));
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
@@ -799,8 +804,13 @@ public class TimeBettingController {
             if(!StringUtils.isEmpty(onewin)){
                 currentProfitSum=currentProfitSum.add(new BigDecimal(onewin));
             }
+            String undo= redisService.getString(vo.getIssueNo()+userPo.getId()+BetTypeEnum.TIME_ONE.getCode().toString());
+            if (!StringUtils.isEmpty(undo)){
+                currentProfitSum=currentProfitSum.subtract(new BigDecimal(undo));
+            }
             currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
             currentProfitSum= currentProfitSum.subtract(userPo.getTodayBettingAmout());
+            currentProfitSum= currentProfitSum.subtract(new BigDecimal(thisTotalBettingNo));
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
@@ -920,6 +930,7 @@ public class TimeBettingController {
             }
             AppUserPo userPo = commonService.checkToken();
             appTimeBettingService.undoTimeBettingService(userPo.getId(), ids);
+
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "撤单成功");
         } catch (CommException ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), ex.getMessage());
