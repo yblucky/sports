@@ -404,12 +404,7 @@ public class TimeBettingController {
             Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_ONE.getCode());
             if (hasBettingCount > 0) {
                 List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_ONE.getCode(), paging);
-                for (AppTimeBettingPo po : timeBettingPos) {
-                    BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                    bettingBaseVo.setMultiple(po.getMultiple());
-                    bettingBaseVo.setBettingContent(po.getBettingContent());
-                    allList.add(bettingBaseVo);
-                }
+                makeAllList(allList, timeBettingPos);
             }
             for (TimeBettingBaseVo baseVo : vo.getTimeList()) {
                 if (baseVo.getMultiple() < agentSettingPo.getMinBetNoPerDigital() || baseVo.getMultiple() > agentSettingPo.getMaxBetNoPerDigital()) {
@@ -432,10 +427,6 @@ public class TimeBettingController {
                                 respBody.add(RespCodeEnum.ERROR.getCode(), "单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "," + agentSettingPo.getMaxBetNoPerDigital() + "】注," + baseVo.getBettingContent() + "超限制");
                                 return respBody;
                             }
-                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                            bettingBaseVo.setMultiple(po.getMultiple());
-                            bettingBaseVo.setBettingContent(po.getBettingContent());
-                            allList.add(bettingBaseVo);
                         }
                     }
                 }
@@ -448,7 +439,11 @@ public class TimeBettingController {
             }
             Map<Integer, Set<String>> map = new HashMap<>();
             Map<String, Map<String, Integer>> countMap = new HashMap<>();
-
+            countMap.put(Constrants.REG_TIME_ONE, new HashMap<>());
+            countMap.put(Constrants.REG_TIME_TWO, new HashMap<>());
+            countMap.put(Constrants.REG_TIME_THREE, new HashMap<>());
+            countMap.put(Constrants.REG_TIME_FOURE, new HashMap<>());
+            countMap.put(Constrants.REG_TIME_FIVE, new HashMap<>());
             for (BettingBaseVo bettingBaseVo : allList) {
                 if (ToolUtils.regex(bettingBaseVo.getBettingContent(), Constrants.REG_TIME_ONE)) {
                     if (!map.containsKey(1)) {
@@ -547,32 +542,8 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "每期最多下注位数为" + agentSettingPo.getMaxBetSeats());
                 return respBody;
             }
-            //计算中奖的概率
-            Integer sumBettingNo = 0;
-            for (int i=0;i<countMap.size();i++){
-                if (countMap.containsKey(Constrants.REG_TIME_ONE)) {
-                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_ONE)).get(0).getValue();
-                    sumBettingNo += mutiple;
-                }
-                if (countMap.containsKey(Constrants.REG_TIME_TWO)) {
-                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_TWO)).get(0).getValue();
-                    sumBettingNo += mutiple;
-                }
-                if (countMap.containsKey(Constrants.REG_TIME_THREE)) {
-                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_THREE)).get(0).getValue();
-                    sumBettingNo += mutiple;
-                }
-                if (countMap.containsKey(Constrants.REG_TIME_FOURE)) {
-                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_FOURE)).get(0).getValue();
-                    sumBettingNo += mutiple;
-                }
-                if (countMap.containsKey(Constrants.REG_TIME_FIVE)) {
-                    Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_FIVE)).get(0).getValue();
-                    sumBettingNo += mutiple;
-                }
-            }
-
-
+            //计算中奖的概率下总的最大注数
+            Integer sumBettingNo = this.oneTimeSumMaxMutiple(countMap);
             BigDecimal scale = new BigDecimal(map.size()).divide(new BigDecimal(10));
             scale = BigDecimal.ONE;
 
@@ -585,42 +556,16 @@ public class TimeBettingController {
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
             BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getOdds()).multiply(timeOneWinRate).multiply(scale));
-            BigDecimal timeSumOneUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_ONE.getCode());
-            BigDecimal timeSumTwoUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_TWO.getCode());
-            BigDecimal pk10SumUnOpen = appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
-
-
-            //获取二定位的缓存
-            String doublewin = redisService.getString(vo.getIssueNo() + userPo.getId() + "double");
-            if (!StringUtils.isEmpty(doublewin)) {
-                currentProfitSum = currentProfitSum.add(new BigDecimal(doublewin));
-            }
-//            currentProfitSum=currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
-//            currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
-            currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
-
             currentProfitSum = currentProfitSum.subtract(userPo.getTodayBettingAmout());
             String undo = redisService.getString(vo.getIssueNo() + userPo.getId() + BetTypeEnum.TIME_TWO.getCode().toString());
-            if (!StringUtils.isEmpty(undo)) {
-                currentProfitSum = currentProfitSum.subtract(new BigDecimal(undo));
-            }
             currentProfitSum = currentProfitSum.subtract(new BigDecimal(thisTotalBettingNo));
+            //本期已投注未开奖的二定最大可能中奖额度
+            BigDecimal historyMaxPosibleMaxAward = twoMaxWard(userPo,vo.getIssueNo(),paging,agentSettingPo);
+            currentProfitSum = currentProfitSum.add(historyMaxPosibleMaxAward);
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }
-
-            //缓存一定位下注中奖的最大额度
-            BigDecimal onewin = new BigDecimal(sumBettingNo).multiply(agentSettingPo.getOdds()).multiply(timeOneWinRate).multiply(scale).subtract(new BigDecimal(thisTotalBettingNo));
-            String oneOnewinValue = redisService.getString(vo.getIssueNo() + userPo.getId() + "one");
-            if (StringUtils.isEmpty(oneOnewinValue)) {
-                redisService.putString(vo.getIssueNo() + userPo.getId() + "one", onewin.toString(), 3000);
-            } else {
-                redisService.putString(vo.getIssueNo() + userPo.getId() + "one", onewin.add(new BigDecimal(oneOnewinValue)).toString(), 3000);
-            }
-
-
-            BigDecimal maximumAward = new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds());
             appTimeBettingService.timeBettingService(userPo.getId(), vo, new BigDecimal(thisTotalBettingNo));
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "投注成功,等待开奖");
         } catch (CommException ex) {
@@ -630,6 +575,15 @@ public class TimeBettingController {
             LogUtils.error("投注失败！", ex);
         }
         return respBody;
+    }
+
+    private void makeAllList(List<BettingBaseVo> allList, List<AppTimeBettingPo> timeBettingPos) {
+        for (AppTimeBettingPo po : timeBettingPos) {
+            BettingBaseVo bettingBaseVo = new BettingBaseVo();
+            bettingBaseVo.setMultiple(po.getMultiple());
+            bettingBaseVo.setBettingContent(po.getBettingContent());
+            allList.add(bettingBaseVo);
+        }
     }
 
 
@@ -711,12 +665,7 @@ public class TimeBettingController {
             Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_TWO.getCode());
             if (hasBettingCount > 0) {
                 List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.TIME_TWO.getCode(), paging);
-                for (AppTimeBettingPo po : timeBettingPos) {
-                    BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                    bettingBaseVo.setMultiple(po.getMultiple());
-                    bettingBaseVo.setBettingContent(po.getBettingContent());
-                    allList.add(bettingBaseVo);
-                }
+                makeAllList(allList, timeBettingPos);
             }
             for (TimeBettingBaseVo baseVo : vo.getTimeList()) {
                 if (baseVo.getBettingContent().replaceAll("\\d", "").length() != 3) {
@@ -739,10 +688,6 @@ public class TimeBettingController {
                                 respBody.add(RespCodeEnum.ERROR.getCode(), "两个数字投注范围为【" + agentSettingPo.getMinBetNoPerDigital() + "-" + "," + agentSettingPo.getTimeDoubleMaxBetNoPerKind() + "】注," + baseVo.getBettingContent() + "超限制");
                                 return respBody;
                             }
-//                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
-//                            bettingBaseVo.setMultiple(po.getMultiple());
-//                            bettingBaseVo.setBettingContent(po.getBettingContent());
-//                            allList.add(bettingBaseVo);
                         }
                     }
                 }
@@ -759,6 +704,9 @@ public class TimeBettingController {
 
             Map<String, Set<String>> sigleGroupMap = new HashMap<>();
             Map<String, Map<String, Integer>> countMap = new HashMap<>();
+            for (String regex:regexTimeTwoList){
+                countMap.put(regex,new HashMap<>());
+            }
             for (BettingBaseVo bettingBaseVo : allList) {
                 for (String regex : regexTimeTwoList) {
                     if (ToolUtils.regex(bettingBaseVo.getBettingContent(), regex)) {
@@ -766,15 +714,6 @@ public class TimeBettingController {
                         if (sigleGroupMap.containsKey(regex)) {
                             Set set = sigleGroupMap.get(regex);
                             set.add(bettingBaseVo.getBettingContent());
-
-                           /* if (!countMap.containsKey(regex) ||(countMap.containsKey(regex)  && !countMap.get(regex).containsKey(bettingBaseVo.getBettingContent()))) {
-                                Map m = new HashMap();
-                                m.put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
-                                countMap.put(regex, m);
-                            } else {
-                                Integer already = countMap.get(regex).get(bettingBaseVo.getBettingContent()).intValue();
-                                countMap.get(regex).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
-                            }*/
                         } else {
                             Set<String> singleSet = new HashSet<>();
                             singleSet.add(bettingBaseVo.getBettingContent());
@@ -831,25 +770,11 @@ public class TimeBettingController {
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
             BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds()).multiply(timeDoubleWinRate).multiply(lastScale));
-            BigDecimal timeSumOneUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_ONE.getCode());
-            BigDecimal timeSumTwoUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_TWO.getCode());
-            BigDecimal pk10SumUnOpen = appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
-
-
-//            currentProfitSum=currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
-//            currentProfitSum=currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
-            //获取一定位的缓存
-            String onewin = redisService.getString(vo.getIssueNo() + userPo.getId() + "one");
-            if (!StringUtils.isEmpty(onewin)) {
-                currentProfitSum = currentProfitSum.add(new BigDecimal(onewin));
-            }
-            String undo = redisService.getString(vo.getIssueNo() + userPo.getId() + BetTypeEnum.TIME_ONE.getCode().toString());
-            if (!StringUtils.isEmpty(undo)) {
-                currentProfitSum = currentProfitSum.subtract(new BigDecimal(undo));
-            }
-            currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
             currentProfitSum = currentProfitSum.subtract(userPo.getTodayBettingAmout());
             currentProfitSum = currentProfitSum.subtract(new BigDecimal(thisTotalBettingNo));
+            //本期已投注未开奖的一定最大可能中奖额度
+            BigDecimal historyMaxPosibleMaxAward = oneMaxWard(userPo,vo.getIssueNo(),paging,agentSettingPo);
+            currentProfitSum = currentProfitSum.add(historyMaxPosibleMaxAward);
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
@@ -863,8 +788,6 @@ public class TimeBettingController {
             } else {
                 redisService.putString(vo.getIssueNo() + userPo.getId() + "double", doublewin.add(new BigDecimal(oneDoubleinValue)).toString(), 3000);
             }
-
-            BigDecimal maximumAward = new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds());
             appTimeBettingService.timeBettingService(userPo.getId(), vo, new BigDecimal(thisTotalBettingNo));
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "投注成功,等待开奖");
         } catch (CommException ex) {
@@ -1081,6 +1004,166 @@ public class TimeBettingController {
             LogUtils.error("获取上期开奖号码成功", ex);
         }
         return respBody;
+    }
+
+
+
+
+    //计算一字定已投注未开奖的最大中奖额度
+    private BigDecimal  oneMaxWard(AppUserPo userPo, String issueNo,Paging paging,SysAgentSettingPo agentSettingPo) throws  Exception{
+        paging.setPageSize(10000);
+        List<BettingBaseVo> allList = new ArrayList<>();
+        Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), issueNo, null, BetTypeEnum.TIME_ONE.getCode());
+        if (hasBettingCount > 0) {
+            List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), issueNo, null, BetTypeEnum.TIME_ONE.getCode(), paging);
+            makeAllList(allList, timeBettingPos);
+        }
+        Map<Integer, Set<String>> map = new HashMap<>();
+        Map<String, Map<String, Integer>> countMap = new HashMap<>();
+
+        for (BettingBaseVo bettingBaseVo : allList) {
+            if (ToolUtils.regex(bettingBaseVo.getBettingContent(), Constrants.REG_TIME_ONE)) {
+                if (!map.containsKey(1)) {
+                    map.put(1, new HashSet<String>());
+                    Map m = new HashMap();
+                    countMap.put(Constrants.REG_TIME_ONE, m);
+                }
+                if (countMap.containsKey(Constrants.REG_TIME_ONE) && !countMap.get(Constrants.REG_TIME_ONE).containsKey(bettingBaseVo.getBettingContent())) {
+                    countMap.get(Constrants.REG_TIME_ONE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                } else {
+                    Integer already = countMap.get(Constrants.REG_TIME_ONE).get(bettingBaseVo.getBettingContent()).intValue();
+                    countMap.get(Constrants.REG_TIME_ONE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
+                }
+            }
+            if (ToolUtils.regex(bettingBaseVo.getBettingContent(), Constrants.REG_TIME_TWO)) {
+                if (!map.containsKey(2)) {
+                    map.put(2, new HashSet<String>());
+                    Map m = new HashMap();
+                    countMap.put(Constrants.REG_TIME_TWO, m);
+                }
+                if (countMap.containsKey(Constrants.REG_TIME_TWO) && !countMap.get(Constrants.REG_TIME_TWO).containsKey(bettingBaseVo.getBettingContent())) {
+                    countMap.get(Constrants.REG_TIME_TWO).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                } else {
+                    Integer already = countMap.get(Constrants.REG_TIME_TWO).get(bettingBaseVo.getBettingContent()).intValue();
+                    countMap.get(Constrants.REG_TIME_TWO).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
+                }
+            }
+            if (ToolUtils.regex(bettingBaseVo.getBettingContent(), REG_TIME_THREE)) {
+                if (!map.containsKey(3)) {
+                    map.put(3, new HashSet<String>());
+                    Map m = new HashMap();
+                    countMap.put(REG_TIME_THREE, m);
+                }
+                if (countMap.containsKey(REG_TIME_THREE) && !countMap.get(REG_TIME_THREE).containsKey(bettingBaseVo.getBettingContent())) {
+                    countMap.get(REG_TIME_THREE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                } else {
+                    Integer already = countMap.get(REG_TIME_THREE).get(bettingBaseVo.getBettingContent()).intValue();
+                    countMap.get(REG_TIME_THREE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
+                }
+            }
+            if (ToolUtils.regex(bettingBaseVo.getBettingContent(), Constrants.REG_TIME_FOURE)) {
+                if (!map.containsKey(4)) {
+                    map.put(4, new HashSet<String>());
+                    Map m = new HashMap();
+                    countMap.put(Constrants.REG_TIME_FOURE, m);
+                }
+                if (countMap.containsKey(4) && !countMap.get(Constrants.REG_TIME_FOURE).containsKey(bettingBaseVo.getBettingContent())) {
+                    countMap.get(Constrants.REG_TIME_FOURE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                } else {
+                    Integer already = countMap.get(Constrants.REG_TIME_FOURE).get(bettingBaseVo.getBettingContent()).intValue();
+                    countMap.get(Constrants.REG_TIME_FOURE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
+                }
+            }
+            if (ToolUtils.regex(bettingBaseVo.getBettingContent(), Constrants.REG_TIME_FIVE)) {
+                if (!map.containsKey(5)) {
+                    map.put(5, new HashSet<String>());
+                    Map m = new HashMap();
+                    countMap.put(Constrants.REG_TIME_FIVE, m);
+                }
+                if (countMap.containsKey(5) && !countMap.get(Constrants.REG_TIME_FIVE).containsKey(bettingBaseVo.getBettingContent())) {
+                    countMap.get(Constrants.REG_TIME_FIVE).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                } else {
+                    Integer already = countMap.get(Constrants.REG_TIME_FIVE).get(bettingBaseVo.getBettingContent()).intValue();
+                    countMap.get(Constrants.REG_TIME_FIVE).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
+                }
+            }
+        }
+        Integer  sumMaxMutiple=oneTimeSumMaxMutiple(countMap);
+        return  new BigDecimal(sumMaxMutiple).multiply(agentSettingPo.getOdds());
+
+
+    }
+
+    private Integer oneTimeSumMaxMutiple(Map<String, Map<String, Integer>> countMap) {
+        //计算中奖的概率
+        Integer sumBettingNo = 0;
+        for (int i=0;i<countMap.size();i++){
+            if (countMap.containsKey(Constrants.REG_TIME_ONE)) {
+                Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_ONE)).get(0).getValue();
+                sumBettingNo += mutiple;
+            }
+            if (countMap.containsKey(Constrants.REG_TIME_TWO)) {
+                Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_TWO)).get(0).getValue();
+                sumBettingNo += mutiple;
+            }
+            if (countMap.containsKey(Constrants.REG_TIME_THREE)) {
+                Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_THREE)).get(0).getValue();
+                sumBettingNo += mutiple;
+            }
+            if (countMap.containsKey(Constrants.REG_TIME_FOURE)) {
+                Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_FOURE)).get(0).getValue();
+                sumBettingNo += mutiple;
+            }
+            if (countMap.containsKey(Constrants.REG_TIME_FIVE)) {
+                Integer mutiple = ToolUtils.compareMapList(countMap.get(Constrants.REG_TIME_FIVE)).get(0).getValue();
+                sumBettingNo += mutiple;
+            }
+        }
+        return  sumBettingNo;
+    }
+
+
+
+    //计算二字定已投注未开奖的最大中奖额度
+    private BigDecimal   twoMaxWard(AppUserPo userPo,String issueNo, Paging paging,SysAgentSettingPo agentSettingPo) throws  Exception{
+        paging.setPageSize(10000);
+        List<BettingBaseVo> allList = new ArrayList<>();
+        Integer hasBettingCount = appTimeBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), issueNo, null, BetTypeEnum.TIME_TWO.getCode());
+        if (hasBettingCount > 0) {
+            List<AppTimeBettingPo> timeBettingPos = appTimeBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(),issueNo, null, BetTypeEnum.TIME_TWO.getCode(), paging);
+            makeAllList(allList, timeBettingPos);
+        }
+
+        Map<String, Map<String, Integer>> countMap = new HashMap<>();
+        for (BettingBaseVo bettingBaseVo : allList) {
+            for (String regex : regexTimeTwoList) {
+                if (ToolUtils.regex(bettingBaseVo.getBettingContent(), regex)) {
+                    if (!countMap.containsKey(regex)) {
+                        Map m = new HashMap();
+                        m.put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                        countMap.put(regex, m);
+                        continue;
+                    }
+                    if (countMap.containsKey(regex) && !countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())) {
+                        countMap.get(regex).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
+                        continue;
+                    }
+                    if (countMap.containsKey(regex) && countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())) {
+                        Integer already = countMap.get(regex).get(bettingBaseVo.getBettingContent()).intValue();
+                        countMap.get(regex).put(bettingBaseVo.getBettingContent(), already + bettingBaseVo.getMultiple());
+                    }
+                }
+            }
+        }
+        //计算最大中奖的注数
+        int sumBettingNo = 0;
+        List<Double> doubles = new ArrayList<>();
+        for (Map.Entry<String, Map<String, Integer>> entry : countMap.entrySet()) {
+            Map<String, Integer> singleRegMap = entry.getValue();
+            Integer signTotal = ToolUtils.compareMapList(singleRegMap).get(0).getValue();
+            sumBettingNo += signTotal;
+        }
+        return  new BigDecimal(sumBettingNo).multiply(agentSettingPo.getTimeDoubleOdds());
     }
 
 
