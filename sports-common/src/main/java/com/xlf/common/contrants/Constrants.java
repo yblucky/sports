@@ -40,6 +40,17 @@ public class Constrants {
             add(9, "XXXXXXXXX\\d");
         }
     };
+    public static final String REG_RACING_PREFIX="REG_RACING_";
+    public static final String REG_RACING_1 = "\\dXXXXXXXXX";
+    public static final String REG_RACING_2 = "X\\dXXXXXXXX";
+    public static final String REG_RACING_3 = "XX\\dXXXXXXX";
+    public static final String REG_RACING_4 = "XXX\\dXXXXXX";
+    public static final String REG_RACING_5 = "XXXX\\dXXXXX";
+    public static final String REG_RACING_6 = "XXXXX\\dXXXX";
+    public static final String REG_RACING_7 = "XXXXXX\\dXXX";
+    public static final String REG_RACING_8 = "XXXXXXX\\dXX";
+    public static final String REG_RACING_9 = "XXXXXXXX\\dX";
+    public static final String REG_RACING_10 = "XXXXXXXXX\\d";
     public static final Map<String, String> racingRegexDescMap = new HashMap<String, String>() {
         {
             put("\\dXXXXXXXXX", "1赛道");

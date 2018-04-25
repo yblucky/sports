@@ -1100,8 +1100,6 @@ public class TimeBettingController {
         }
         Integer sumMaxMutiple = oneTimeSumMaxMutiple(countMap);
         return new BigDecimal(sumMaxMutiple).multiply(agentSettingPo.getOdds());
-
-
     }
 
     private Integer oneTimeSumMaxMutiple(Map<String, Map<String, Integer>> countMap) {
