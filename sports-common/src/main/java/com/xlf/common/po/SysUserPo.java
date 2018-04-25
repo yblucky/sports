@@ -56,6 +56,14 @@ public class SysUserPo {
 	 */
 	private Date createTime;
 	/**
+	 * 返水时间
+	 */
+	private Date returnWaterTime;
+	/**
+	 * 清理返水时间
+	 */
+	private Date clearReturnWaterTime;
+	/**
 	 * 最后登录时间
 	 */
 	private Date lastTime;
@@ -300,5 +308,21 @@ public class SysUserPo {
 
 	public void setTotalReturnWater(BigDecimal totalReturnWater) {
 		this.totalReturnWater = totalReturnWater;
+	}
+
+	public Date getReturnWaterTime() {
+		return returnWaterTime;
+	}
+
+	public void setReturnWaterTime(Date returnWaterTime) {
+		this.returnWaterTime = returnWaterTime;
+	}
+
+	public Date getClearReturnWaterTime() {
+		return clearReturnWaterTime;
+	}
+
+	public void setClearReturnWaterTime(Date clearReturnWaterTime) {
+		this.clearReturnWaterTime = clearReturnWaterTime;
 	}
 }

@@ -9,7 +9,7 @@
     </resultMap>
 
     <sql id="fields">
-       userName,loginName,password,salt,mobile,agentLevelId,roleId,roleName,userIcon,createTime,lastTime,state,roleType,totayReturnWater,totalReturnWater,balance
+       userName,loginName,password,salt,mobile,agentLevelId,roleId,roleName,userIcon,createTime,lastTime,state,roleType,totayReturnWater,totalReturnWater,balance,returnWaterTime,clearReturnWaterTime
     </sql>
 
     <sql id="fields_id">
