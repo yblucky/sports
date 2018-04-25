@@ -741,7 +741,6 @@ public class TimeBettingController {
                         if (!countMap.containsKey(regex)) {
                             Map m = new HashMap();
                             countMap.put(regex, m);
-                            continue;
                         }
                         if (countMap.containsKey(regex) && !countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())) {
                             countMap.get(regex).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
@@ -1144,7 +1143,6 @@ public class TimeBettingController {
                     if (!countMap.containsKey(regex)) {
                         Map m = new HashMap();
                         countMap.put(regex, m);
-                        continue;
                     }
                     if (countMap.containsKey(regex) && !countMap.get(regex).containsKey(bettingBaseVo.getBettingContent())) {
                         countMap.get(regex).put(bettingBaseVo.getBettingContent(), bettingBaseVo.getMultiple());
