@@ -376,6 +376,10 @@ public class TimeBettingController {
             Integer endBeforeInt = Integer.valueOf(endBefore);
             AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo(vo.getSerialNumber(), 10);
             Long longDate = DateTimeUtil.getLongTimeByDatrStr(timeIntervalPo.getTime());
+            if (timeIntervalPo.getIssueNo()==120){
+                longDate+=24*60*60*1000;
+                longDate-=10*1000;
+            }
             if (System.currentTimeMillis() > (longDate - endBeforeInt * 1000)) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "本期投注已截止");
                 return respBody;
@@ -636,6 +640,10 @@ public class TimeBettingController {
             Integer endBeforeInt = Integer.valueOf(endBefore);
             AppTimeIntervalPo timeIntervalPo = appTimeIntervalService.findByIssNo(vo.getSerialNumber(), 10);
             Long longDate = DateTimeUtil.getLongTimeByDatrStr(timeIntervalPo.getTime());
+            if (timeIntervalPo.getIssueNo()==120){
+                longDate+=24*60*60*1000;
+                longDate-=10*1000;
+            }
             if (System.currentTimeMillis() > (longDate - endBeforeInt * 1000)) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "本期投注已截止");
                 return respBody;

@@ -1,7 +1,6 @@
 package com.xlf.server.mapper;
 
 
-import com.xlf.common.po.AppRacingBettingPo;
 import com.xlf.common.po.AppTimeBettingPo;
 import com.xlf.server.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -45,7 +44,7 @@ public interface AppTimeBettingMapper extends BaseMapper<AppTimeBettingPo> {
     @Select("SELECT COUNT(*) FROM `app_time_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
     Integer recordListTotal(@Param("userId") String userId, @Param("businessNumber") String businessNumber);
 
-    @Select("SELECT * FROM `app_time_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber}")
+    @Select("SELECT * FROM `app_time_betting` WHERE userId=#{userId} and businessNumber=#{businessNumber} ORDER BY winningAmount desc,bettingContent asc")
     List<AppTimeBettingPo> findRecordList(@Param("userId") String userId, @Param("businessNumber") String businessNumber, RowBounds rowBounds);
 
     Integer countBettingByUserIdAndIssueNoAndContent(@Param("userId") String userId, @Param("issueNo") String issueNo, @Param("bettingContent") String bettingContent,@Param ("betType") Integer betType);
