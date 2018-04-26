@@ -34,8 +34,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.xlf.server.utils.LotteryUtils.oneRacingSumMaxMutiple;
-
 /**
  * 用户资产相关
  */
@@ -288,6 +286,7 @@ public class RacingBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数有误");
                 return respBody;
             }
+
             Long openDate = DateTimeUtil.getLongTimeByDatrStr(timeIntervalPo.getTime());
             String undoBefore = commonService.findParameter("undoBefore");
             Integer undoBeforeInt = Integer.valueOf(undoBefore);
