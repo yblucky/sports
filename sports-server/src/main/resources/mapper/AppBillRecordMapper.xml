@@ -155,6 +155,7 @@
 			a.roleType='20'
 			<if test="model.userId != null and model.userId != ''"> AND a.id=#{model.userId}</if>
 		</where>
+		order by ifnull(t.betTotal,0) asc
 	</select>
 
 	<select id="report" resultType="java.lang.Double">
