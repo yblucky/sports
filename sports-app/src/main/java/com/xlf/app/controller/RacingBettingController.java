@@ -19,6 +19,7 @@ import com.xlf.common.vo.app.*;
 import com.xlf.common.vo.pc.SysUserVo;
 import com.xlf.server.app.*;
 import com.xlf.server.common.CommonService;
+import com.xlf.server.utils.LotteryUtils;
 import com.xlf.server.web.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.xlf.server.utils.LotteryUtils.oneRacingSumMaxMutiple;
 
 /**
  * 用户资产相关
@@ -368,6 +371,15 @@ public class RacingBettingController {
             Integer totalBettingNo = 0;
             Integer thisTotalBettingNo = 0;
             Integer hasBettingCount = appRacingBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.RACE_ONE.getCode());
+
+
+            if (hasBettingCount > 0) {
+                paging.setPageSize(30000);
+                paging.setPageNumber(1);
+                List<AppRacingBettingPo> racingBettingPos = appRacingBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.RACE_ONE.getCode(), paging);
+                appRacingBettingService.makeAllList(allList, racingBettingPos);
+            }
+
             for (RacingBettingBaseVo baseVo : vo.getRaingList()) {
                 if (baseVo.getMultiple() < agentSettingPo.getMinBetNoPerDigitalRace() || baseVo.getMultiple() > agentSettingPo.getMaxBetNoPerDigitalRace()) {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "单赛道单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigitalRace() + "," + agentSettingPo.getMaxBetNoPerDigitalRace() + "】注" + baseVo.getBettingContent() + "超限制");
@@ -377,43 +389,15 @@ public class RacingBettingController {
                     respBody.add(RespCodeEnum.ERROR.getCode(), "非一字定投注");
                     return respBody;
                 }
-                if (hasBettingCount > 0) {
-                    Integer count = appRacingBettingService.countBettingByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.RACE_ONE.getCode());
-                    if (count > 0) {
-                        paging.setPageSize(30);
-                        paging.setPageNumber(1);
-                        List<AppRacingBettingPo> timeBettingPos = appRacingBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), baseVo.getBettingContent(), BetTypeEnum.RACE_ONE.getCode(), paging);
-                        Integer total = 0;
-                        for (AppRacingBettingPo po : timeBettingPos) {
-                            total += baseVo.getMultiple();
-                            total += po.getMultiple();
-                            if (total < agentSettingPo.getMinBetNoPerDigitalRace() || total > agentSettingPo.getMaxBetNoPerDigitalRace()) {
-                                respBody.add(RespCodeEnum.ERROR.getCode(), "单赛道单个数字最小投注范围为【" + agentSettingPo.getMinBetNoPerDigitalRace() + "," + agentSettingPo.getMaxBetNoPerDigitalRace() + "】注," + baseVo.getBettingContent() + "超限制");
-                                return respBody;
-                            }
-                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                            bettingBaseVo.setMultiple(po.getMultiple());
-                            bettingBaseVo.setBettingContent(po.getBettingContent());
-                            allList.add(bettingBaseVo);
-                        }
-                    } else {
-                        List<AppRacingBettingPo> timeBettingPos = appRacingBettingService.findListByUserIdAndIssueNoAndContent(userPo.getId(), vo.getIssueNo(), null, BetTypeEnum.RACE_ONE.getCode(), paging);
-                        for (AppRacingBettingPo po : timeBettingPos) {
-                            BettingBaseVo bettingBaseVo = new BettingBaseVo();
-                            bettingBaseVo.setMultiple(po.getMultiple());
-                            bettingBaseVo.setBettingContent(po.getBettingContent());
-                            allList.add(bettingBaseVo);
-                        }
-                    }
-                }
+
                 BettingBaseVo bettingBaseVo = new BettingBaseVo();
                 bettingBaseVo.setMultiple(baseVo.getMultiple());
                 bettingBaseVo.setBettingContent(baseVo.getBettingContent());
                 allList.add(bettingBaseVo);
+
                 totalBettingNo += baseVo.getMultiple();
                 thisTotalBettingNo += baseVo.getMultiple();
             }
-            Map<Integer, Set<String>> map = new HashMap<>();
             Map<String, Set<String>> trackMap = new HashMap<>();
 
 
@@ -436,30 +420,26 @@ public class RacingBettingController {
                 }
             }
 
+
             //最大可能中奖金额
             if (userPo.getBalance().compareTo(new BigDecimal(thisTotalBettingNo.toString())) == -1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "用户余额不足，无法完成下注");
                 return respBody;
             }
-
+            Map<String, Map<String, Integer>> countMap = LotteryUtils.makeRaceingCountMapWithAlllist(allList);
+            Integer sumMaxMutiple = LotteryUtils.oneRacingSumMaxMutiple(countMap);
+            BigDecimal sumMaxPosiable = new BigDecimal(sumMaxMutiple).multiply(agentSettingPo.getRacingOdds());
             BigDecimal timeOneWinRate = new BigDecimal(commonService.findParameter("timeOneWinRate"));
             BigDecimal timeDoubleWinRate = new BigDecimal(commonService.findParameter("timeDoubleWinRate"));
             BigDecimal pk10OneWinRate = new BigDecimal(commonService.findParameter("pk10OneWinRate"));
-            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(totalBettingNo).multiply(agentSettingPo.getRacingOdds()).multiply(pk10OneWinRate));
-            BigDecimal timeSumOneUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_ONE.getCode());
-            BigDecimal timeSumTwoUnOpen = appTimeBettingService.sumUnLotteryByUserId(userPo.getId(), BetTypeEnum.TIME_TWO.getCode());
-            BigDecimal pk10SumUnOpen = appRacingBettingService.sumUnLotteryByUserId(userPo.getId());
-
-            currentProfitSum = currentProfitSum.add(timeSumOneUnOpen.multiply(timeOneWinRate).multiply(agentSettingPo.getOdds()));
-            currentProfitSum = currentProfitSum.add(timeSumTwoUnOpen.multiply(timeDoubleWinRate).multiply(agentSettingPo.getTimeDoubleOdds()));
-            currentProfitSum = currentProfitSum.add(pk10SumUnOpen.multiply(pk10OneWinRate));
-
+            BigDecimal currentProfitSum = userPo.getTodayWiningAmout().add(new BigDecimal(thisTotalBettingNo).multiply(agentSettingPo.getRacingOdds()).multiply(pk10OneWinRate));
+            currentProfitSum = currentProfitSum.subtract(userPo.getTodayBettingAmout());
+            currentProfitSum = currentProfitSum.subtract(new BigDecimal(thisTotalBettingNo));
 
             if (currentProfitSum.compareTo(agentSettingPo.getMaxProfitPerDay()) == 1) {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "盈利额度超限,无法完成下注");
                 return respBody;
             }
-            BigDecimal maximumAward = new BigDecimal(totalBettingNo).multiply(agentSettingPo.getOdds());
             appRacingBettingService.racingBettingService(userPo.getId(), vo, new BigDecimal(thisTotalBettingNo));
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "投注成功,等待开奖");
         } catch (CommException ex) {
