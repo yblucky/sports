@@ -2,7 +2,10 @@ package com.xlf.server.app;
 
 import com.xlf.common.enums.RacingSeatEnum;
 import com.xlf.common.po.AppRacingBettingPo;
+import com.xlf.common.po.AppUserPo;
+import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.resp.Paging;
+import com.xlf.common.vo.app.BettingBaseVo;
 import com.xlf.common.vo.app.RacingBettingVo;
 import com.xlf.common.vo.pc.LotteryVo;
 
@@ -51,4 +54,8 @@ public interface AppRacingBettingService {
     Integer wininggCountAndWingConent(String issuNo, Integer lotteryFlag, Integer betType, List<String> winingList);
 
     public BigDecimal sumUnLotteryByUserId(String userId);
+
+    public BigDecimal oneRacingMaxWard(AppUserPo userPo, String issueNo, Paging paging, SysAgentSettingPo agentSettingPo) throws Exception;
+
+    public void makeAllList(List<BettingBaseVo> allList, List<AppRacingBettingPo> racingBettingPos);
 }

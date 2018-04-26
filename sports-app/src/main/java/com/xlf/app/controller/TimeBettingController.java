@@ -897,7 +897,14 @@ public class TimeBettingController {
                 respBody.add(RespCodeEnum.ERROR.getCode(), "撤单参数有误");
                 return respBody;
             }
-            Long openDate = DateTimeUtil.getLongTimeByDatrStr(timeIntervalPo.getTime());
+            String timeMMss=timeIntervalPo.getTime();
+            if (timeIntervalPo.getIssueNo()==120){
+                timeMMss="23:59";
+            }
+            Long openDate = DateTimeUtil.getLongTimeByDatrStr(timeMMss);
+            if (timeIntervalPo.getIssueNo()==120){
+                openDate+=30*1000;
+            }
             String undoBefore = commonService.findParameter("undoBefore");
             Integer undoBeforeInt = Integer.valueOf(undoBefore);
             if (StringUtils.isEmpty(undoBefore)) {
