@@ -169,7 +169,8 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         //更新用户盈亏返水衡量值(正值才有返水)
         appUserService.updateKickBackAmountById(userPo.getId(), award.multiply(new BigDecimal(-1)));
         //写入盈亏返水衡量值流水(此处酌情写入)
-        appBillRecordService.saveBillRecord(bettingPo.getBusinessNumber(), userPo.getId(), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode(), award.multiply(new BigDecimal("-1")), userPo.getKickBackAmount(), after, "下级" + userPo.getMobile() + "【" + userPo.getNickName() + "】" + "中奖返水减少", bettingPo.getIssueNo());
+        BigDecimal afterKickAmount=userPo.getKickBackAmount ().subtract (award);
+        appBillRecordService.saveBillRecord(bettingPo.getBusinessNumber(), userPo.getId(), BusnessTypeEnum.REDUCE_KICKBACKAMOUNT_RECORD.getCode(), award.multiply(new BigDecimal("-1")), userPo.getKickBackAmount(), afterKickAmount, "下级" + userPo.getMobile() + "【" + userPo.getNickName() + "】" + "中奖返水减少", bettingPo.getIssueNo());
         //更新用户当天累计盈亏
         appUserService.updateCurrentProfitById(userPo.getId(), award);
         appUserService.updateTodayBettingAmoutTodayWiningAmout(userPo.getId(), BigDecimal.ZERO, award);
