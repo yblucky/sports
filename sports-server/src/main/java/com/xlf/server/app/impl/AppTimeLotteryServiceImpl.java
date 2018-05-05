@@ -271,7 +271,8 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         for (int i = 0; i < jsonArray.size(); i++) {
             AppTimeLotteryPo model = new AppTimeLotteryPo();
             JSONObject rowJson = jsonArray.getJSONObject(i);
-            model.setLotteryTime(new Date(rowJson.getLong("opentimestamp") * 1000));
+//            model.setLotteryTime(new Date(rowJson.getLong("opentimestamp") * 1000));
+            model.setLotteryTime(DateTimeUtil.parseDateFromStr (rowJson.getString ("opentime"),DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
             model.setIssueNo(rowJson.getString("expect"));
             String opencode = rowJson.getString("opencode");
             String[] array = opencode.split(",");
@@ -348,7 +349,8 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         for (int i = 0; i < jsonArray.size(); i++) {
             AppTimeLotteryPo model = new AppTimeLotteryPo();
             JSONObject rowJson = jsonArray.getJSONObject(i);
-            model.setLotteryTime(new Date(rowJson.getLong("opentimestamp") * 1000));
+            model.setLotteryTime(DateTimeUtil.parseDateFromStr (rowJson.getString ("opentime"),DateTimeUtil.PATTERN_YYYY_MM_DD_HH_MM_SS));
+//            model.setLotteryTime(new Date(rowJson.getLong("opentimestamp") * 1000));
             model.setIssueNo(rowJson.getString("expect"));
             String opencode = rowJson.getString("opencode");
             String[] array = opencode.split(",");
@@ -364,7 +366,11 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             System.out.println("*********");
             System.out.println(ToolUtils.toJson(po));
         }
+
+        System.out.println ("888888888888888888888888888888");
+        System.out.println (new Date (1525497659000l));
     }
+
 
 
 }
