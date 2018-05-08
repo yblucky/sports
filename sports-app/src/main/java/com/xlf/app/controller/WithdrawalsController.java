@@ -74,7 +74,7 @@ public class WithdrawalsController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }
-             if (userPo==null || userPo.getBalance ().compareTo (vo.getAmount ())<=0){
+             if (userPo==null || userPo.getBalance ().compareTo (vo.getAmount ()) < 0){
                 throw  new CommException ("用户余额不足，无法提现");
             }
             BigDecimal currencySumDraw= new BigDecimal (appWithDrawService.drawSumCurrentDay (userPo.getId ()));
