@@ -916,6 +916,9 @@ public class TimeBettingController {
                 openDate += 30 * 1000;
             }
             String undoBefore = commonService.findParameter ("undoBefore");
+            if (timeIntervalPo.getIssueNo ()>=96 ||  timeIntervalPo.getIssueNo ()<=23) {
+                undoBefore = commonService.findParameter ("undoBeforeAtNight");
+            }
             Integer undoBeforeInt = Integer.valueOf (undoBefore);
             if (StringUtils.isEmpty (undoBefore)) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "撤单参数时间有误");

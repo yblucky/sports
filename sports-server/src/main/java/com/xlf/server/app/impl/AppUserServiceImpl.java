@@ -363,10 +363,10 @@ public class AppUserServiceImpl implements AppUserService {
             if (row == null || row == 0) {
                 throw new CommException("更新代理今日和累计返水错误");
             }
-            /*row= sysUserService.updateBalance(sysUserVo.getId(),returnAmount);
+            row= sysUserService.updateBalance(sysUserVo.getId(),returnAmount);
             if (row == null || row == 0) {
                 throw new CommException("更新代理返水余额错误");
-            }*/
+            }
         }
         this.returnWaterService(waterList, userIds);
         return false;
