@@ -117,13 +117,14 @@
 
 
 	<select id="revenueList" resultType="com.xlf.common.vo.pc.RevenueVo">
-		select a.*,t.betTotal as betScore,(t.lotteryTotal+t.betTotal) as memberRs,t2.bus1 as agentProfit,b.agentName,t.betCount
+		select a.*,t.betTotal as betScore,(t.lotteryTotal+t.betTotal) as memberRs,t2.bus1 as agentProfit,b.agentName,t.betCount,t.createtime as agentTime
 		  from sys_user a
 		 inner join sys_agent_setting b on a.agentLevelId = b.id
 		 left JOIN
 			(select sum(case b.busnessType when 21 then b.balance when 23 then b.balance when 31 then b.balance when 33 then b.balance else 0 end) as betTotal,
 					 sum(case b.busnessType when 22 then b.balance when 32 then b.balance else 0 end) as lotteryTotal,count(1) as betCount,
-					 b.busnessType,b.userId,a.parentId from app_user a
+					 b.busnessType,b.userId,a.parentId,b.createtime ,datediff(date_sub(b.createTime,interval 2 hour),date_sub(now(),interval 2 hour)) as time
+		       from app_user a
 			   LEFT JOIN app_bill_record b on a.id = b.userid
 				<where>
 					1 = 1 and a.state='10'
@@ -134,11 +135,13 @@
 					<if test="model.endDiff != null and model.endDiff != -399">AND datediff(date_sub(b.createTime,interval 2 hour),date_sub(now(),interval 2 hour)) &lt;=#{model.endDiff}</if>
 				</where>
 			  GROUP BY a.parentId
+		      <if test="model.findDetail != null and model.findDetail != ''"> ,datediff(date_sub(b.createTime,interval 2 hour),date_sub(now(),interval 2 hour)) </if>
 			) as t on a.id=t.parentId
 		left JOIN
 			(select sum(case b.busnessType when 51 then b.balance else 0 end) as bus1,
 					 0 as bus2,
-					 b.busnessType,a.id from sys_user a
+					 b.busnessType,a.id ,datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour))  as time
+		       from sys_user a
 			   LEFT JOIN app_bill_record b on a.id = b.userid
 			<where>
 				a.roleType='20'
@@ -150,7 +153,8 @@
 				<if test="model.endDiff != null and model.endDiff != -399">AND datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour)) &lt;=#{model.endDiff}</if>
 			</where>
 			  GROUP BY a.id
-			) as t2 on a.id=t2.id
+			  <if test="model.findDetail != null and model.findDetail != ''"> ,datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour))</if>
+			) as t2 on a.id=t2.id and t.time=t2.time
 		<where>
 			a.roleType='20'
 			<if test="model.userId != null and model.userId != ''"> AND a.id=#{model.userId}</if>

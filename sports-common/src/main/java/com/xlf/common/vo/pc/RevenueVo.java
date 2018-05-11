@@ -61,6 +61,10 @@ public class RevenueVo implements Serializable{
      * */
     private String gameType;
     /**
+     * 查看每天的流水情况
+     * */
+    private String findDetail;
+    /**
      * 时间相差天数
      * */
     private int startDiff;
@@ -78,6 +82,11 @@ public class RevenueVo implements Serializable{
      */
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date endTime;
+    /**
+     * '结束时间'
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date agentTime;
 
     public String getId() {
         return id;
@@ -197,5 +206,21 @@ public class RevenueVo implements Serializable{
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public String getFindDetail() {
+        return findDetail;
+    }
+
+    public void setFindDetail(String findDetail) {
+        this.findDetail = findDetail;
+    }
+
+    public Date getAgentTime() {
+        return agentTime;
+    }
+
+    public void setAgentTime(Date agentTime) {
+        this.agentTime = agentTime;
     }
 }
