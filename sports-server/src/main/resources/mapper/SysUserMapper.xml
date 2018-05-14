@@ -61,7 +61,7 @@
             <if test="model.roleType != null and model.roleType != ''">and u.roleType=#{model.roleType}</if>
             <if test="model.id != null and model.id != ''">and u.id=#{model.id}</if>
         </where>
-        ORDER BY u.createTime DESC
+        ORDER BY u.state ASC ,u.createTime DESC
     </select>
 
     <select id="findCount" resultType="java.lang.Long">

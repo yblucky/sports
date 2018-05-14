@@ -160,7 +160,7 @@
             <if test="model.state != null and model.state != ''">and a.state=#{model.state}</if>
         </where>
         ORDER BY
-        a.todayBettingAmout DESC
+        a.state ASC ,a.todayBettingAmout DESC
         limit #{startRow}, #{pageSize};
     </select>
     
