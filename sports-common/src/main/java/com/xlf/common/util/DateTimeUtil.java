@@ -445,14 +445,14 @@ public final class DateTimeUtil {
         Map<String,String> dateMap = new HashMap<>();
         dateMap.put("startTime",day + " 00:00:00");
         dateMap.put("endTime",day + " 23:59:59");
-        //凌晨两点内算昨天那期
+        //凌晨两点内算昨天那期，因为跨天查询的日期都对不上了
         String startDay = "";
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         if(hour <= 2){
             calendar.add(Calendar.DATE,-1);
             startDay = sdf.format(calendar.getTime());
-            dateMap.put("startTime",startDay + " 10:00:00");
+            dateMap.put("startTime",startDay + " 00:00:00");
         }
 
         return  dateMap;
