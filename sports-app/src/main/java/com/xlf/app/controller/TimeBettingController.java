@@ -75,12 +75,12 @@ public class TimeBettingController {
             Calendar calendar = Calendar.getInstance ();
             calendar.setTime (new Date ());
             Integer hour = calendar.get (Calendar.HOUR_OF_DAY);
-            if (hour >= 2 && hour < 10) {
+            if (hour >= 2 && hour < 9) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "非投注时间");
                 return respBody;
             }
             Integer inteval = 5;
-            if (hour >= 10 && hour < 22) {
+            if (hour >= 9 && hour < 22) {
                 inteval = 10;
             }
             String hhmm = DateTimeUtil.parseCurrentDateMinuteIntervalToStr (DateTimeUtil.PATTERN_HH_MM, inteval);
