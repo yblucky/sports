@@ -9,10 +9,7 @@ import com.xlf.common.po.AppWithDrawPo;
 import com.xlf.common.po.SysAgentSettingPo;
 import com.xlf.common.resp.Paging;
 import com.xlf.common.resp.RespBody;
-import com.xlf.common.util.CryptUtils;
-import com.xlf.common.util.LanguageUtil;
-import com.xlf.common.util.LogUtils;
-import com.xlf.common.util.ToolUtils;
+import com.xlf.common.util.*;
 import com.xlf.common.vo.app.AppBillRecordVo;
 import com.xlf.common.vo.app.BankCardVo;
 import com.xlf.common.vo.app.DrawVo;
@@ -32,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 提现
@@ -74,10 +72,15 @@ public class WithdrawalsController {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;
             }
-             if (userPo==null || userPo.getBalance ().compareTo (vo.getAmount ())<=0){
+             if (userPo==null || userPo.getBalance ().compareTo (vo.getAmount ()) < 0){
                 throw  new CommException ("用户余额不足，无法提现");
             }
-            BigDecimal currencySumDraw= new BigDecimal (appWithDrawService.drawSumCurrentDay (userPo.getId ()));
+
+            Map<String,String> dateMap = DateTimeUtil.getCurrentDayTime();
+            String startTime = dateMap.get("startTime");
+            String endTime = dateMap.get("endTime");
+
+            BigDecimal currencySumDraw= new BigDecimal (appWithDrawService.drawSumCurrentDay (userPo.getId (),startTime,endTime));
             if (currencySumDraw.compareTo (withdrawMaxAmount) == 1) {
                 respBody.add (RespCodeEnum.ERROR.getCode (), "每天最大提现额度为："+withdrawMaxAmount);
                 return respBody;

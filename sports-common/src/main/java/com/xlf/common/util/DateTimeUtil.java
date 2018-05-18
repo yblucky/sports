@@ -452,7 +452,7 @@ public final class DateTimeUtil {
         if(hour <= 2){
             calendar.add(Calendar.DATE,-1);
             startDay = sdf.format(calendar.getTime());
-            dateMap.put("startTime",startDay + " 10:00:00");
+            dateMap.put("startTime",startDay + " 00:00:00");
         }
 
         return  dateMap;

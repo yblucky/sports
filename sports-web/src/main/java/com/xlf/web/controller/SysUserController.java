@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.xlf.common.enums.RoleTypeEnum;
 import com.xlf.common.po.AppUserPo;
 import com.xlf.common.po.SysAgentSettingPo;
+import com.xlf.common.po.SysUserPo;
+import com.xlf.common.util.ToolUtils;
 import com.xlf.server.app.AppUserService;
 import com.xlf.server.app.SysAgentSettingService;
 import com.xlf.server.common.CommonService;
@@ -328,5 +330,39 @@ public class SysUserController {
 		}
 		return respBody;
 	}
-	
+
+
+	/**
+	 * 修改登陆密码
+	 *
+	 * @return 响应对象
+	 */
+	@PostMapping("/upPwd")
+	public RespBody upPwd(@RequestBody SysUserVo po) {
+		RespBody respBody = new RespBody();
+		try {
+			SysUserVo token = commonService.checkWebToken();
+			if (token.getRoleType().intValue() == RoleTypeEnum.AGENT.getCode()) {
+				respBody.add(RespCodeEnum.ERROR.getCode(), "不符合权限");
+				return respBody;
+			}
+			SysUserVo find = sysUserService.findByLoginName(po.getMobile());
+			if (null == find) {
+				find = sysUserService.findByMobile(po.getMobile());
+			}
+			if (null == find) {
+				respBody.add(RespCodeEnum.ERROR.getCode(), "找不到用户");
+				return respBody;
+			}
+			//根据旧盐加密登录密码
+			String loginPw = CryptUtils.hmacSHA1Encrypt(po.getPassword(), find.getSalt());
+			//调用通用的更新方法
+			sysUserService.updatePw(loginPw,find.getId());
+			respBody.add(RespCodeEnum.SUCCESS.getCode(), "修改密码成功");
+		} catch (Exception ex) {
+			respBody.add(RespCodeEnum.ERROR.getCode(), "修改密码失败");
+			LogUtils.error("修改密码失败", ex);
+		}
+		return respBody;
+	}
 }
