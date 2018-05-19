@@ -12,7 +12,6 @@ import java.util.List;
  * 提现
  * Created by Administrator on 2018/1/4 0004.
  */
-@Service
 public interface AppWithDrawService {
 
     public  Boolean  epWithDraw(String userId,String  bankId, String bankCardName,BigDecimal amount) throws  Exception;
@@ -24,7 +23,7 @@ public interface AppWithDrawService {
 
     public Integer drawRecordTotal(String userId);
 
-    public Double drawSumCurrentDay(String userId);
+    public Double drawSumCurrentDay(String userId,String startTime,String endTime);
 
     public Integer drawRecordListTotal(String userId);
 

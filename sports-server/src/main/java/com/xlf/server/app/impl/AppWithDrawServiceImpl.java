@@ -113,8 +113,8 @@ public class AppWithDrawServiceImpl implements AppWithDrawService {
     }
 
     @Override
-    public Double drawSumCurrentDay(String userId) {
-        Double sum= withDrawMapper.drawSumCurrentDay (userId);
+    public Double drawSumCurrentDay(String userId,String startTime,String endTime) {
+        Double sum= withDrawMapper.drawSumCurrentDay (userId,startTime,endTime);
         if (sum==null){
             sum=0d;
         }
