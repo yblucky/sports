@@ -99,4 +99,10 @@ public interface AppBillRecordMapper extends BaseMapper<AppBillRecordPo> {
     Integer reportCount(@Param("userId") String userId, @Param("list") List<Integer> busnessTypeList, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
 
+    List<LotteryVo> findBetRecord(@Param("model") LotteryVo vo,RowBounds rowBounds);
+
+    Integer findBetRecordCount(@Param("model") LotteryVo vo);
+
+
+    long revenueCount(@Param("model")RevenueVo vo);
 }

@@ -58,4 +58,10 @@ public interface AppBillRecordService {
     Double report( String userId,  List<Integer> busnessTypeList,  String startTime,   String endTime);
 
     public Integer reportCount(String userId, List<Integer> busnessTypeList, String startTime, String endTime);
+
+    int findBetRecordCount(LotteryVo vo);
+
+    List<LotteryVo> findBetRecord(LotteryVo vo, Paging paging);
+
+    long revenueCount(RevenueVo vo);
 }

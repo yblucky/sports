@@ -50,8 +50,12 @@
     </select>
 
     <select id="findAll" resultType="com.xlf.common.vo.pc.SysUserVo">
-        select u.id,u.userName,u.loginName,u.mobile,u.roleId,u.roleName,u.roleType,u.userIcon,u.createTime,u.lastTime,u.state,u.totayReturnWater,u.totalReturnWater,t.agentName,u.agentLevelId,u.balance
-        from sys_user u left join sys_agent_setting t on u.agentLevelId=t.id
+        select u.id,u.userName,u.loginName,u.mobile,u.roleId,u.roleName,u.roleType,u.userIcon,u.createTime,u.lastTime,u.state,u.totayReturnWater,u.totalReturnWater,t.agentName,u.agentLevelId,u.balance,ifnull(a.kickBackAmount,0) kickBackAmount
+        from sys_user u
+        left join sys_agent_setting t on u.agentLevelId=t.id
+        left join (
+        select sum(kickBackAmount) as kickBackAmount,parentId from app_user group by parentId
+        ) as a on u.id=a.parentId
         <where>
             <if test="model.userName != null and model.userName != ''">u.userName like concat('%',#{model.userName})</if>
             <if test="model.mobile != null and model.mobile != ''">and u.mobile=#{model.mobile}</if>

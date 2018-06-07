@@ -95,6 +95,10 @@ public class SysUserVo implements Serializable{
 	 * 代理余额
 	 */
 	private BigDecimal balance;
+	/**
+	 * 返水衡量值
+	 */
+	private BigDecimal kickBackAmount;
 
 	public BigDecimal getBalance() {
 		return balance;
@@ -322,5 +326,13 @@ public class SysUserVo implements Serializable{
 
 	public void setTotalReturnWater(BigDecimal totalReturnWater) {
 		this.totalReturnWater = totalReturnWater;
+	}
+
+	public BigDecimal getKickBackAmount() {
+		return kickBackAmount;
+	}
+
+	public void setKickBackAmount(BigDecimal kickBackAmount) {
+		this.kickBackAmount = kickBackAmount;
 	}
 }

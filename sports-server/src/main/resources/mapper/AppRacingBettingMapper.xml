@@ -81,7 +81,6 @@
         FROM `app_time_betting` a LEFT JOIN app_time_lottery b on a.issueNo=b.issueNo
         <where>
             1 = 1
-            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
             <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
             <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
             <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
@@ -92,7 +91,6 @@
         FROM `app_racing_betting` a LEFT JOIN app_racing_lottery b on a.issueNo=b.issueNo
         <where>
             1 = 1
-            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
             <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
             <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
             <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
@@ -116,7 +114,6 @@
         FROM `app_time_betting` a LEFT JOIN app_time_lottery b on a.issueNo=b.issueNo
         <where>
             1 = 1
-            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
             <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
             <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
             <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
@@ -130,7 +127,6 @@
         FROM `app_racing_betting` a LEFT JOIN app_racing_lottery b on a.issueNo=b.issueNo
         <where>
             1 = 1
-            <if test="model.state != null and model.state != ''">AND w.state=#{model.state}</if>
             <if test="model.issueNo != null and model.issueNo != ''">AND a.issueNo=#{model.issueNo}</if>
             <if test="model.startTime != null">AND a.createTime&gt;=#{model.startTime}</if>
             <if test="model.endTime != null">AND a.createTime&lt;#{model.endTime}</if>
@@ -144,7 +140,7 @@
             <if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
             <if test="model.parentId != null and model.parentId != ''">AND u.parentId = #{model.parentId}</if>
         </where>
-        ORDER BY t.createTime DESC
+        ORDER BY t.createTime DESC,t.betContent asc
     </select>
     <select id="countBettingByUserIdAndIssueNoAndContent" resultType="java.lang.Integer">
         select count(id) from

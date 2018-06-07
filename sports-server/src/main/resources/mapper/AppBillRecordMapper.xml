@@ -55,17 +55,31 @@
     </select>
     
     <select id="findCount" resultType="int">
-    	SELECT count(1) from app_bill_record b left join app_user u on b.userId=u.id
-    	<where>
-       	 1 = 1
-		<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
-		<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
-		<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
-		<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
-		<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
-		<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
-		<if test="model.parentId != null and model.parentId != ''">AND u.parentId=#{model.parentId}</if>
-		</where>
+		select count(id) from (
+			SELECT b.id from app_bill_record b inner join app_user u on b.userId=u.id
+			<where>
+				1 = 1
+				<if test="model.uid != null and model.uid != ''">AND u.uid=#{model.uid}</if>
+				<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
+				<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
+				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
+				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
+				<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
+				<if test="model.parentId != null and model.parentId != ''">AND u.parentId=#{model.parentId}</if>
+
+			</where>
+			union all
+			SELECT b.id from app_bill_record b inner join sys_user u on b.userId=u.id
+			<where>
+				1 = 1
+				<if test="model.mobile != null and model.mobile != ''">AND u.mobile=#{model.mobile}</if>
+				<if test="model.busnessType != null and model.busnessType != ''">AND b.busnessType=#{model.busnessType}</if>
+				<if test="model.startTime != null">AND b.createTime&gt;=#{model.startTime}</if>
+				<if test="model.endTime != null">AND b.createTime&lt;#{model.endTime}</if>
+				<if test="model.businessNumber != null and model.businessNumber != ''">AND b.businessNumber=#{model.businessNumber}</if>
+				<if test="model.parentId != null and model.parentId != ''">AND u.id=#{model.parentId}</if>
+			</where>
+		) as t
     </select>
 
 	<select id="findBillRecord" resultType="com.xlf.common.vo.app.AppBillRecordVo">
@@ -76,6 +90,32 @@
 			<if test="model.busnessType != null and model.busnessType != ''"> AND bill.busnessType=#{model.busnessType}</if>
 		</where>
 		order by bill.createTime desc
+	</select>
+
+	<select id="findBetRecord" resultType="com.xlf.common.vo.pc.LotteryVo">
+		SELECT a.balance as betAmount,a.createTime,a.businessNumber,t.issueNo,t.winningAmount,t.lotteryFlag as state,b.uid,b.mobile,b.nickname from app_bill_record a LEFT JOIN
+		(select sum(winningAmount) as winningAmount,lotteryFlag,businessNumber,issueNo from app_time_betting group by issueNo,businessNumber) t on a.businessNumber=t.businessNumber
+		LEFT JOIN app_user b on a.userId=b.id
+		<where>
+			a.busnessType='21'
+			<if test="model.uid != null and model.uid != ''"> AND b.uid=#{model.userId}</if>
+			<if test="model.mobile != null and model.mobile != ''"> AND b.mobile=#{model.mobile}</if>
+			<if test="model.issueNo != null and model.issueNo != ''"> AND t.issueNo=#{model.issueNo}</if>
+			<if test="model.parentId != null and model.parentId != ''"> AND b.parentId=#{model.parentId}</if>
+		</where>
+		order by a.createTime desc
+	</select>
+
+	<select id="findBetRecordCount" resultType="Integer">
+		SELECT count(a.id) from app_bill_record a
+		LEFT JOIN app_user b on a.userId=b.id
+		<where>
+			a.busnessType='21'
+			<if test="model.uid != null and model.uid != ''"> AND b.uid=#{model.userId}</if>
+			<if test="model.mobile != null and model.mobile != ''"> AND b.mobile=#{model.mobile}</if>
+			<if test="model.issueNo != null and model.issueNo != ''"> AND a.extend=#{model.issueNo}</if>
+			<if test="model.parentId != null and model.parentId != ''"> AND b.parentId=#{model.parentId}</if>
+		</where>
 	</select>
 
     <select id="billRecordListTotal" resultType="Integer">
@@ -127,7 +167,7 @@
 		       from app_user a
 			   LEFT JOIN app_bill_record b on a.id = b.userid
 				<where>
-					1 = 1 and a.state='10'
+					1 = 1
 					<if test="model.userId != null and model.userId != ''">AND a.parentId=#{model.userId}</if>
 					<if test="model.startTime != null">AND date_sub(b.createTime,interval 2 hour)&gt;=#{model.startTime}</if>
 					<if test="model.endTime != null">AND date_sub(b.createTime,interval 2 hour)&lt;date_add(#{model.endTime},interval 1 day)</if>
@@ -154,14 +194,56 @@
 			</where>
 			  GROUP BY a.id
 			  <if test="model.findDetail != null and model.findDetail != ''"> ,datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour))</if>
-			) as t2 on a.id=t2.id and t.time=t2.time
+			) as t2 on a.id=t2.id
+			<if test="model.findDetail != null and model.findDetail != ''">  and t.time=t2.time</if>
 		<where>
 			a.roleType='20'
 			<if test="model.userId != null and model.userId != ''"> AND a.id=#{model.userId}</if>
 		</where>
-		order by ifnull(t.betTotal,0) asc
+		order by
+		<if test="model.findDetail != null and model.findDetail != ''"> t.createtime asc , </if>
+		ifnull(t.betTotal,0) asc
 	</select>
 
+	<select id="revenueCount" resultType="java.lang.Long">
+			select count(a.id)
+			from sys_user a
+			left JOIN
+				(select b.busnessType,b.userId,a.parentId,b.createtime ,datediff(date_sub(b.createTime,interval 2 hour),date_sub(now(),interval 2 hour)) as time
+				from app_user a
+				LEFT JOIN app_bill_record b on a.id = b.userid
+				<where>
+					1 = 1
+					<if test="model.userId != null and model.userId != ''"> AND a.parentId=#{model.userId}</if>
+					<if test="model.startTime != null"> AND date_sub(b.createTime,interval 2 hour)&gt;=#{model.startTime}</if>
+					<if test="model.endTime != null"> AND date_sub(b.createTime,interval 2 hour)&lt;date_add(#{model.endTime},interval 1 day)</if>
+					<if test="model.startDiff != null and  model.startDiff != -399"> AND datediff(date_sub(b.createTime,interval 2 hour),date_sub(now(),interval 2 hour))>=#{model.startDiff}</if>
+					<if test="model.endDiff != null and model.endDiff != -399"> AND datediff(date_sub(b.createTime,interval 2 hour),date_sub(now(),interval 2 hour)) &lt;=#{model.endDiff}</if>
+				</where>
+				GROUP BY a.parentId
+				<if test="model.findDetail != null and model.findDetail != ''">,datediff(date_sub(b.createTime,interval 2 hour),date_sub(now(),interval 2 hour))</if>
+				) as t on a.id=t.parentId
+			left JOIN
+			(select b.busnessType,a.id ,datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour))  as time from sys_user a LEFT JOIN app_bill_record b on a.id = b.userid
+			<where>
+				a.roleType='20'
+				<if test="model.userId != null and model.userId != ''"> AND a.id=#{model.userId}</if>
+				<if test="model.mobile != null and model.mobile != ''"> AND a.mobile=#{model.mobile}</if>
+				<if test="model.startTime != null"> AND date_sub(b.createTime,interval 1 day)&gt;=#{model.startTime}</if>
+				<if test="model.endTime != null"> AND date_sub(b.createTime,interval 1 day)&lt;date_add(#{model.endTime},interval 1 day)</if>
+				<if test="model.startDiff != null and  model.startDiff != -399"> AND datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour))>=#{model.startDiff}</if>
+				<if test="model.endDiff != null and model.endDiff != -399"> AND datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour)) &lt;=#{model.endDiff}</if>
+			</where>
+			GROUP BY a.id
+			<if test="model.findDetail != null and model.findDetail != ''">,datediff(date_sub(b.createTime,interval 1 day),date_sub(now(),interval 2 hour))
+			</if>
+			) as t2 on a.id=t2.id
+			<if test="model.findDetail != null and model.findDetail != ''"> and t.time=t2.time</if>
+			<where>
+				a.roleType='20'
+				<if test="model.userId != null and model.userId != ''"> AND a.id=#{model.userId}</if>
+			</where>
+	</select>
 	<select id="report" resultType="java.lang.Double">
 		SELECT SUM(b.balance) from app_bill_record b left join app_user u on b.userId=u.id where userId=#{userId}
 		and busnessType IN

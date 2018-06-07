@@ -129,4 +129,20 @@ public class AppBillRecordServiceImpl implements AppBillRecordService {
         }
         return count;
     }
+
+    @Override
+    public int findBetRecordCount(LotteryVo vo) {
+        return billRecordMapper.findBetRecordCount(vo);
+    }
+
+    @Override
+    public List<LotteryVo> findBetRecord(LotteryVo vo, Paging paging) {
+        RowBounds rowBounds = new RowBounds(paging.getPageNumber(),paging.getPageSize());
+        return billRecordMapper.findBetRecord(vo,rowBounds);
+    }
+
+    @Override
+    public long revenueCount(RevenueVo vo) {
+        return billRecordMapper.revenueCount(vo);
+    }
 }

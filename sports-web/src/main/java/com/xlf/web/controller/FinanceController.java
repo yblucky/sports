@@ -27,6 +27,7 @@ import com.xlf.server.app.AppTimeLotteryService;
 import com.xlf.server.common.CommonService;
 import com.xlf.server.web.SysUserService;
 import com.xlf.server.web.WebWithDrawService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -66,10 +67,20 @@ public class FinanceController {
             if (sysUser != null && RoleTypeEnum.AGENT.getCode().equals(sysUser.getRoleType())) {
                 vo.setParentId(sysUser.getId());
             }
-            int total = appRacingBettingService.findAllCount(vo);
+            String state = vo.getState();
+            int total = 0;
             List<LotteryVo> list = Collections.emptyList();
-            if (total > 0) {
-                list = appRacingBettingService.findAll(vo, paging);
+            //查看总的投注
+            if (StringUtils.isEmpty(state) || "10".equals(state)) {
+                total = appBillRecordService.findBetRecordCount(vo);
+                if (total > 0) {
+                    list = appBillRecordService.findBetRecord(vo, paging);
+                }
+            } else {
+                total = appRacingBettingService.findAllCount(vo);
+                if (total > 0) {
+                    list = appRacingBettingService.findAll(vo, paging);
+                }
             }
             paging.setTotalCount(total);
             respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功", paging, list);
@@ -131,13 +142,18 @@ public class FinanceController {
                 vo.setUserId(userVo.getId());
                 sysUserVo.setId(userVo.getId());
             }
-            long counts = sysUserService.findCount(sysUserVo);
+            long counts = 0;
+            if (StringUtils.isEmpty(vo.getFindDetail())) {
+                counts = sysUserService.findCount(sysUserVo);
+            } else {
+                counts = appBillRecordService.revenueCount(vo);
+            }
             List<RevenueVo> list = null;
-            if(counts >0){
+            if (counts > 0) {
                 list = appBillRecordService.revenueList(vo, paging);
             }
             paging.setTotalCount(counts);
-            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功", paging,list);
+            respBody.add(RespCodeEnum.SUCCESS.getCode(), "加载注单信息成功", paging, list);
         } catch (Exception ex) {
             respBody.add(RespCodeEnum.ERROR.getCode(), "加载注单失败");
             LogUtils.error("加载注单失败！", ex);
