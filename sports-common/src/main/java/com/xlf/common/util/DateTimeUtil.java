@@ -468,8 +468,10 @@ public final class DateTimeUtil {
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,5));
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,-10));
 //        System.out.println(parseCurrentDateMinuteIntervalToStr(DateTimeUtil.PATTERN_HH_MM,10));
-        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
-        System.out.println(sdf.format(new Date()) + " 23:59:59");
-        System.out.println(DateTimeUtil.getDayAddWithPattern(1,DateTimeUtil.PATTERN_YYYYMMDD));
+//        SimpleDateFormat sdf = new SimpleDateFormat(DateTimeUtil.PATTERN_YYYY_MM_DD);
+//        System.out.println(sdf.format(new Date()) + " 23:59:59");
+//        System.out.println(DateTimeUtil.getDayAddWithPattern(1,DateTimeUtil.PATTERN_YYYYMMDD));
+        Map<String,String> dateMap =  getCurrentDayTime();
+        System.out.println (ToolUtils.toJson (dateMap));
     }
 }
