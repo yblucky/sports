@@ -129,6 +129,7 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
             if (list.size() > 0) {
                 for (AppTimeBettingPo bettingPo : list) {
                     timeLotteryHandleService(bettingPo);
+                    log.info("888888888888888888：时时彩第" + lotteryPo.getIssueNo() + "期开奖"+ ",结算id：" + bettingPo.getId () + "");
                 }
             }
         } else {
@@ -136,7 +137,8 @@ public class AppTimeLotteryServiceImpl implements AppTimeLotteryService {
         }
         log.info("时时彩第" + lotteryPo.getIssueNo() + "期开奖");
         if (flag) {
-            this.batchTimeLotteryHandleService(lotteryPo, flag);
+            log.info("时时彩第" + lotteryPo.getIssueNo() + "期开奖,中奖人数多于1人，再次进行开奖处理");
+            this.batchTimeLotteryHandleWayTwoService(lotteryPo, flag,betType);
         }
         return flag;
     }
